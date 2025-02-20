@@ -1,7 +1,35 @@
 services:
   app:
+    container_name: ${PROJECTNAME}-app
     build:
-      dockerfile: app/Dockerfile-tools
+      dockerfile: Dockerfile
       context: app
-      target: app
+      target: production
+      args:
+        GRPCPORT: ${GRPCPORT}
+        GRPCSSLPORT: ${GRPCSSLPORT}
+        OPSPORT: ${OPSPORT}
+        HTTP: ${HTTP}
+        HTTPS: ${HTTPS}
+    working_dir: /app
+    command: "./app"
+
+  tool:
+    container_name: ${PROJECTNAME}-tool
+    volumes:
+      - "./app:/app"
+    build:
+      dockerfile: Dockerfile
+      context: app
+      target: builder
+      args:
+        GRPCPORT: ${GRPCPORT}
+        GRPCSSLPORT: ${GRPCSSLPORT}
+        OPSPORT: ${OPSPORT}
+        HTTP: ${HTTP}
+        HTTPS: ${HTTPS}
+        USERID: ${USERID}
+        GROUPID: ${GROUPID}
+        USERNAME: ${USERNAME}
+    command: "sh -c 'while true; do sleep 1; done'"
 
