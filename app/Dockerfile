@@ -13,9 +13,10 @@ USER $USERNAME
 #install protoc
 RUN wget -O protoc.zip https://github.com/protocolbuffers/protobuf/releases/download/v30.0-rc1/protoc-30.0-rc-1-linux-x86_64.zip && \
     unzip protoc.zip -d $HOME/protoc && \
-    echo 'export PATH="$PATH:$HOME/protoc/bin"' >> $HOME/.bashrc && \
     go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.5 && \
     go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+ENV PATH="/home/${USERNAME}/protoc/bin:${PATH}"
 
 WORKDIR /app
 

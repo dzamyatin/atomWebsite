@@ -16,7 +16,5 @@ logs:
 	docker logs -f $(PROJECTNAME)-tool
 sh:
 	docker exec -ti $(PROJECTNAME)-tool bash
-protoc:
-	docker exec -ti $(PROJECTNAME)-tool bash -c "cd /app/proto && /home/$(USERNAME)/protoc/bin/protoc --go_out=../internal/grpc/generated/ --go_opt=paths=source_relative \
-                 --go-grpc_out=../internal/grpc/generated/ --go-grpc_opt=paths=source_relative \
-                 *.proto"
+gen:
+	docker exec -ti $(PROJECTNAME)-tool bash -c "go generate --tags wireinject ./..."

@@ -1,30 +1,27 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
-	"google.golang.org/grpc"
+	"github.com/dzamyatin/atomWebsite/internal/di"
 	"log"
-	"net"
 )
 
-type AuthServer struct {
-	atomWebsite.UnimplementedAuthServer
-}
-
 func main() {
-	fmt.Println("Hello world!")
+	fmt.Println("Server starting...")
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", 8502))
+	ctx := context.Background()
+
+	//server := di.InitializeGRPCServer()
+	//
+	//err := server.Start()
+
+	manager := di.InitializeGRPCProcessManager()
+	err := manager.Start(ctx)
+
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Fatalf("failed to start: %v", err)
 	}
-	var opts []grpc.ServerOption
-
-	grpcServer := grpc.NewServer(opts...)
-	atomWebsite.RegisterAuthServer(grpcServer, AuthServer{})
-
-	grpcServer.Serve(lis)
 
 	fmt.Println("Done")
 }
