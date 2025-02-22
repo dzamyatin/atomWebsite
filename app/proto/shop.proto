@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+package shop;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/dzamyatin/atomWebsite";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8503"
+  base_path: "/"
+  schemes: HTTP
+  security_definitions: {
+    security: {
+      key: "Bearer"
+      value: {
+        type: TYPE_OAUTH2
+        flow: FLOW_APPLICATION
+        token_url: "http://localhost:8503/login"
+        description: "OAuth2 authentication"
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "Bearer"
+      value: {}
+    }
+  }
+};
+
+
+service Shop {
+  // Check assigned to user cart of create a new one
+  rpc CreateOrGetCart (CreateCartRequest) returns (CreateCartResponse) {
+    option(google.api.http) = {
+      post: "/shop/cart"
+      body: "*"
+    };
+  };
+  rpc GetCart (GetCartRequest) returns (GetCartResponse) {
+    option(google.api.http) = {
+      get: "/shop/cart/{cart_uuid}"
+    };
+  };
+  rpc CreateCartItem (CreateCartItemRequest) returns (CreateCartItemResponse) {
+    option(google.api.http) = {
+      post: "/shop/cart/{cart_uuid}/item"
+      body: "*"
+    };
+  };
+  rpc DeleteCartItem (DeleteCartItemRequest) returns (DeleteCartItemResponse) {
+    option(google.api.http) = {
+      delete: "/shop/cart/{cart_uuid}/item/{cart_item_uuid}"
+    };
+  };
+
+  rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse) {
+    option(google.api.http) = {
+      post: "/shop/order"
+      body: "*"
+    };
+  };
+  rpc GetOrder (GetOrderRequest) returns (GetOrderResponse) {
+    option(google.api.http) = {
+      get: "/shop/order/{order_uuid}"
+    };
+  };
+  rpc GetOrders (GetOrdersRequest) returns (GetOrdersResponse) {
+    option(google.api.http) = {
+      get: "/shop/order"
+    };
+  };
+}
+
+message CartItem {
+  string uuid = 1;
+  string name = 2;
+}
+
+message GetCartResponse {
+  string uuid = 1;
+  repeated CartItem items = 2;
+}
+
+message GetCartRequest {
+  string cart_uuid = 1;
+}
+
+message GetOrdersRequest {}
+
+message GetOrdersResponse {
+  repeated Order items = 1;
+}
+
+enum OrderStatusEnum {
+  STATUS_UNSPECIFIED = 0;
+  NEW = 1;
+  WAITING_PAYMENT = 2;
+  DONE = 3;
+}
+
+message Order {
+  string uuid = 1;
+  OrderStatusEnum status = 2;
+  message OrderItem {
+    string uuid = 1;
+    string name = 2;
+    string cert = 3;
+  }
+  repeated OrderItem items = 3;
+}
+
+message GetOrderResponse {
+  Order data = 1;
+}
+
+message GetOrderRequest {
+  string order_uuid = 1;
+}
+
+message CreateOrderRequest {
+  string cart_uuid = 1;
+}
+
+message CreateOrderResponse {
+  string order_uuid = 1;
+}
+
+message DeleteCartItemRequest {
+  string cart_uuid = 1;
+  string cart_item_uuid = 2;
+}
+
+message DeleteCartItemResponse {}
+
+message CreateCartRequest {}
+
+message CreateCartResponse {
+  string uuid = 1;
+}
+
+message CreateCartItemRequest {
+  string cart_uuid = 1;
+  string product_uuid = 2;
+}
+
+message CreateCartItemResponse {}

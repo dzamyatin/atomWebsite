@@ -3,15 +3,17 @@ package process
 import (
 	"context"
 	"errors"
-	"go.uber.org/zap"
 	"sync"
+
+	"go.uber.org/zap"
 )
 
 type ProcessManager struct {
-	runningLock sync.RWMutex
-	running     []Process
-	processes   []Process
-	logger      *zap.Logger
+	runningLock          sync.RWMutex
+	running              []Process
+	processes            []Process
+	logger               *zap.Logger
+	globalShutdownerFunc ShutdownFunc
 }
 
 type Process struct {
@@ -28,6 +30,12 @@ func NewProcessManager(
 		processes:   processes,
 		logger:      logger,
 	}
+}
+
+func (p *ProcessManager) WithGlobalShutdowner(f ShutdownFunc) *ProcessManager {
+	p.globalShutdownerFunc = f
+
+	return p
 }
 
 func (p *ProcessManager) Shutdown() error {
@@ -51,6 +59,12 @@ func (p *ProcessManager) Shutdown() error {
 		}
 	}
 
+	if p.globalShutdownerFunc != nil {
+		if err := p.globalShutdownerFunc(); err != nil {
+			resErr = errors.Join(resErr, err)
+		}
+	}
+
 	return resErr
 }
 
@@ -65,9 +79,10 @@ func (p *ProcessManager) Start(ctx context.Context) error {
 
 	for _, process := range p.processes {
 		p.logger.Info("Starting process", zap.String("name", process.Name))
-		go func() {
-			p.running = append(p.running, process)
 
+		p.running = append(p.running, process)
+
+		go func() {
 			if err := process.Object.Start(ctx); err != nil {
 				p.logger.Error("Process error", zap.Error(err))
 			}

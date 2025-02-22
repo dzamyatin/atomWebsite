@@ -2,26 +2,17 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"github.com/dzamyatin/atomWebsite/internal/di"
-	"log"
+	"github.com/dzamyatin/atomWebsite/internal/service/cmd"
+	"os"
 )
 
 func main() {
-	fmt.Println("Server starting...")
-
 	ctx := context.Background()
 
-	//server := di.InitializeGRPCServer()
-	//
-	//err := server.Start()
-
-	manager := di.InitializeGRPCProcessManager()
-	err := manager.Start(ctx)
-
-	if err != nil {
-		log.Fatalf("failed to start: %v", err)
+	com := ""
+	if len(os.Args) > 1 {
+		com = os.Args[1]
 	}
 
-	fmt.Println("Done")
+	cmd.GetRegistry().MustExecuteCommand(ctx, com)
 }

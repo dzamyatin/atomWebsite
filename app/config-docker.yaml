@@ -1,0 +1,9 @@
+db:
+  host: "postgres"
+  port: 5432
+  username: "user"
+  password: "password"
+  database: "database"
+addr_metric: ":9090"
+addr_grpc: ":8502"
+addr_http: ":8503"

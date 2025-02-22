@@ -1,18 +1,36 @@
+volumes:
+  postgres-data:
+    name: ${PROJECTNAME}-postgres-data
+    driver: local
+
 services:
-  app:
-    container_name: ${PROJECTNAME}-app
-    build:
-      dockerfile: Dockerfile
-      context: app
-      target: production
-      args:
-        GRPCPORT: ${GRPCPORT}
-        GRPCSSLPORT: ${GRPCSSLPORT}
-        OPSPORT: ${OPSPORT}
-        HTTP: ${HTTP}
-        HTTPS: ${HTTPS}
-    working_dir: /app
-    command: "./app"
+#  app:
+#    container_name: ${PROJECTNAME}-app
+#    build:
+#      dockerfile: Dockerfile
+#      context: app
+#      target: production
+#      args:
+#        GRPCPORT: ${GRPCPORT}
+#        GRPCSSLPORT: ${GRPCSSLPORT}
+#        OPSPORT: ${OPSPORT}
+#        HTTP: ${HTTP}
+#        HTTPS: ${HTTPS}
+#    working_dir: /app
+#    command: "./app"
+
+#  frontend:
+#    container_name: ${PROJECTNAME}-frontend
+#    build:
+#      dockerfile: Dockerfile
+#      context: frontend
+#    working_dir:
+#      /app
+#    volumes:
+#      - "./frontend:/app"
+#    command: "sh -c 'while true; do sleep 1; done'"
+#    ports:
+#      - "5173:5173"
 
   tool:
     container_name: ${PROJECTNAME}-tool
@@ -33,3 +51,15 @@ services:
         USERNAME: ${USERNAME}
     command: "sh -c 'while true; do sleep 1; done'"
 
+  postgres:
+    ports:
+      - "${OUT_POSTGRES}:5432"
+    container_name: ${PROJECTNAME}-db
+    image: postgres:17.4
+    environment:
+      - "PGDATA=/data"
+      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_DB=database"
+      - "POSTGRES_USER=user"
+    volumes:
+      - "postgres-data:/data"
