@@ -1,3 +1,8 @@
+volumes:
+  postgres-data:
+    name: ${PROJECTNAME}-postgres-data
+    driver: local
+
 services:
   app:
     container_name: ${PROJECTNAME}-app
@@ -33,3 +38,15 @@ services:
         USERNAME: ${USERNAME}
     command: "sh -c 'while true; do sleep 1; done'"
 
+  postgres:
+    ports:
+      - "${OUT_POSTGRES}:5432"
+    container_name: ${PROJECTNAME}-db
+    image: postgres:17.4
+    environment:
+      - "PGDATA=/data"
+      - "POSTGRES_PASSWORD=password"
+      - "POSTGRES_DB=database"
+      - "POSTGRES_USER=user"
+    volumes:
+      - "postgres-data:/data"

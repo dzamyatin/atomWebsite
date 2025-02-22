@@ -19,7 +19,7 @@ import (
 	"os"
 )
 
-// Injectors from grpc.go:
+// Injectors from di.go:
 
 func InitializeGRPCProcessManager() *process.ProcessManager {
 	logger := newLogger()
@@ -31,7 +31,7 @@ func InitializeGRPCProcessManager() *process.ProcessManager {
 	return processManager
 }
 
-// grpc.go:
+// di.go:
 
 func newGRPCProcessManager(
 	logger *zap.Logger,
