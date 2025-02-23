@@ -2,6 +2,7 @@
 # TODO
 
 ## MVP
+
 - <span style="color:green">DONE</span> grpc server
 - <span style="color:green">DONE</span> wire (DI) by Gooogl
 - <span style="color:green">DONE</span> process manager to gracefully shutdown app
