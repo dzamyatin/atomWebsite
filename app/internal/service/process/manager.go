@@ -65,9 +65,10 @@ func (p *ProcessManager) Start(ctx context.Context) error {
 
 	for _, process := range p.processes {
 		p.logger.Info("Starting process", zap.String("name", process.Name))
-		go func() {
-			p.running = append(p.running, process)
 
+		p.running = append(p.running, process)
+
+		go func() {
 			if err := process.Object.Start(ctx); err != nil {
 				p.logger.Error("Process error", zap.Error(err))
 			}

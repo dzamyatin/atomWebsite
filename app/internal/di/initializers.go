@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
-	grpcservice "github.com/dzamyatin/atomWebsite/internal/service/grpc"
+	grpcservice2 "github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
@@ -18,8 +18,9 @@ import (
 
 func newGRPCProcessManager(
 	logger *zap.Logger,
-	serv *grpcservice.GRPCServer,
+	serv *grpcservice2.GRPCServer,
 	listener *process.SignalListener,
+	db *sql.DB,
 ) *process.ProcessManager {
 	return process.NewProcessManager(
 		logger,
@@ -31,6 +32,15 @@ func newGRPCProcessManager(
 			Name:   "signal listener",
 			Object: listener,
 		},
+		process.Process{
+			Name: "database shutdowner",
+			Object: process.NewShutdowner(
+				logger,
+				func() error {
+					return db.Close()
+				},
+			),
+		},
 	)
 }
 
@@ -39,19 +49,13 @@ func newDb() (*sql.DB, error) {
 
 	u := url.URL{
 		Scheme: "postgres",
-		//Opaque:      "",
-		User: url.UserPassword(config.Username, config.Password),
-		Host: config.Host + ":" + config.Port,
-		//Path:        "",
-		//RawPath:     "",
-		//OmitHost:    false,
-		//ForceQuery:  false,
-		//RawQuery:    "",
-		//Fragment:    "",
-		//RawFragment: "",
+		User:   url.UserPassword(config.Username, config.Password),
+		Host:   config.Host + ":" + config.Port,
 	}
 
-	return sql.Open("postgres", u.String())
+	db, err := sql.Open("postgres", u.String())
+
+	return db, err
 }
 
 func newLogger() *zap.Logger {
@@ -66,19 +70,19 @@ func newLogger() *zap.Logger {
 
 func newServer(
 	grpcServer *grpc.Server,
-) *grpcservice.GRPCServer {
+) *grpcservice2.GRPCServer {
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", 8502))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	return grpcservice.NewGRPCServer(
+	return grpcservice2.NewGRPCServer(
 		lis,
 		grpcServer,
 	)
 }
 
-func newGrpcServer(server grpcservice.AuthServer) *grpc.Server {
+func newGrpcServer(server grpcservice2.AuthServer) *grpc.Server {
 	grpcServer := grpc.NewServer()
 
 	atomWebsite.RegisterAuthServer(grpcServer, server)

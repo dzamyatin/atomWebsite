@@ -17,7 +17,11 @@ func main() {
 		log.Fatalf("failed to create config: %v", err)
 	}
 
-	manager := di.InitializeGRPCProcessManager()
+	manager, err := di.InitializeGRPCProcessManager()
+	if err != nil {
+		log.Fatalf("failed to initialize grpc process manager: %v", err)
+	}
+	
 	err = manager.Start(ctx)
 
 	if err != nil {

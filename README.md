@@ -7,8 +7,11 @@
 - <span style="color:green">DONE</span> wire (DI) by Gooogl
 - <span style="color:green">DONE</span> process manager to gracefully shutdown app
 - <span style="color:green">DONE</span> viper config
-- add database
+- <span style="color:yellow">PARTIAL</span> add database
 - main.go common entrypoint of apps
+- command migration
+- registration endpoint
+- login endpoint
 - metric health
 - metric prometheus
 - bus (command handler pattern) database implementation

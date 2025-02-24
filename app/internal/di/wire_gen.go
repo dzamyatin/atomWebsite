@@ -7,8 +7,10 @@
 package di
 
 import (
-	"github.com/dzamyatin/atomWebsite/internal/service/grpc"
+	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
+	"github.com/dzamyatin/atomWebsite/internal/repository"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
+	"github.com/dzamyatin/atomWebsite/internal/usecase"
 )
 
 import (
@@ -17,12 +19,18 @@ import (
 
 // Injectors from di.go:
 
-func InitializeGRPCProcessManager() *process.ProcessManager {
+func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 	logger := newLogger()
-	authServer := grpcservice.NewAuthServer()
+	db, err := newDb()
+	if err != nil {
+		return nil, err
+	}
+	userRepository := repository.NewUserRepository(db)
+	registrationUseCase := usecase.NewRegistrationUseCase(userRepository)
+	authServer := grpc.NewAuthServer(registrationUseCase)
 	server := newGrpcServer(authServer)
 	grpcServer := newServer(server)
 	signalListener := process.NewSignalListener(logger)
-	processManager := newGRPCProcessManager(logger, grpcServer, signalListener)
-	return processManager
+	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, db)
+	return processManager, nil
 }

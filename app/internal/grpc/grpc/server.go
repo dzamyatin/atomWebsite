@@ -1,4 +1,4 @@
-package grpcservice
+package grpc
 
 import (
 	"context"
@@ -24,7 +24,6 @@ func NewGRPCServer(
 
 func (s *GRPCServer) Shutdown() error {
 	s.grpcServer.GracefulStop()
-	//return s.netListener.Close()
 
 	return nil
 }
