@@ -7,10 +7,14 @@
 package di
 
 import (
+	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
+	"github.com/dzamyatin/atomWebsite/internal/service/user"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
+	"github.com/dzamyatin/atomWebsite/internal/validator"
+	"github.com/google/wire"
 )
 
 import (
@@ -26,7 +30,9 @@ func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 		return nil, err
 	}
 	userRepository := repository.NewUserRepository(db)
-	registrationUseCase := usecase.NewRegistrationUseCase(userRepository)
+	passwordEncoder := userservice.NewPasswordEncoder()
+	registrationValidator := validator.NewRegistrationValidator()
+	registrationUseCase := usecase.NewRegistrationUseCase(userRepository, passwordEncoder, registrationValidator, logger)
 	authServer := grpc.NewAuthServer(registrationUseCase)
 	server := newGrpcServer(authServer)
 	grpcServer := newServer(server)
@@ -34,3 +40,12 @@ func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, db)
 	return processManager, nil
 }
+
+// di.go:
+
+var set = wire.NewSet(
+	newGRPCProcessManager,
+	newLogger,
+	newServer,
+	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb, wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator,
+)
