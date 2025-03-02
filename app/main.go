@@ -2,29 +2,17 @@ package main
 
 import (
 	"context"
-	"github.com/dzamyatin/atomWebsite/internal/di"
-	"github.com/dzamyatin/atomWebsite/internal/service/arg"
-	"log"
+	"github.com/dzamyatin/atomWebsite/internal/service/command"
+	"os"
 )
 
 func main() {
 	ctx := context.Background()
 
-	a := arg.NewArg()
-	err := di.CreateConfig(a.Config)
-
-	if err != nil {
-		log.Fatalf("failed to create config: %v", err)
+	com := ""
+	if len(os.Args) > 1 {
+		com = os.Args[1]
 	}
 
-	manager, err := di.InitializeGRPCProcessManager()
-	if err != nil {
-		log.Fatalf("failed to initialize grpc process manager: %v", err)
-	}
-	
-	err = manager.Start(ctx)
-
-	if err != nil {
-		log.Fatalf("failed to start: %v", err)
-	}
+	command.GetRegistry().MustExecuteCommand(ctx, com)
 }

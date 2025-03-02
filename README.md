@@ -20,7 +20,7 @@
 - vue js admin
 - grpc client
 - payment 
-- crypt method
+- crypt payment method
 
 ## backlog
 - code generation of decorators (find a package) to add metrics

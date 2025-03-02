@@ -10,6 +10,7 @@ tool (
 
 require (
 	github.com/alexflint/go-arg v1.5.1
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/google/wire v0.6.0
 	github.com/lib/pq v1.10.9
 	github.com/spf13/viper v1.19.0
