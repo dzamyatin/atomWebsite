@@ -18,3 +18,7 @@ sh:
 	docker exec -ti $(PROJECTNAME)-tool bash
 gen:
 	docker exec -ti $(PROJECTNAME)-tool bash -c "go generate --tags wireinject ./..."
+migration-up:
+	docker exec -ti $(PROJECTNAME)-tool bash -c "go run ./ migration-up --config config-docker.yaml"
+migration-down:
+	docker exec -ti $(PROJECTNAME)-tool bash -c "go run ./ migration-down --config config-docker.yaml"

@@ -9,16 +9,16 @@ import (
 )
 
 func init() {
-	GetRegistry().Register("migration-up", NewMigrationCommand())
+	GetRegistry().Register("migration-up", NewMigrationUpCommand())
 }
 
 type ArgMogration struct {
 	mainarg.Arg
 }
 
-type MigrationCommand struct{}
+type MigrationUpCommand struct{}
 
-func (r *MigrationCommand) Execute(ctx context.Context) int {
+func (r *MigrationUpCommand) Execute(ctx context.Context) int {
 	args := &ArgMogration{}
 	arg.MustParse(args)
 	err := di.CreateConfig(args.Config)
@@ -49,10 +49,10 @@ func (r *MigrationCommand) Execute(ctx context.Context) int {
 	return 0
 }
 
-func NewMigrationCommand() *MigrationCommand {
-	return &MigrationCommand{}
+func NewMigrationUpCommand() *MigrationUpCommand {
+	return &MigrationUpCommand{}
 }
 
-func (r *MigrationCommand) Help() string {
+func (r *MigrationUpCommand) Help() string {
 	return "There is no special requirements"
 }

@@ -53,6 +53,16 @@ func InitializeMigrationUpCommand() (*usecasemigration.Up, error) {
 	return up, nil
 }
 
+func InitializeMigrationDownCommand() (*usecasemigration.Down, error) {
+	logger := newLogger()
+	db, err := newDb()
+	if err != nil {
+		return nil, err
+	}
+	down := usecasemigration.NewDown(logger, db)
+	return down, nil
+}
+
 func InitializeLogger() *zap.Logger {
 	logger := newLogger()
 	return logger
@@ -64,5 +74,5 @@ var set = wire.NewSet(
 	newGRPCProcessManager,
 	newLogger,
 	newServer,
-	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb, wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp,
+	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb, wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown,
 )

@@ -36,6 +36,7 @@ var set = wire.NewSet(
 	wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)),
 	validator.NewRegistrationValidator,
 	usecasemigration.NewUp,
+	usecasemigration.NewDown,
 )
 
 func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
@@ -48,6 +49,12 @@ func InitializeMigrationUpCommand() (*usecasemigration.Up, error) {
 	wire.Build(set)
 
 	return &usecasemigration.Up{}, nil
+}
+
+func InitializeMigrationDownCommand() (*usecasemigration.Down, error) {
+	wire.Build(set)
+
+	return &usecasemigration.Down{}, nil
 }
 
 func InitializeLogger() *zap.Logger {
