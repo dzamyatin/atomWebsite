@@ -28,7 +28,7 @@ func (r *MigrationDownCommand) Execute(ctx context.Context) int {
 	com, err := di.InitializeMigrationDownCommand()
 
 	if err != nil {
-		logger.Error("could not initialize migration up command", zap.Error(err))
+		logger.Error("could not initialize migration down command", zap.Error(err))
 
 		panic(err)
 	}
@@ -36,7 +36,7 @@ func (r *MigrationDownCommand) Execute(ctx context.Context) int {
 	err = com.Execute(ctx)
 
 	if err != nil {
-		logger.Error("could not execute migration up command", zap.Error(err))
+		logger.Error("could not execute migration down command", zap.Error(err))
 
 		panic(err)
 	}
