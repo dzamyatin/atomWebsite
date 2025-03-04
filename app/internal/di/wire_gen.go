@@ -13,8 +13,10 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	"github.com/dzamyatin/atomWebsite/internal/service/user"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
+	"github.com/dzamyatin/atomWebsite/internal/usecase/migration"
 	"github.com/dzamyatin/atomWebsite/internal/validator"
 	"github.com/google/wire"
+	"go.uber.org/zap"
 )
 
 import (
@@ -41,11 +43,26 @@ func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 	return processManager, nil
 }
 
+func InitializeMigrationUpCommand() (*usecasemigration.Up, error) {
+	logger := newLogger()
+	db, err := newDb()
+	if err != nil {
+		return nil, err
+	}
+	up := usecasemigration.NewUp(logger, db)
+	return up, nil
+}
+
+func InitializeLogger() *zap.Logger {
+	logger := newLogger()
+	return logger
+}
+
 // di.go:
 
 var set = wire.NewSet(
 	newGRPCProcessManager,
 	newLogger,
 	newServer,
-	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb, wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator,
+	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb, wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp,
 )

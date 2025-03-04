@@ -10,9 +10,11 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	userservice "github.com/dzamyatin/atomWebsite/internal/service/user"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
+	usecasemigration "github.com/dzamyatin/atomWebsite/internal/usecase/migration"
 	"github.com/dzamyatin/atomWebsite/internal/validator"
 	"github.com/google/wire"
 	_ "github.com/lib/pq"
+	"go.uber.org/zap"
 )
 
 //go:generate go tool wire
@@ -33,10 +35,23 @@ var set = wire.NewSet(
 	userservice.NewPasswordEncoder,
 	wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)),
 	validator.NewRegistrationValidator,
+	usecasemigration.NewUp,
 )
 
 func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 	wire.Build(set)
 
 	return &process.ProcessManager{}, nil
+}
+
+func InitializeMigrationUpCommand() (*usecasemigration.Up, error) {
+	wire.Build(set)
+
+	return &usecasemigration.Up{}, nil
+}
+
+func InitializeLogger() *zap.Logger {
+	wire.Build(set)
+
+	return &zap.Logger{}
 }

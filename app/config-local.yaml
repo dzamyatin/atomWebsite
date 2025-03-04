@@ -1,6 +1,6 @@
 db:
   host: "localhost"
   port: 9432
-  username: "username"
+  username: "user"
   password: "password"
   database: "database"

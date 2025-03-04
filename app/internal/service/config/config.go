@@ -15,6 +15,7 @@ type AppConfig struct {
 }
 
 type DbConfig struct {
+	SSL      bool   `mapstructure:"ssl"`
 	Host     string `mapstructure:"host"`
 	Port     string `mapstructure:"port"`
 	Username string `mapstructure:"username"`

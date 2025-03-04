@@ -7,6 +7,7 @@ import (
 	grpcservice2 "github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	_ "github.com/lib/pq"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
@@ -47,15 +48,31 @@ func newGRPCProcessManager(
 func newDb() (*sql.DB, error) {
 	config := getConfig().Db
 
+	query := "dbname=database"
+	if !config.SSL {
+		query += "&sslmode=disable"
+	}
+
 	u := url.URL{
-		Scheme: "postgres",
-		User:   url.UserPassword(config.Username, config.Password),
-		Host:   config.Host + ":" + config.Port,
+		Scheme:   "postgres",
+		User:     url.UserPassword(config.Username, config.Password),
+		Host:     config.Host + ":" + config.Port,
+		RawQuery: query,
 	}
 
 	db, err := sql.Open("postgres", u.String())
 
-	return db, err
+	if err != nil {
+		return nil, errors.Wrap(err, "could not connect to postgres")
+	}
+
+	err = db.Ping()
+
+	if err != nil {
+		return nil, errors.Wrap(err, "could not connect to postgres")
+	}
+
+	return db, nil
 }
 
 func newLogger() *zap.Logger {
