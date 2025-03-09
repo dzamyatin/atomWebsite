@@ -11,8 +11,8 @@
 - <span style="color:green">DONE</span> main.go common entrypoint of apps
 - <span style="color:green">DONE</span> command migration
 - <span style="color:green">DONE</span> metric health
-- sqlx
-- registration endpoint
+- <span style="color:green">DONE</span> sqlx
+- <span style="color:green">DONE</span> registration endpoint
 - login endpoint
 - cqrs implementation
   - event bus
