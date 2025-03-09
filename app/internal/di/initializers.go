@@ -1,20 +1,24 @@
 package di
 
 import (
+	"context"
 	"database/sql"
-	"fmt"
 	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
 	grpcservice2 "github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
+	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+	_ "github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"net/http"
 	"net/url"
 	"os"
+	"time"
 )
 
 func newGRPCProcessManager(
@@ -22,6 +26,7 @@ func newGRPCProcessManager(
 	serv *grpcservice2.GRPCServer,
 	listener *process.SignalListener,
 	db *sql.DB,
+	metric *metric.Registry,
 ) *process.ProcessManager {
 	return process.NewProcessManager(
 		logger,
@@ -42,13 +47,17 @@ func newGRPCProcessManager(
 				},
 			),
 		},
+		process.Process{
+			Name:   "http listener",
+			Object: newHttpMetricProcessor(metric),
+		},
 	)
 }
 
 func newDb() (*sql.DB, error) {
 	config := getConfig().Db
 
-	query := "dbname=database"
+	query := "dbname=" + config.Database
 	if !config.SSL {
 		query += "&sslmode=disable"
 	}
@@ -88,7 +97,7 @@ func newLogger() *zap.Logger {
 func newServer(
 	grpcServer *grpc.Server,
 ) *grpcservice2.GRPCServer {
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", 8502))
+	lis, err := net.Listen("tcp", getConfig().AddrGrpc)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -99,10 +108,55 @@ func newServer(
 	)
 }
 
-func newGrpcServer(server grpcservice2.AuthServer) *grpc.Server {
+func newGrpcServer(
+	server grpcservice2.AuthServer,
+	m *metric.Metric,
+) *grpc.Server {
 	grpcServer := grpc.NewServer()
+
+	grpc.WithIdleTimeout(time.Minute * 1)
+	grpc.WithTimeout(time.Minute * 1)
+
+	grpc.WithChainUnaryInterceptor(
+		func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+			var err error
+
+			m.IncomingRequestHistogram(
+				func() {
+					err = invoker(ctx, method, req, reply, cc, opts...)
+				},
+			)
+
+			return err
+		},
+	)
 
 	atomWebsite.RegisterAuthServer(grpcServer, server)
 
 	return grpcServer
+}
+
+func newHttpMetricProcessor(r *metric.Registry) *process.Processor {
+	mux := http.NewServeMux()
+	mux.Handle("/metrics", r.HTTPHandler())
+
+	ctx := context.Background()
+
+	server := &http.Server{
+		Addr:    getConfig().AddrMetric,
+		Handler: mux,
+		BaseContext: func(l net.Listener) context.Context {
+			return ctx
+		},
+	}
+
+	return process.NewProcessor(
+		func(_ context.Context) error {
+			return server.ListenAndServe()
+		},
+		func() error {
+			return server.Shutdown(ctx)
+		},
+	)
+
 }

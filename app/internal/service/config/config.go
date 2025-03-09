@@ -11,7 +11,9 @@ var (
 )
 
 type AppConfig struct {
-	Db DbConfig `mapstructure:"db"`
+	Db         DbConfig `mapstructure:"db"`
+	AddrMetric string   `mapstructure:"addr_metric"`
+	AddrGrpc   string   `mapstructure:"addr_grpc"`
 }
 
 type DbConfig struct {

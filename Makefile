@@ -22,3 +22,5 @@ migration-up:
 	docker exec -ti $(PROJECTNAME)-tool bash -c "go run ./ migration-up --config config-docker.yaml"
 migration-down:
 	docker exec -ti $(PROJECTNAME)-tool bash -c "go run ./ migration-down --config config-docker.yaml"
+tidy:
+	sh -c "cd app && go mod tidy"

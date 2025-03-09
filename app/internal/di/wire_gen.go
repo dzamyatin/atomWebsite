@@ -10,6 +10,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
+	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	"github.com/dzamyatin/atomWebsite/internal/service/user"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
@@ -21,6 +22,7 @@ import (
 
 import (
 	_ "github.com/lib/pq"
+	_ "github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // Injectors from di.go:
@@ -36,10 +38,12 @@ func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 	registrationValidator := validator.NewRegistrationValidator()
 	registrationUseCase := usecase.NewRegistrationUseCase(userRepository, passwordEncoder, registrationValidator, logger)
 	authServer := grpc.NewAuthServer(registrationUseCase)
-	server := newGrpcServer(authServer)
+	registry := metric.NewRegistry(logger)
+	metricMetric := metric.NewMetric(logger, registry)
+	server := newGrpcServer(authServer, metricMetric)
 	grpcServer := newServer(server)
 	signalListener := process.NewSignalListener(logger)
-	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, db)
+	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, db, registry)
 	return processManager, nil
 }
 
@@ -74,5 +78,5 @@ var set = wire.NewSet(
 	newGRPCProcessManager,
 	newLogger,
 	newServer,
-	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb, wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown,
+	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb, wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry,
 )

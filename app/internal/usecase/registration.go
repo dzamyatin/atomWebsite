@@ -35,7 +35,7 @@ func NewRegistrationUseCase(
 }
 
 func (r *RegistrationUseCase) Execute(request dto.RegistrationRequest) error {
-	if err := r.Validate(request); err != nil {
+	if err := r.validate(request); err != nil {
 		return err
 	}
 
@@ -57,7 +57,7 @@ func (r *RegistrationUseCase) Execute(request dto.RegistrationRequest) error {
 	return nil
 }
 
-func (r *RegistrationUseCase) Validate(request dto.RegistrationRequest) error {
+func (r *RegistrationUseCase) validate(request dto.RegistrationRequest) error {
 	if err := r.validator.Validate(request); err != nil {
 		return err
 	}

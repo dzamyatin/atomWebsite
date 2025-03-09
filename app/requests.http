@@ -3,3 +3,6 @@ GRPC localhost:8502/auth.Auth/Login
 
 ###
 GRPC localhost:8502/auth.Auth/Register
+
+###
+GET http://localhost:9090/metrics
