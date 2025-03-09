@@ -7,6 +7,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
+	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	userservice "github.com/dzamyatin/atomWebsite/internal/service/user"
@@ -31,6 +32,9 @@ var set = wire.NewSet(
 	repository.NewUserRepository,
 	wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)),
 	newDb,
+	newDbx,
+	db.NewDatabase,
+	wire.Bind(new(db.IDatabase), new(*db.Database)),
 	wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)),
 	wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)),
 	userservice.NewPasswordEncoder,

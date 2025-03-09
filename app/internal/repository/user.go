@@ -1,9 +1,11 @@
 package repository
 
 import (
-	"database/sql"
-	"errors"
+	"context"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
+	"github.com/dzamyatin/atomWebsite/internal/service/db"
+	"github.com/huandu/go-sqlbuilder"
+	"github.com/pkg/errors"
 )
 
 var (
@@ -11,27 +13,45 @@ var (
 )
 
 type IUserRepository interface {
-	GetUserByEmail(email string) (entity.UserEntity, error)
-	GetUserByPhone(phone string) (entity.UserEntity, error)
-	AddUser(user entity.UserEntity) error
+	GetUserByEmail(ctx context.Context, email string) (entity.UserEntity, error)
+	GetUserByPhone(ctx context.Context, phone string) (entity.UserEntity, error)
+	AddUser(ctx context.Context, user entity.UserEntity) error
 }
 
 type UserRepository struct {
-	db *sql.DB
+	db db.IDatabase
 }
 
-func NewUserRepository(db *sql.DB) *UserRepository {
+func NewUserRepository(db db.IDatabase) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (u *UserRepository) GetUserByEmail(email string) (entity.UserEntity, error) {
-	panic("implement me")
+func (u *UserRepository) GetUserByEmail(ctx context.Context, email string) (entity.UserEntity, error) {
+	return entity.UserEntity{}, ErrUserNotFound
 }
 
-func (u *UserRepository) GetUserByPhone(phone string) (entity.UserEntity, error) {
-	panic("implement me")
+func (u *UserRepository) GetUserByPhone(ctx context.Context, phone string) (entity.UserEntity, error) {
+	return entity.UserEntity{}, ErrUserNotFound
 }
 
-func (u *UserRepository) AddUser(user entity.UserEntity) error {
-	panic("implement me")
+func (u *UserRepository) AddUser(ctx context.Context, user entity.UserEntity) error {
+	sb := sqlbuilder.InsertInto("users")
+
+	sb.Cols(
+		"email",
+		"password",
+		"phone",
+	)
+	sb.Values(
+		user.Email,
+		user.PasswordHash,
+		user.Phone,
+	)
+
+	sql, args := sb.Build()
+	sql = u.db.Rebind(sql)
+
+	_, err := u.db.Exec(ctx, sql, args...)
+
+	return errors.Wrap(err, "error adding user")
 }

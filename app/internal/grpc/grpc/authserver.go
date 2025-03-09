@@ -20,8 +20,9 @@ func NewAuthServer(registerUseCase *usecase.RegistrationUseCase) AuthServer {
 	}
 }
 
-func (r AuthServer) Register(_ context.Context, req *atomWebsite.RegisterRequest) (*atomWebsite.RegisterResponse, error) {
+func (r AuthServer) Register(ctx context.Context, req *atomWebsite.RegisterRequest) (*atomWebsite.RegisterResponse, error) {
 	err := r.registerUseCase.Execute(
+		ctx,
 		dto.RegistrationRequest{
 			Email:    req.Email,
 			Password: req.Password,

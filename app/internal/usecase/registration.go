@@ -1,11 +1,12 @@
 package usecase
 
 import (
-	"errors"
+	"context"
 	"github.com/dzamyatin/atomWebsite/internal/dto"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	"github.com/dzamyatin/atomWebsite/internal/validator"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -34,8 +35,8 @@ func NewRegistrationUseCase(
 	}
 }
 
-func (r *RegistrationUseCase) Execute(request dto.RegistrationRequest) error {
-	if err := r.validate(request); err != nil {
+func (r *RegistrationUseCase) Execute(ctx context.Context, request dto.RegistrationRequest) error {
+	if err := r.validate(ctx, request); err != nil {
 		return err
 	}
 
@@ -48,7 +49,7 @@ func (r *RegistrationUseCase) Execute(request dto.RegistrationRequest) error {
 		}
 	}
 
-	err := r.userRepository.AddUser(user)
+	err := r.userRepository.AddUser(ctx, *user)
 
 	if err != nil {
 		return err
@@ -57,29 +58,33 @@ func (r *RegistrationUseCase) Execute(request dto.RegistrationRequest) error {
 	return nil
 }
 
-func (r *RegistrationUseCase) validate(request dto.RegistrationRequest) error {
+func (r *RegistrationUseCase) validate(ctx context.Context, request dto.RegistrationRequest) error {
 	if err := r.validator.Validate(request); err != nil {
 		return err
 	}
 
-	if _, err := r.userRepository.GetUserByPhone(request.Phone); err != nil {
-		if errors.Is(err, repository.ErrUserNotFound) {
-			return ErrUserAlreadyExists
-		}
+	_, err := r.userRepository.GetUserByPhone(ctx, request.Phone)
 
-		r.logger.Error("User repository error get by phone", zap.Error(err))
-
-		return err
+	if err == nil {
+		return ErrUserAlreadyExists
 	}
 
-	if _, err := r.userRepository.GetUserByEmail(request.Email); err != nil {
-		if errors.Is(err, repository.ErrUserNotFound) {
-			return ErrUserAlreadyExists
-		}
+	if !errors.Is(err, repository.ErrUserNotFound) {
+		r.logger.Error("User repository error get by phone", zap.Error(err))
 
+		return errors.Wrap(err, "cant get user by phone")
+	}
+
+	_, err = r.userRepository.GetUserByEmail(ctx, request.Email)
+
+	if err == nil {
+		return ErrUserAlreadyExists
+	}
+
+	if !errors.Is(err, repository.ErrUserNotFound) {
 		r.logger.Error("User repository error get by email", zap.Error(err))
 
-		return err
+		return errors.Wrap(err, "cant get user by email")
 	}
 
 	return nil

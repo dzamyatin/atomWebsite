@@ -10,6 +10,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
+	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	"github.com/dzamyatin/atomWebsite/internal/service/user"
@@ -21,6 +22,7 @@ import (
 )
 
 import (
+	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/lib/pq"
 	_ "github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -29,11 +31,16 @@ import (
 
 func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 	logger := newLogger()
-	db, err := newDb()
+	sqlDB, err := newDb()
 	if err != nil {
 		return nil, err
 	}
-	userRepository := repository.NewUserRepository(db)
+	sqlxDB, err := newDbx(sqlDB)
+	if err != nil {
+		return nil, err
+	}
+	database := db.NewDatabase(sqlxDB)
+	userRepository := repository.NewUserRepository(database)
 	passwordEncoder := userservice.NewPasswordEncoder()
 	registrationValidator := validator.NewRegistrationValidator()
 	registrationUseCase := usecase.NewRegistrationUseCase(userRepository, passwordEncoder, registrationValidator, logger)
@@ -43,27 +50,27 @@ func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 	server := newGrpcServer(authServer, metricMetric)
 	grpcServer := newServer(server)
 	signalListener := process.NewSignalListener(logger)
-	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, db, registry)
+	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, sqlDB, registry)
 	return processManager, nil
 }
 
 func InitializeMigrationUpCommand() (*usecasemigration.Up, error) {
 	logger := newLogger()
-	db, err := newDb()
+	sqlDB, err := newDb()
 	if err != nil {
 		return nil, err
 	}
-	up := usecasemigration.NewUp(logger, db)
+	up := usecasemigration.NewUp(logger, sqlDB)
 	return up, nil
 }
 
 func InitializeMigrationDownCommand() (*usecasemigration.Down, error) {
 	logger := newLogger()
-	db, err := newDb()
+	sqlDB, err := newDb()
 	if err != nil {
 		return nil, err
 	}
-	down := usecasemigration.NewDown(logger, db)
+	down := usecasemigration.NewDown(logger, sqlDB)
 	return down, nil
 }
 
@@ -78,5 +85,6 @@ var set = wire.NewSet(
 	newGRPCProcessManager,
 	newLogger,
 	newServer,
-	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb, wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry,
+	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
+	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry,
 )

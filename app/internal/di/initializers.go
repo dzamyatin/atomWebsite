@@ -7,6 +7,8 @@ import (
 	grpcservice2 "github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
+	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	_ "github.com/prometheus/client_golang/prometheus/promhttp"
@@ -82,6 +84,16 @@ func newDb() (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func newDbx(db *sql.DB) (*sqlx.DB, error) {
+	dbx := sqlx.NewDb(db, "pgx")
+
+	if err := dbx.Ping(); err != nil {
+		return nil, errors.Wrap(err, "sqlx could not connect to postgres")
+	}
+
+	return dbx, nil
 }
 
 func newLogger() *zap.Logger {
