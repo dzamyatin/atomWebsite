@@ -43,7 +43,7 @@ func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 	userRepository := repository.NewUserRepository(database)
 	passwordEncoder := userservice.NewPasswordEncoder()
 	registrationValidator := validator.NewRegistrationValidator()
-	registrationUseCase := usecase.NewRegistrationUseCase(userRepository, passwordEncoder, registrationValidator, logger)
+	registrationUseCase := usecase.NewRegistration(userRepository, passwordEncoder, registrationValidator, logger)
 	authServer := grpc.NewAuthServer(registrationUseCase)
 	registry := metric.NewRegistry(logger)
 	metricMetric := metric.NewMetric(logger, registry)
@@ -85,6 +85,6 @@ var set = wire.NewSet(
 	newGRPCProcessManager,
 	newLogger,
 	newServer,
-	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistrationUseCase, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
+	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistration, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
 	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry,
 )

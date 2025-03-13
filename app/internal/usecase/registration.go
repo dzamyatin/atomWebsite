@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"context"
-	"github.com/dzamyatin/atomWebsite/internal/dto"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
+	"github.com/dzamyatin/atomWebsite/internal/request"
 	"github.com/dzamyatin/atomWebsite/internal/validator"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -14,20 +14,20 @@ var (
 	ErrUserAlreadyExists = errors.New("user already exists")
 )
 
-type RegistrationUseCase struct {
+type Registration struct {
 	userRepository  repository.IUserRepository
 	passwordEncoder entity.PasswordEncoder
 	validator       validator.IRegistrationValidator
 	logger          *zap.Logger
 }
 
-func NewRegistrationUseCase(
+func NewRegistration(
 	userRepository repository.IUserRepository,
 	passwordEncoder entity.PasswordEncoder,
 	validator validator.IRegistrationValidator,
 	logger *zap.Logger,
-) *RegistrationUseCase {
-	return &RegistrationUseCase{
+) *Registration {
+	return &Registration{
 		userRepository:  userRepository,
 		passwordEncoder: passwordEncoder,
 		validator:       validator,
@@ -35,12 +35,12 @@ func NewRegistrationUseCase(
 	}
 }
 
-func (r *RegistrationUseCase) Execute(ctx context.Context, request dto.RegistrationRequest) error {
+func (r *Registration) Execute(ctx context.Context, request request.RegistrationRequest) error {
 	if err := r.validate(ctx, request); err != nil {
 		return err
 	}
 
-	user := entity.NewUserEntity(request.Email, request.Phone)
+	user := entity.NewUser(request.Email, request.Phone)
 
 	if request.Password != "" {
 		err := user.AddPassword(request.Password, r.passwordEncoder)
@@ -58,7 +58,7 @@ func (r *RegistrationUseCase) Execute(ctx context.Context, request dto.Registrat
 	return nil
 }
 
-func (r *RegistrationUseCase) validate(ctx context.Context, request dto.RegistrationRequest) error {
+func (r *Registration) validate(ctx context.Context, request request.RegistrationRequest) error {
 	if err := r.validator.Validate(request); err != nil {
 		return err
 	}

@@ -13,9 +13,9 @@ var (
 )
 
 type IUserRepository interface {
-	GetUserByEmail(ctx context.Context, email string) (entity.UserEntity, error)
-	GetUserByPhone(ctx context.Context, phone string) (entity.UserEntity, error)
-	AddUser(ctx context.Context, user entity.UserEntity) error
+	GetUserByEmail(ctx context.Context, email string) (*entity.User, error)
+	GetUserByPhone(ctx context.Context, phone string) (*entity.User, error)
+	AddUser(ctx context.Context, user entity.User) error
 }
 
 type UserRepository struct {
@@ -26,15 +26,15 @@ func NewUserRepository(db db.IDatabase) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (u *UserRepository) GetUserByEmail(ctx context.Context, email string) (entity.UserEntity, error) {
-	return entity.UserEntity{}, ErrUserNotFound
+func (u *UserRepository) GetUserByEmail(ctx context.Context, email string) (*entity.User, error) {
+	return &entity.User{}, ErrUserNotFound
 }
 
-func (u *UserRepository) GetUserByPhone(ctx context.Context, phone string) (entity.UserEntity, error) {
-	return entity.UserEntity{}, ErrUserNotFound
+func (u *UserRepository) GetUserByPhone(ctx context.Context, phone string) (*entity.User, error) {
+	return &entity.User{}, ErrUserNotFound
 }
 
-func (u *UserRepository) AddUser(ctx context.Context, user entity.UserEntity) error {
+func (u *UserRepository) AddUser(ctx context.Context, user entity.User) error {
 	sb := sqlbuilder.InsertInto("users")
 
 	sb.Cols(

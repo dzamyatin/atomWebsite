@@ -1,4 +1,4 @@
-package dto
+package request
 
 type RegistrationRequest struct {
 	Email    string

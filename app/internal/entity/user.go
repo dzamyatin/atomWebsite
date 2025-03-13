@@ -1,13 +1,14 @@
 package entity
 
-type UserEntity struct {
+type User struct {
+	UUID         string `db:"uuid"`
 	Email        string `db:"email"`
 	Phone        string `db:"phone"`
 	PasswordHash string `db:"password"`
 }
 
-func NewUserEntity(email, phone string) *UserEntity {
-	return &UserEntity{
+func NewUser(email, phone string) *User {
+	return &User{
 		Email: email,
 		Phone: phone,
 	}
@@ -18,10 +19,10 @@ type PasswordEncoder interface {
 }
 
 type PasswordComparator interface {
-	Compare(password string, hash string) error
+	Compare(password string, hash string) (ok bool, err error)
 }
 
-func (r *UserEntity) AddPassword(password string, passwordEncoder PasswordEncoder) error {
+func (r *User) AddPassword(password string, passwordEncoder PasswordEncoder) error {
 	encoded, err := passwordEncoder.Encode(password)
 
 	if err != nil {
@@ -33,6 +34,6 @@ func (r *UserEntity) AddPassword(password string, passwordEncoder PasswordEncode
 	return nil
 }
 
-func (r *UserEntity) CheckPassword(password string, comparator PasswordComparator) error {
+func (r *User) CheckPassword(password string, comparator PasswordComparator) (ok bool, err error) {
 	return comparator.Compare(r.PasswordHash, password)
 }

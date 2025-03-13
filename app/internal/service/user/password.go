@@ -1,6 +1,9 @@
 package userservice
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"github.com/pkg/errors"
+	"golang.org/x/crypto/bcrypt"
+)
 
 type PasswordEncoder struct{}
 
@@ -14,6 +17,12 @@ func (p *PasswordEncoder) Encode(password string) (string, error) {
 	return string(b), err
 }
 
-func (p *PasswordEncoder) Compare(password string, hash string) error {
-	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+func (p *PasswordEncoder) Compare(password string, hash string) (bool, error) {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+
+	if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+		return false, nil
+	}
+
+	return err == nil, err
 }

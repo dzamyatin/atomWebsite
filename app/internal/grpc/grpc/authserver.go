@@ -2,8 +2,8 @@ package grpc
 
 import (
 	"context"
-	"github.com/dzamyatin/atomWebsite/internal/dto"
 	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
+	"github.com/dzamyatin/atomWebsite/internal/request"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -11,10 +11,10 @@ import (
 
 type AuthServer struct {
 	atomWebsite.UnimplementedAuthServer
-	registerUseCase *usecase.RegistrationUseCase
+	registerUseCase *usecase.Registration
 }
 
-func NewAuthServer(registerUseCase *usecase.RegistrationUseCase) AuthServer {
+func NewAuthServer(registerUseCase *usecase.Registration) AuthServer {
 	return AuthServer{
 		registerUseCase: registerUseCase,
 	}
@@ -23,7 +23,7 @@ func NewAuthServer(registerUseCase *usecase.RegistrationUseCase) AuthServer {
 func (r AuthServer) Register(ctx context.Context, req *atomWebsite.RegisterRequest) (*atomWebsite.RegisterResponse, error) {
 	err := r.registerUseCase.Execute(
 		ctx,
-		dto.RegistrationRequest{
+		request.RegistrationRequest{
 			Email:    req.Email,
 			Password: req.Password,
 			Phone:    req.Phone,

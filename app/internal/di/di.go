@@ -28,7 +28,7 @@ var set = wire.NewSet(
 	newGrpcServer,
 	grpc.NewAuthServer,
 	process.NewSignalListener,
-	usecase.NewRegistrationUseCase,
+	usecase.NewRegistration,
 	repository.NewUserRepository,
 	wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)),
 	newDb,

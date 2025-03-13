@@ -2,7 +2,7 @@ package validator
 
 import (
 	"errors"
-	"github.com/dzamyatin/atomWebsite/internal/dto"
+	"github.com/dzamyatin/atomWebsite/internal/request"
 )
 
 var (
@@ -12,7 +12,7 @@ var (
 )
 
 type IRegistrationValidator interface {
-	Validate(request dto.RegistrationRequest) error
+	Validate(request request.RegistrationRequest) error
 }
 
 type RegistrationValidator struct{}
@@ -21,6 +21,6 @@ func NewRegistrationValidator() *RegistrationValidator {
 	return &RegistrationValidator{}
 }
 
-func (r *RegistrationValidator) Validate(request dto.RegistrationRequest) error {
+func (r *RegistrationValidator) Validate(req request.RegistrationRequest) error {
 	return nil
 }

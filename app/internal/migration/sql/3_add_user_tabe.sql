@@ -1,6 +1,6 @@
 -- +goose Up
 CREATE TABLE IF NOT EXISTS users (
-    id BIGSERIAL PRIMARY KEY,
+    uuid VARCHAR(255) NOT NULL PRIMARY KEY,
     email VARCHAR(255),
     password VARCHAR(255),
     phone VARCHAR(255)
