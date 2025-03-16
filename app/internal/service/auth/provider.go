@@ -12,5 +12,5 @@ var (
 )
 
 type IProvider interface {
-	GetUser(ctx context.Context, request request.LoginRequest) (dtoauth.User, error)
+	GetUser(ctx context.Context, request request.LoginRequest) (*dtoauth.User, error)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
+	"github.com/google/uuid"
 	"github.com/huandu/go-sqlbuilder"
 	"github.com/pkg/errors"
 )
@@ -27,7 +28,28 @@ func NewUserRepository(db db.IDatabase) *UserRepository {
 }
 
 func (u *UserRepository) GetUserByEmail(ctx context.Context, email string) (*entity.User, error) {
-	return &entity.User{}, ErrUserNotFound
+	sb := sqlbuilder.Select(
+		"uuid",
+		"email",
+		"password",
+		"phone",
+	)
+
+	sb.From("users")
+	sb.Where(sb.ILike("email", email))
+
+	q, args := sb.Build()
+
+	q = u.db.Rebind(sb.String())
+
+	user := entity.User{}
+	err := u.db.Get(ctx, &user, q, args...)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "get user by email")
+	}
+
+	return &user, nil
 }
 
 func (u *UserRepository) GetUserByPhone(ctx context.Context, phone string) (*entity.User, error) {
@@ -38,11 +60,18 @@ func (u *UserRepository) AddUser(ctx context.Context, user entity.User) error {
 	sb := sqlbuilder.InsertInto("users")
 
 	sb.Cols(
+		"uuid",
 		"email",
 		"password",
 		"phone",
 	)
+
+	if user.UUID == [16]byte{} {
+		user.UUID = uuid.New()
+	}
+
 	sb.Values(
+		user.UUID,
 		user.Email,
 		user.PasswordHash,
 		user.Phone,

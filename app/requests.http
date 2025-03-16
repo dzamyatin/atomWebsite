@@ -1,6 +1,12 @@
 ###
 GRPC localhost:8502/auth.Auth/Login
 
+{
+  "email": "test@test.ru",
+  "password": "pwd",
+  "phone": "+79991112233"
+}
+
 ###
 GRPC localhost:8502/auth.Auth/Register
 

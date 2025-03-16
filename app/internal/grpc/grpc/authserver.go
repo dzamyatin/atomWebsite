@@ -12,11 +12,13 @@ import (
 type AuthServer struct {
 	atomWebsite.UnimplementedAuthServer
 	registerUseCase *usecase.Registration
+	loginUseCase    *usecase.Login
 }
 
-func NewAuthServer(registerUseCase *usecase.Registration) AuthServer {
+func NewAuthServer(registerUseCase *usecase.Registration, loginUseCase *usecase.Login) AuthServer {
 	return AuthServer{
 		registerUseCase: registerUseCase,
+		loginUseCase:    loginUseCase,
 	}
 }
 
@@ -35,4 +37,20 @@ func (r AuthServer) Register(ctx context.Context, req *atomWebsite.RegisterReque
 	}
 
 	return &atomWebsite.RegisterResponse{}, nil
+}
+
+func (r AuthServer) Login(ctx context.Context, req *atomWebsite.LoginRequest) (*atomWebsite.LoginResponse, error) {
+	res, err := r.loginUseCase.Execute(ctx, request.LoginRequest{
+		Email:    req.Email,
+		Password: req.Password,
+		Phone:    req.Phone,
+	})
+
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "Login fail: %s", err.Error())
+	}
+
+	return &atomWebsite.LoginResponse{
+		Token: res.Token,
+	}, nil
 }

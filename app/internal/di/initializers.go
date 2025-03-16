@@ -3,8 +3,11 @@ package di
 import (
 	"context"
 	"database/sql"
+	"github.com/dzamyatin/atomWebsite/internal/entity"
 	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
 	grpcservice2 "github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
+	"github.com/dzamyatin/atomWebsite/internal/repository"
+	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -170,5 +173,27 @@ func newHttpMetricProcessor(r *metric.Registry) *process.Processor {
 			return server.Shutdown(ctx)
 		},
 	)
+}
 
+func newSequentialProvider(
+	userRepository repository.IUserRepository,
+	logger *zap.Logger,
+	passwordComparator entity.PasswordComparator,
+) *serviceauth.SequentialProvider {
+	return serviceauth.NewSequentialProvider(
+		logger,
+		serviceauth.NewPasswordProvider(
+			userRepository,
+			logger,
+			passwordComparator,
+		),
+	)
+}
+
+func newJWT(logger *zap.Logger) *serviceauth.JWT {
+	return serviceauth.NewJWT(
+		"hella1245912dasdas",
+		128*time.Hour,
+		logger,
+	)
 }

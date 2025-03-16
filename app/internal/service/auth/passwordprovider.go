@@ -16,8 +16,12 @@ type PasswordProvider struct {
 	logger             *zap.Logger
 }
 
-func NewPasswordProvider(rep repository.IUserRepository, logger *zap.Logger) *PasswordProvider {
-	return &PasswordProvider{rep: rep, logger: logger}
+func NewPasswordProvider(
+	rep repository.IUserRepository,
+	logger *zap.Logger,
+	passwordComparator entity.PasswordComparator,
+) *PasswordProvider {
+	return &PasswordProvider{rep: rep, logger: logger, passwordComparator: passwordComparator}
 }
 
 func (r *PasswordProvider) GetUser(ctx context.Context, request request.LoginRequest) (*dtoauth.User, error) {

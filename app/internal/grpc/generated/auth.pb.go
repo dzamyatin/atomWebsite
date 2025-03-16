@@ -83,7 +83,7 @@ func (x *RegisterRequest) GetPhone() string {
 
 type RegisterResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // User ID of the registered user.
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // User ID of the registered user.[ITR] Импорт очередей Я.Трекер
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

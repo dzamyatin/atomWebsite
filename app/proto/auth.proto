@@ -16,7 +16,7 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  int64 user_id = 1; // User ID of the registered user.
+  int64 user_id = 1; // User ID of the registered user.[ITR] Импорт очередей Я.Трекер
 }
 
 message LoginRequest {

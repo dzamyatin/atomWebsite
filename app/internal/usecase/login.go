@@ -15,7 +15,11 @@ type Login struct {
 	jwt      serviceauth.IJWT
 }
 
-func NewLogin(logger *zap.Logger, provider serviceauth.IProvider, jwt serviceauth.IJWT) *Login {
+func NewLogin(
+	logger *zap.Logger,
+	provider serviceauth.IProvider,
+	jwt serviceauth.IJWT,
+) *Login {
 	return &Login{logger: logger, provider: provider, jwt: jwt}
 }
 
@@ -26,7 +30,7 @@ func (r *Login) Execute(ctx context.Context, req request.LoginRequest) (response
 		return response.LoginResponse{}, errors.Wrap(err, "provider get user")
 	}
 
-	jwt, err := r.jwt.CreateToken(user)
+	jwt, err := r.jwt.CreateToken(*user)
 
 	if err != nil {
 		return response.LoginResponse{}, errors.Wrap(err, "create token")

@@ -27,6 +27,10 @@ type JWT struct {
 	logger *zap.Logger
 }
 
+func NewJWT(secret string, jwtTTL time.Duration, logger *zap.Logger) *JWT {
+	return &JWT{secret: secret, jwtTTL: jwtTTL, logger: logger}
+}
+
 func (r *JWT) CreateToken(user dtoauth.User) (*dtoauth.Token, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims, ok := token.Claims.(jwt.MapClaims)
@@ -74,7 +78,7 @@ func (r *JWT) DecodeToken(token string) (*dtoauth.Token, error) {
 		return nil, ErrUnexpectedSigningMethod
 	}
 
-	u, isString := uuid.(string)
+	u, isString := uuid.([16]byte)
 
 	if !isString {
 		return nil, ErrUnexpectedSigningMethod

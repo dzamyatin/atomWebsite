@@ -1,9 +1,11 @@
 package dtoauth
 
+import "github.com/google/uuid"
+
 type User struct {
-	UUID string
+	UUID uuid.UUID
 }
 
-func NewUser(UUID string) *User {
+func NewUser(UUID uuid.UUID) *User {
 	return &User{UUID: UUID}
 }

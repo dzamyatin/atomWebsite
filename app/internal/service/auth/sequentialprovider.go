@@ -17,7 +17,7 @@ func NewSequentialProvider(logger *zap.Logger, providers ...IProvider) *Sequenti
 	return &SequentialProvider{logger: logger, providers: providers}
 }
 
-func (s SequentialProvider) GetUser(ctx context.Context, request request.LoginRequest) (dtoauth.User, error) {
+func (s *SequentialProvider) GetUser(ctx context.Context, request request.LoginRequest) (*dtoauth.User, error) {
 	for _, provider := range s.providers {
 		user, err := provider.GetUser(ctx, request)
 		if err != nil {
@@ -33,5 +33,5 @@ func (s SequentialProvider) GetUser(ctx context.Context, request request.LoginRe
 		return user, nil
 	}
 
-	return dtoauth.User{}, ErrInvalidCredentials
+	return nil, ErrInvalidCredentials
 }

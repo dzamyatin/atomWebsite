@@ -1,10 +1,13 @@
 package entity
 
+import "github.com/google/uuid"
+
 type User struct {
-	UUID         string `db:"uuid"`
-	Email        string `db:"email"`
-	Phone        string `db:"phone"`
-	PasswordHash string `db:"password"`
+	//UUID         string `db:"uuid"`
+	UUID         uuid.UUID `db:"uuid"`
+	Email        string    `db:"email"`
+	Phone        string    `db:"phone"`
+	PasswordHash string    `db:"password"`
 }
 
 func NewUser(email, phone string) *User {
@@ -35,5 +38,5 @@ func (r *User) AddPassword(password string, passwordEncoder PasswordEncoder) err
 }
 
 func (r *User) CheckPassword(password string, comparator PasswordComparator) (ok bool, err error) {
-	return comparator.Compare(r.PasswordHash, password)
+	return comparator.Compare(password, r.PasswordHash)
 }
