@@ -13,15 +13,15 @@
 - <span style="color:green">DONE</span> metric health
 - <span style="color:green">DONE</span> sqlx
 - <span style="color:green">DONE</span> registration endpoint
+- <span style="color:green">DONE</span> login endpoint
+- vue js admin
+- nginx for static
 - begin transaction should return "metric" tx
-- login endpoint
 - cqrs implementation
   - event bus
   - command dispatcher
-- bus (command handler pattern) database implementation
+- <span style="color:yellow">IN PROGRESS</span> bus (command handler pattern) database implementation
 - http server
-- nginx for static
-- vue js admin
 - grpc client
 - payment 
 - crypt payment method

@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
-	"github.com/google/uuid"
 	"github.com/huandu/go-sqlbuilder"
 	"github.com/pkg/errors"
 )
@@ -66,9 +65,7 @@ func (u *UserRepository) AddUser(ctx context.Context, user entity.User) error {
 		"phone",
 	)
 
-	if user.UUID == [16]byte{} {
-		user.UUID = uuid.New()
-	}
+	user.GenerateUUID()
 
 	sb.Values(
 		user.UUID,

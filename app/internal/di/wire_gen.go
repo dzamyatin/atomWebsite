@@ -11,6 +11,8 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	"github.com/dzamyatin/atomWebsite/internal/service/auth"
+	"github.com/dzamyatin/atomWebsite/internal/service/bus"
+	"github.com/dzamyatin/atomWebsite/internal/service/command"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
@@ -90,5 +92,5 @@ var set = wire.NewSet(
 	newLogger,
 	newServer,
 	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistration, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
-	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry, usecase.NewLogin, wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)), newSequentialProvider, wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)), newJWT,
+	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry, usecase.NewLogin, wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)), newSequentialProvider, wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)), newJWT, wire.Bind(new(bus.IBus), new(*bus.MainBus)), bus.NewBus, bus.NewMemoryBus, command.NewRegisterHandler,
 )

@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/dzamyatin/atomWebsite/internal/service/command"
+	"github.com/dzamyatin/atomWebsite/internal/service/cmd"
 	"os"
 )
 
@@ -14,5 +14,5 @@ func main() {
 		com = os.Args[1]
 	}
 
-	command.GetRegistry().MustExecuteCommand(ctx, com)
+	cmd.GetRegistry().MustExecuteCommand(ctx, com)
 }

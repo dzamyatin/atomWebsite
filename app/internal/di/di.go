@@ -8,6 +8,8 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
+	"github.com/dzamyatin/atomWebsite/internal/service/bus"
+	"github.com/dzamyatin/atomWebsite/internal/service/command"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
@@ -50,6 +52,10 @@ var set = wire.NewSet(
 	newSequentialProvider,
 	wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)),
 	newJWT,
+	wire.Bind(new(bus.IBus), new(*bus.MainBus)),
+	bus.NewBus,
+	bus.NewMemoryBus,
+	command.NewRegisterHandler,
 )
 
 func InitializeGRPCProcessManager() (*process.ProcessManager, error) {

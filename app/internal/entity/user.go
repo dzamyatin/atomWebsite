@@ -3,7 +3,6 @@ package entity
 import "github.com/google/uuid"
 
 type User struct {
-	//UUID         string `db:"uuid"`
 	UUID         uuid.UUID `db:"uuid"`
 	Email        string    `db:"email"`
 	Phone        string    `db:"phone"`
@@ -23,6 +22,14 @@ type PasswordEncoder interface {
 
 type PasswordComparator interface {
 	Compare(password string, hash string) (ok bool, err error)
+}
+
+func (r *User) GenerateUUID() uuid.UUID {
+	if r.UUID == [16]byte{} {
+		r.UUID = uuid.New()
+	}
+
+	return r.UUID
 }
 
 func (r *User) AddPassword(password string, passwordEncoder PasswordEncoder) error {
