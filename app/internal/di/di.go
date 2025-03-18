@@ -53,7 +53,8 @@ var set = wire.NewSet(
 	wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)),
 	newJWT,
 	wire.Bind(new(bus.IBus), new(*bus.MainBus)),
-	bus.NewBus,
+	newBus,
+	newHandlerRegistry,
 	bus.NewMemoryBus,
 	command.NewRegisterHandler,
 )

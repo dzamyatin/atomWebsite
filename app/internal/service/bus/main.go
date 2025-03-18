@@ -15,6 +15,7 @@ type MainBus struct {
 func NewBus(
 	buses map[BusName]IBus,
 	handlerRegistry HandlerRegistry,
+	logger *zap.Logger,
 ) *MainBus {
 	mappedBuses := make(map[BusName]IBus)
 
@@ -25,6 +26,7 @@ func NewBus(
 	bus := &MainBus{
 		buses:    mappedBuses,
 		commands: map[string][]BusName{},
+		logger:   logger,
 	}
 
 	for _, handler := range handlerRegistry {
@@ -59,6 +61,7 @@ func (b *MainBus) Dispatch(ctx context.Context, command ICommand) error {
 		return errors.New("bus not found across commands")
 	}
 
+	var err error
 	for _, bus := range buses {
 		var busInstance IBus
 		busInstance, ok = b.buses[bus]
@@ -67,7 +70,7 @@ func (b *MainBus) Dispatch(ctx context.Context, command ICommand) error {
 			return errors.New("bus not found across available busses")
 		}
 
-		err := busInstance.Dispatch(nil, command)
+		err = busInstance.Dispatch(ctx, command)
 
 		if err != nil {
 			b.logger.Error(
@@ -79,5 +82,5 @@ func (b *MainBus) Dispatch(ctx context.Context, command ICommand) error {
 		}
 	}
 
-	return nil
+	return err
 }

@@ -9,7 +9,7 @@ import (
 )
 
 type RegisterCommand struct {
-	req request.RegistrationRequest
+	Req request.RegistrationRequest
 }
 
 func (c *RegisterCommand) GetName() string {
@@ -17,10 +17,10 @@ func (c *RegisterCommand) GetName() string {
 }
 
 type RegisterHandler struct {
-	registration usecase.Registration
+	registration *usecase.Registration
 }
 
-func NewRegisterHandler(registration usecase.Registration) *RegisterHandler {
+func NewRegisterHandler(registration *usecase.Registration) *RegisterHandler {
 	return &RegisterHandler{registration: registration}
 }
 
@@ -30,5 +30,5 @@ func (h *RegisterHandler) Handle(ctx context.Context, command bus.ICommand) erro
 		return errors.New("invalid command")
 	}
 
-	return errors.Wrap(h.registration.Execute(ctx, v.req), "execute")
+	return errors.Wrap(h.registration.Execute(ctx, v.Req), "execute")
 }
