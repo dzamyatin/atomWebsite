@@ -21,6 +21,8 @@
   - event bus
   - command dispatcher
 - <span style="color:yellow">IN PROGRESS</span> bus (command handler pattern) database implementation
+  - <span style="color:green">DONE</span> memory provider
+  - postgress provider
 - http server
 - grpc client
 - payment 
