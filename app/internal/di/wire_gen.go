@@ -7,6 +7,7 @@
 package di
 
 import (
+	"context"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
@@ -32,9 +33,9 @@ import (
 
 // Injectors from di.go:
 
-func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
+func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
 	logger := newLogger()
-	sqlDB, err := newDb()
+	sqlDB, err := newDb(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -64,9 +65,9 @@ func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
 	return processManager, nil
 }
 
-func InitializeMigrationUpCommand() (*usecasemigration.Up, error) {
+func InitializeMigrationUpCommand(ctx context.Context) (*usecasemigration.Up, error) {
 	logger := newLogger()
-	sqlDB, err := newDb()
+	sqlDB, err := newDb(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -74,9 +75,9 @@ func InitializeMigrationUpCommand() (*usecasemigration.Up, error) {
 	return up, nil
 }
 
-func InitializeMigrationDownCommand() (*usecasemigration.Down, error) {
+func InitializeMigrationDownCommand(ctx context.Context) (*usecasemigration.Down, error) {
 	logger := newLogger()
-	sqlDB, err := newDb()
+	sqlDB, err := newDb(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +85,7 @@ func InitializeMigrationDownCommand() (*usecasemigration.Down, error) {
 	return down, nil
 }
 
-func InitializeLogger() *zap.Logger {
+func InitializeLogger(ctx context.Context) *zap.Logger {
 	logger := newLogger()
 	return logger
 }

@@ -14,19 +14,39 @@
 - <span style="color:green">DONE</span> sqlx
 - <span style="color:green">DONE</span> registration endpoint
 - <span style="color:green">DONE</span> login endpoint
-- vue js admin
-- nginx for static
-- begin transaction should return "metric" tx
-- cqrs implementation
-  - event bus
-  - command dispatcher
-- <span style="color:yellow">IN PROGRESS</span> bus (command handler pattern) database implementation
+- <span style="color:yellow">IN PROGRESS</span> bus (command handler pattern, cqrs implementation)
+  - <span style="color:green">DONE</span> event bus
+  - <span style="color:green">DONE</span> command dispatcher
   - <span style="color:green">DONE</span> memory provider
   - postgress provider
-- http server
+- vue js admin
+  - login
+  - payment
+  - personal cabinet
+  - download app
+- nginx for static
+- begin transaction should return "metric" tx
+- registration
+  - email verification
+    - smtp server
 - grpc client
-- payment 
+- reserch which payment method are better (yandexpay)
+- payment implementation
+- reserch which crypt method are better
 - crypt payment method
+- kubernetes deploy
+  - statefulset for postgress
+  - deploy for app
+  - volume
+
+## backlog
+- test cover
+- kafka instead of postgress
+- code generation of decorators (find a package) to add metrics
+- helm
+- phone verifiction
+  - telegram verify
+  - whatsup|vk / rollback messager
 - metric prometheus (see: https://habr.com/ru/companies/otus/articles/769806/)
   - prometeus
   - grafana
@@ -36,9 +56,7 @@
       2) average request time
       3) all db query timing (should looks like bukets .01, .1, ... 10) To IDatabase
       4) average query time
-- check http to grpc proxy (see: https://habr.com/ru/articles/658769/)
 
-## backlog
-- code generation of decorators (find a package) to add metrics
-- kubernetes
-- helm
+## interesting
+- check http to grpc proxy (see: https://habr.com/ru/articles/658769/)
+- http server (which point?)

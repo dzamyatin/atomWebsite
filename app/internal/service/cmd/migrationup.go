@@ -22,7 +22,7 @@ func (r *MigrationUpCommand) Execute(ctx context.Context) int {
 	args := &ArgMogration{}
 	arg.MustParse(args)
 	err := di.CreateConfig(args.Config)
-	logger := di.InitializeLogger()
+	logger := di.InitializeLogger(ctx)
 
 	if err != nil {
 		logger.Error("could not create config", zap.Error(err))
@@ -30,7 +30,7 @@ func (r *MigrationUpCommand) Execute(ctx context.Context) int {
 		panic(err)
 	}
 
-	com, err := di.InitializeMigrationUpCommand()
+	com, err := di.InitializeMigrationUpCommand(ctx)
 
 	if err != nil {
 		logger.Error("could not initialize migration up command", zap.Error(err))

@@ -4,6 +4,7 @@
 package di
 
 import (
+	"context"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
@@ -59,25 +60,25 @@ var set = wire.NewSet(
 	command.NewRegisterHandler,
 )
 
-func InitializeGRPCProcessManager() (*process.ProcessManager, error) {
+func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
 	wire.Build(set)
 
 	return &process.ProcessManager{}, nil
 }
 
-func InitializeMigrationUpCommand() (*usecasemigration.Up, error) {
+func InitializeMigrationUpCommand(ctx context.Context) (*usecasemigration.Up, error) {
 	wire.Build(set)
 
 	return &usecasemigration.Up{}, nil
 }
 
-func InitializeMigrationDownCommand() (*usecasemigration.Down, error) {
+func InitializeMigrationDownCommand(ctx context.Context) (*usecasemigration.Down, error) {
 	wire.Build(set)
 
 	return &usecasemigration.Down{}, nil
 }
 
-func InitializeLogger() *zap.Logger {
+func InitializeLogger(ctx context.Context) *zap.Logger {
 	wire.Build(set)
 
 	return &zap.Logger{}

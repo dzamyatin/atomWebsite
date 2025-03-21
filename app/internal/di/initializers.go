@@ -59,7 +59,7 @@ func newGRPCProcessManager(
 	)
 }
 
-func newDb() (*sql.DB, error) {
+func newDb(ctx context.Context) (*sql.DB, error) {
 	config := getConfig().Db
 
 	query := "dbname=" + config.Database
@@ -80,7 +80,9 @@ func newDb() (*sql.DB, error) {
 		return nil, errors.Wrap(err, "could not connect to postgres")
 	}
 
-	err = db.Ping()
+	ctx, _ = context.WithTimeout(ctx, 5*time.Second)
+
+	err = db.PingContext(ctx)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "could not connect to postgres")

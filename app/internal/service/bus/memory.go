@@ -8,28 +8,23 @@ import (
 const BusMemory BusName = "memory"
 
 type MemoryBus struct {
-	dispatcher map[string]IHandler
+	BaseBus
 }
 
 func NewMemoryBus() *MemoryBus {
-	return &MemoryBus{dispatcher: make(map[string]IHandler)}
-}
-
-func (r *MemoryBus) Register(command ICommand, handler IHandler, name BusName) error {
-	r.dispatcher[command.GetName()] = handler
-
-	return nil
+	return &MemoryBus{
+		BaseBus{
+			dispatcher: make(map[string]IHandler),
+		},
+	}
 }
 
 func (r *MemoryBus) Dispatch(ctx context.Context, command ICommand) error {
-	handler, ok := r.dispatcher[command.GetName()]
-	if !ok {
-		return errors.New("no Handler found")
+	handler, err := r.GetHandler(command)
+
+	if err != nil {
+		return errors.Wrap(err, "get handler")
 	}
 
 	return errors.Wrap(handler.Handle(ctx, command), "execute")
-}
-
-func (r *MemoryBus) GetName() BusName {
-	return BusMemory
 }

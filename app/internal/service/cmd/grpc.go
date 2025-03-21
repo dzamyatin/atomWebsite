@@ -21,7 +21,7 @@ func (G GRPCCommand) Execute(ctx context.Context) int {
 		log.Fatalf("failed to create config: %v", err)
 	}
 
-	manager, err := di.InitializeGRPCProcessManager()
+	manager, err := di.InitializeGRPCProcessManager(ctx)
 	if err != nil {
 		log.Fatalf("failed to initialize grpc process manager: %v", err)
 	}
