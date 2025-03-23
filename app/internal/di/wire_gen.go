@@ -13,6 +13,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	"github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
+	"github.com/dzamyatin/atomWebsite/internal/service/cmd/executors"
 	"github.com/dzamyatin/atomWebsite/internal/service/command"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
@@ -30,6 +31,36 @@ import (
 	_ "github.com/lib/pq"
 	_ "github.com/prometheus/client_golang/prometheus/promhttp"
 )
+
+// Injectors from command.go:
+
+func InitializeMigrationUpCommand(ctx context.Context) (*executors.MigrationUpCommand, error) {
+	logger := newLogger()
+	db, err := newDb(ctx)
+	if err != nil {
+		return nil, err
+	}
+	up := usecasemigration.NewUp(logger, db)
+	migrationUpCommand := executors.NewMigrationUpCommand(logger, up)
+	return migrationUpCommand, nil
+}
+
+func InitializeMigrationCreateCommand(ctx context.Context) *executors.MigrationCreateCommand {
+	logger := newLogger()
+	migrationCreateCommand := executors.NewMigrationCreateCommand(logger)
+	return migrationCreateCommand
+}
+
+func InitializeMigrationDownCommand(ctx context.Context) (*executors.MigrationDownCommand, error) {
+	logger := newLogger()
+	db, err := newDb(ctx)
+	if err != nil {
+		return nil, err
+	}
+	down := usecasemigration.NewDown(logger, db)
+	migrationDownCommand := executors.NewMigrationDownCommand(logger, down)
+	return migrationDownCommand, nil
+}
 
 // Injectors from di.go:
 
@@ -65,26 +96,6 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 	return processManager, nil
 }
 
-func InitializeMigrationUpCommand(ctx context.Context) (*usecasemigration.Up, error) {
-	logger := newLogger()
-	sqlDB, err := newDb(ctx)
-	if err != nil {
-		return nil, err
-	}
-	up := usecasemigration.NewUp(logger, sqlDB)
-	return up, nil
-}
-
-func InitializeMigrationDownCommand(ctx context.Context) (*usecasemigration.Down, error) {
-	logger := newLogger()
-	sqlDB, err := newDb(ctx)
-	if err != nil {
-		return nil, err
-	}
-	down := usecasemigration.NewDown(logger, sqlDB)
-	return down, nil
-}
-
 func InitializeLogger(ctx context.Context) *zap.Logger {
 	logger := newLogger()
 	return logger
@@ -98,5 +109,5 @@ var set = wire.NewSet(
 	newServer,
 	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistration, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
 	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry, usecase.NewLogin, wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)), newSequentialProvider, wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)), newJWT, wire.Bind(new(bus.IBus), new(*bus.MainBus)), newBus,
-	newHandlerRegistry, bus.NewMemoryBus, command.NewRegisterHandler,
+	newHandlerRegistry, bus.NewMemoryBus, command.NewRegisterHandler, executors.NewMigrationCreateCommand, executors.NewMigrationDownCommand, executors.NewMigrationUpCommand,
 )

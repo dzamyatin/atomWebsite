@@ -10,6 +10,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
+	"github.com/dzamyatin/atomWebsite/internal/service/cmd/executors"
 	"github.com/dzamyatin/atomWebsite/internal/service/command"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
@@ -58,24 +59,15 @@ var set = wire.NewSet(
 	newHandlerRegistry,
 	bus.NewMemoryBus,
 	command.NewRegisterHandler,
+	executors.NewMigrationCreateCommand,
+	executors.NewMigrationDownCommand,
+	executors.NewMigrationUpCommand,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
 	wire.Build(set)
 
 	return &process.ProcessManager{}, nil
-}
-
-func InitializeMigrationUpCommand(ctx context.Context) (*usecasemigration.Up, error) {
-	wire.Build(set)
-
-	return &usecasemigration.Up{}, nil
-}
-
-func InitializeMigrationDownCommand(ctx context.Context) (*usecasemigration.Down, error) {
-	wire.Build(set)
-
-	return &usecasemigration.Down{}, nil
 }
 
 func InitializeLogger(ctx context.Context) *zap.Logger {
