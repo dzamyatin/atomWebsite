@@ -55,10 +55,12 @@ func (r *Command[ARG]) Execute(ctx context.Context) int {
 	parseConfig(args)
 
 	if err := r.executer(ctx).Execute(ctx, args); err != nil {
-		return 0
+		fmt.Println("error:", err)
+
+		return 1
 	}
 
-	return 1
+	return 0
 }
 
 func (r *Command[ARG]) Help() string {

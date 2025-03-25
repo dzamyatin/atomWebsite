@@ -14,11 +14,13 @@
 - <span style="color:green">DONE</span> sqlx
 - <span style="color:green">DONE</span> registration endpoint
 - <span style="color:green">DONE</span> login endpoint
-- <span style="color:yellow">IN PROGRESS</span> bus (command handler pattern, cqrs implementation)
+- <span style="color:yellow">IN PROGRESS</span> bus (command handler pattern, cqrs implementation) 
   - <span style="color:green">DONE</span> event bus
   - <span style="color:green">DONE</span> command dispatcher
   - <span style="color:green">DONE</span> memory provider
-  - postgress provider
+  - <span style="color:yellow">IN PROGRESS</span> postgress provider
+    - <span style="color:green">DONE</span> pg dispatch
+    - <span style="color:yellow">IN PROGRESS</span> pg handler
 - vue js admin
   - login
   - payment

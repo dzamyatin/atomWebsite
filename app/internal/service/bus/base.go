@@ -8,6 +8,10 @@ type BaseBus struct {
 	dispatcher map[string]IHandler
 }
 
+func NewBaseBus() BaseBus {
+	return BaseBus{dispatcher: make(map[string]IHandler)}
+}
+
 func (r *BaseBus) Register(command ICommand, handler IHandler, name BusName) error {
 	r.dispatcher[command.GetName()] = handler
 
