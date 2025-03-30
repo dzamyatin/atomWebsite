@@ -5,6 +5,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/command"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"go.uber.org/zap"
+	"time"
 )
 
 func newHandlerRegistry(
@@ -24,6 +25,8 @@ func newPostgresBus(db db.IDatabase) *bus.PostgresBus {
 	return bus.NewPostgresBus(
 		"main",
 		db,
+		30*time.Second,
+		5,
 	)
 }
 
