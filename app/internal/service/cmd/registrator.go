@@ -10,6 +10,20 @@ const defaultHelp = "There is no special conditions"
 
 func init() {
 	GetRegistry().Register(
+		"bus",
+		NewCommand[executors.ArgBusProcess](
+			func(ctx context.Context) IExecuter[executors.ArgBusProcess] {
+				v, err := di.InitializeBusProcessCommand(ctx)
+				if err != nil {
+					panic(err)
+				}
+
+				return v
+			},
+			defaultHelp,
+		),
+	)
+	GetRegistry().Register(
 		"migration-create",
 		NewCommand[executors.ArgMigrationCreate](
 			func(ctx context.Context) IExecuter[executors.ArgMigrationCreate] {

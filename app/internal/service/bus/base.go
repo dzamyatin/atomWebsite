@@ -10,7 +10,10 @@ type BaseBus struct {
 }
 
 func NewBaseBus() BaseBus {
-	return BaseBus{dispatcher: make(map[string]IHandler)}
+	return BaseBus{
+		dispatcher: make(map[string]IHandler),
+		commands:   make(map[string]ICommand),
+	}
 }
 
 func (r *BaseBus) Register(command ICommand, handler IHandler, name BusName) error {

@@ -63,6 +63,7 @@ var set = wire.NewSet(
 	executors.NewMigrationDownCommand,
 	executors.NewMigrationUpCommand,
 	newPostgresBus,
+	executors.NewBusProcessCommand,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

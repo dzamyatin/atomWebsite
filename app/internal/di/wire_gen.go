@@ -62,6 +62,22 @@ func InitializeMigrationDownCommand(ctx context.Context) (*executors.MigrationDo
 	return migrationDownCommand, nil
 }
 
+func InitializeBusProcessCommand(ctx context.Context) (*executors.BusProcessCommand, error) {
+	logger := newLogger()
+	sqlDB, err := newDb(ctx)
+	if err != nil {
+		return nil, err
+	}
+	sqlxDB, err := newDbx(sqlDB)
+	if err != nil {
+		return nil, err
+	}
+	database := db.NewDatabase(sqlxDB)
+	postgresBus := newPostgresBus(database, logger)
+	busProcessCommand := executors.NewBusProcessCommand(logger, postgresBus)
+	return busProcessCommand, nil
+}
+
 // Injectors from di.go:
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
@@ -82,7 +98,7 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 	sequentialProvider := newSequentialProvider(userRepository, logger, passwordEncoder)
 	jwt := newJWT(logger)
 	login := usecase.NewLogin(logger, sequentialProvider, jwt)
-	postgresBus := newPostgresBus(database)
+	postgresBus := newPostgresBus(database, logger)
 	memoryBus := bus.NewMemoryBus()
 	registerHandler := command.NewRegisterHandler(registration)
 	handlerRegistry := newHandlerRegistry(registerHandler)
@@ -110,5 +126,5 @@ var set = wire.NewSet(
 	newServer,
 	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistration, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
 	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry, usecase.NewLogin, wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)), newSequentialProvider, wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)), newJWT, wire.Bind(new(bus.IBus), new(*bus.MainBus)), newBus,
-	newHandlerRegistry, bus.NewMemoryBus, command.NewRegisterHandler, executors.NewMigrationCreateCommand, executors.NewMigrationDownCommand, executors.NewMigrationUpCommand, newPostgresBus,
+	newHandlerRegistry, bus.NewMemoryBus, command.NewRegisterHandler, executors.NewMigrationCreateCommand, executors.NewMigrationDownCommand, executors.NewMigrationUpCommand, newPostgresBus, executors.NewBusProcessCommand,
 )

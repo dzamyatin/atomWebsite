@@ -27,3 +27,9 @@ func InitializeMigrationDownCommand(ctx context.Context) (*executors.MigrationDo
 
 	return &executors.MigrationDownCommand{}, nil
 }
+
+func InitializeBusProcessCommand(ctx context.Context) (*executors.BusProcessCommand, error) {
+	wire.Build(set)
+
+	return &executors.BusProcessCommand{}, nil
+}

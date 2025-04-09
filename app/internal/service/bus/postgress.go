@@ -2,6 +2,7 @@ package bus
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
@@ -33,15 +34,15 @@ var (
 )
 
 type Item struct {
-	uniqid      string    `db:"uniqid"`
-	queue       string    `db:"queue"`
-	createdAt   string    `db:"created_at"`
-	payload     string    `db:"payload"`
-	status      string    `db:"status"`
-	timeoutAt   time.Time `db:"timeout_at"`
-	attemptLeft uint64    `db:"attempt_left"`
-	commandName string    `db:"command_name"`
-	runAfter    string    `db:"run_after"`
+	Uniqid      string    `db:"uniqid"`
+	Queue       string    `db:"queue"`
+	CreatedAt   string    `db:"created_at"`
+	Payload     string    `db:"payload"`
+	Status      string    `db:"status"`
+	TimeoutAt   time.Time `db:"timeout_at"`
+	AttemptLeft uint64    `db:"attempt_left"`
+	CommandName string    `db:"command_name"`
+	RunAfter    string    `db:"run_after"`
 }
 
 type PostgresBus struct {
@@ -172,14 +173,14 @@ func (r *PostgresBus) process(ctx context.Context, queueName string) error {
 }
 
 func (r *PostgresBus) handleItem(ctx context.Context, item *Item) error {
-	command, err := r.GetCommand(item.commandName)
+	command, err := r.GetCommand(item.CommandName)
 	if err != nil {
 		return errors.Wrap(err, "failed to get command")
 	}
 
-	err = json.Unmarshal([]byte(item.payload), &command)
+	err = json.Unmarshal([]byte(item.Payload), &command)
 	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to unmarshal command %s", item.commandName))
+		return errors.Wrap(err, fmt.Sprintf("failed to unmarshal command %s", item.CommandName))
 	}
 
 	handler, err := r.GetHandler(command)
@@ -195,7 +196,7 @@ func (r *PostgresBus) successItem(ctx context.Context, item *Item) error {
 	ub.Set(
 		ub.Assign("statue", BusStatusSuccess),
 	)
-	ub.Where(ub.E("uniqid", item.uniqid))
+	ub.Where(ub.E("uniqid", item.Uniqid))
 
 	return nil
 }
@@ -207,9 +208,13 @@ func (r *PostgresBus) extractItem(ctx context.Context, queueName string) (*Item,
 	}
 	defer tx.Rollback()
 
-	item, err := r.getItem(ctx, tx, queueName)
+	item, ok, err := r.getItem(ctx, tx, queueName)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get item")
+	}
+
+	if !ok {
+		return nil, ErrEmptyQueue
 	}
 
 	err = r.startItem(ctx, tx, item)
@@ -222,7 +227,7 @@ func (r *PostgresBus) extractItem(ctx context.Context, queueName string) (*Item,
 		return nil, errors.Wrap(err, "failed to commit transaction")
 	}
 
-	if item.attemptLeft < 0 {
+	if item.AttemptLeft < 0 {
 		err = r.failItem(ctx, item)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to fail item")
@@ -231,21 +236,26 @@ func (r *PostgresBus) extractItem(ctx context.Context, queueName string) (*Item,
 		return nil, errors.Wrap(err, "attempts exceeded")
 	}
 
-	return nil, ErrEmptyQueue
-
 	return item, nil
 }
 
 func (r *PostgresBus) startItem(ctx context.Context, tx *db.Tx, item *Item) error {
 	ub := repository.Builder.NewUpdateBuilder()
-	item.attemptLeft--
-	ub.Set(
-		ub.Assign("statue", BusStatusinProgress),
-		ub.Assign("queue", item.queue),
+	item.AttemptLeft--
+	ub.Update("bus").Set(
+		ub.Assign("status", BusStatusinProgress),
+		ub.Assign("queue", item.Queue),
 		ub.Assign("timeout_at", time.Now().Add(r.timeout)),
-		ub.Assign("attempt_left", item.attemptLeft),
+		ub.Assign("attempt_left", item.AttemptLeft),
 	)
-	ub.Where(ub.E("uniqid", item.uniqid))
+	ub.Where(ub.E("uniqid", item.Uniqid))
+
+	q, args := ub.Build()
+
+	_, err := tx.Exec(metric.MetricContext(ctx, "start bus item"), q, args...)
+	if err != nil {
+		return errors.Wrap(err, "failed to start bus item")
+	}
 
 	return nil
 }
@@ -255,12 +265,19 @@ func (r *PostgresBus) failItem(ctx context.Context, item *Item) error {
 	ub.Set(
 		ub.Assign("statue", BusStatusFailed),
 	)
-	ub.Where(ub.E("uniqid", item.uniqid))
+	ub.Where(ub.E("uniqid", item.Uniqid))
+
+	q, args := ub.Build()
+
+	_, err := r.db.Exec(metric.MetricContext(ctx, "insert to bus"), q, args...)
+	if err != nil {
+		return errors.Wrap(err, "failed to fail item")
+	}
 
 	return nil
 }
 
-func (r *PostgresBus) getItem(ctx context.Context, tx *db.Tx, queueName string) (*Item, error) {
+func (r *PostgresBus) getItem(ctx context.Context, tx *db.Tx, queueName string) (*Item, bool, error) {
 	sb := repository.Builder.NewSelectBuilder()
 	sb.Select(
 		"uniqid",
@@ -273,23 +290,34 @@ func (r *PostgresBus) getItem(ctx context.Context, tx *db.Tx, queueName string) 
 		"command_name",
 		"run_after",
 	).
+		From("bus").
 		ForUpdate().
 		Where(
-			sb.GE("run_after", time.Now()),
+			sb.LE("run_after", time.Now()),
 			sb.GT("attempt_left", 0),
 			sb.E("queue", queueName),
 			sb.Or(
 				sb.In("status", BusStatusNew, BusStatusFailed),
 				sb.And(
 					sb.E("status", BusStatusinProgress),
-					sb.G("timeout_at", time.Now()),
+					sb.GTE("timeout_at", time.Now()),
 				),
 			),
 		).
 		Limit(1).
 		OrderBy("created_at").
-		Asc().
-		SQL(" SKIP LOCKED")
+		Asc()
 
-	return nil, nil
+	q, args := sb.Build()
+
+	q += " SKIP LOCKED"
+
+	var item Item
+	err := tx.GetContext(metric.MetricContext(ctx, "get item from bus"), &item, q, args...)
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return nil, false, errors.Wrap(err, "failed to execute query")
+	}
+
+	return &item, !errors.Is(err, sql.ErrNoRows), nil
 }

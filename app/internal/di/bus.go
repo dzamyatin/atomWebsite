@@ -21,12 +21,16 @@ func newHandlerRegistry(
 	}
 }
 
-func newPostgresBus(db db.IDatabase) *bus.PostgresBus {
+func newPostgresBus(
+	db db.IDatabase,
+	logger *zap.Logger,
+) *bus.PostgresBus {
 	return bus.NewPostgresBus(
 		"main",
 		db,
 		30*time.Second,
 		5,
+		logger,
 	)
 }
 
