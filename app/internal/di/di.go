@@ -11,8 +11,8 @@ import (
 	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
 	"github.com/dzamyatin/atomWebsite/internal/service/cmd/executors"
-	"github.com/dzamyatin/atomWebsite/internal/service/command"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
+	"github.com/dzamyatin/atomWebsite/internal/service/handler"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	userservice "github.com/dzamyatin/atomWebsite/internal/service/user"
@@ -58,7 +58,7 @@ var set = wire.NewSet(
 	newBus,
 	newHandlerRegistry,
 	bus.NewMemoryBus,
-	command.NewRegisterHandler,
+	handler.NewRegisterHandler,
 	executors.NewMigrationCreateCommand,
 	executors.NewMigrationDownCommand,
 	executors.NewMigrationUpCommand,

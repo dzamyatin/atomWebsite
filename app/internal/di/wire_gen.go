@@ -14,8 +14,8 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
 	"github.com/dzamyatin/atomWebsite/internal/service/cmd/executors"
-	"github.com/dzamyatin/atomWebsite/internal/service/command"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
+	"github.com/dzamyatin/atomWebsite/internal/service/handler"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	"github.com/dzamyatin/atomWebsite/internal/service/user"
@@ -74,7 +74,15 @@ func InitializeBusProcessCommand(ctx context.Context) (*executors.BusProcessComm
 	}
 	database := db.NewDatabase(sqlxDB)
 	postgresBus := newPostgresBus(database, logger)
-	busProcessCommand := executors.NewBusProcessCommand(logger, postgresBus)
+	memoryBus := bus.NewMemoryBus()
+	userRepository := repository.NewUserRepository(database)
+	passwordEncoder := userservice.NewPasswordEncoder()
+	registrationValidator := validator.NewRegistrationValidator()
+	registration := usecase.NewRegistration(userRepository, passwordEncoder, registrationValidator, logger)
+	registerHandler := handler.NewRegisterHandler(registration)
+	handlerRegistry := newHandlerRegistry(registerHandler)
+	mainBus := newBus(postgresBus, memoryBus, handlerRegistry, logger)
+	busProcessCommand := executors.NewBusProcessCommand(logger, postgresBus, mainBus)
 	return busProcessCommand, nil
 }
 
@@ -100,7 +108,7 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 	login := usecase.NewLogin(logger, sequentialProvider, jwt)
 	postgresBus := newPostgresBus(database, logger)
 	memoryBus := bus.NewMemoryBus()
-	registerHandler := command.NewRegisterHandler(registration)
+	registerHandler := handler.NewRegisterHandler(registration)
 	handlerRegistry := newHandlerRegistry(registerHandler)
 	mainBus := newBus(postgresBus, memoryBus, handlerRegistry, logger)
 	authServer := grpc.NewAuthServer(registration, login, mainBus)
@@ -126,5 +134,5 @@ var set = wire.NewSet(
 	newServer,
 	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistration, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
 	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry, usecase.NewLogin, wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)), newSequentialProvider, wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)), newJWT, wire.Bind(new(bus.IBus), new(*bus.MainBus)), newBus,
-	newHandlerRegistry, bus.NewMemoryBus, command.NewRegisterHandler, executors.NewMigrationCreateCommand, executors.NewMigrationDownCommand, executors.NewMigrationUpCommand, newPostgresBus, executors.NewBusProcessCommand,
+	newHandlerRegistry, bus.NewMemoryBus, handler.NewRegisterHandler, executors.NewMigrationCreateCommand, executors.NewMigrationDownCommand, executors.NewMigrationUpCommand, newPostgresBus, executors.NewBusProcessCommand,
 )

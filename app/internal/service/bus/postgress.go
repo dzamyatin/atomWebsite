@@ -156,8 +156,7 @@ func (r *PostgresBus) process(ctx context.Context, queueName string) error {
 
 	err = r.handleItem(ctx, item)
 	if err != nil {
-		err = r.failItem(ctx, item)
-		if err != nil {
+		if err := r.failItem(ctx, item); err != nil {
 			return errors.Wrap(err, "failed to fail item")
 		}
 
@@ -178,7 +177,7 @@ func (r *PostgresBus) handleItem(ctx context.Context, item *Item) error {
 		return errors.Wrap(err, "failed to get command")
 	}
 
-	err = json.Unmarshal([]byte(item.Payload), &command)
+	err = json.Unmarshal([]byte(item.Payload), command)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to unmarshal command %s", item.CommandName))
 	}
@@ -194,7 +193,7 @@ func (r *PostgresBus) handleItem(ctx context.Context, item *Item) error {
 func (r *PostgresBus) successItem(ctx context.Context, item *Item) error {
 	ub := repository.Builder.NewUpdateBuilder()
 	ub.Set(
-		ub.Assign("statue", BusStatusSuccess),
+		ub.Assign("status", BusStatusSuccess),
 	)
 	ub.Where(ub.E("uniqid", item.Uniqid))
 
@@ -260,10 +259,15 @@ func (r *PostgresBus) startItem(ctx context.Context, tx *db.Tx, item *Item) erro
 	return nil
 }
 
+func (r *PostgresBus) choseTimeAfterFail(item *Item) time.Time {
+	return time.Now().Add(5 * time.Second)
+}
+
 func (r *PostgresBus) failItem(ctx context.Context, item *Item) error {
 	ub := repository.Builder.NewUpdateBuilder()
-	ub.Set(
-		ub.Assign("statue", BusStatusFailed),
+	ub.Update("bus").Set(
+		ub.Assign("status", BusStatusFailed),
+		ub.Assign("run_after", r.choseTimeAfterFail(item)),
 	)
 	ub.Where(ub.E("uniqid", item.Uniqid))
 

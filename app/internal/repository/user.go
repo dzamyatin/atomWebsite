@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/huandu/go-sqlbuilder"
@@ -45,6 +46,9 @@ func (u *UserRepository) GetUserByEmail(ctx context.Context, email string) (*ent
 	err := u.db.Get(ctx, &user, q, args...)
 
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrUserNotFound
+		}
 		return nil, errors.Wrap(err, "get user by email")
 	}
 

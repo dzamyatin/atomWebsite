@@ -4,12 +4,13 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
 	"github.com/dzamyatin/atomWebsite/internal/service/command"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
+	"github.com/dzamyatin/atomWebsite/internal/service/handler"
 	"go.uber.org/zap"
 	"time"
 )
 
 func newHandlerRegistry(
-	handler *command.RegisterHandler,
+	handler *handler.RegisterHandler,
 ) bus.HandlerRegistry {
 	return bus.HandlerRegistry{
 		{

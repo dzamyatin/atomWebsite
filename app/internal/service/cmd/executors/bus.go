@@ -21,6 +21,7 @@ type BusProcessCommand struct {
 func NewBusProcessCommand(
 	logger *zap.Logger,
 	bus *bus.PostgresBus,
+	_ *bus.MainBus, //to initialize handlers throgh di
 ) *BusProcessCommand {
 	return &BusProcessCommand{logger: logger, bus: bus}
 }
