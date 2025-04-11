@@ -1,33 +1,31 @@
 {
-  "name": "atomwebsite",
-  "version": "0.0.0",
+  "name": "vue-argon-design-system",
+  "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
-    "lint:eslint": "eslint . --fix",
-    "lint": "run-s lint:*",
-    "format": "prettier --write src/"
+    "serve": "vue-cli-service serve",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider cross-env CI=false vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "bootstrap-vue": "^2.0.4",
+    "flatpickr": "^4.5.1",
+    "nouislider": "^11.1.0",
+    "register-service-worker": "^1.5.2",
+    "vue": "^2.6.6",
+    "vue-flatpickr-component": "^8.1.1",
+    "vue-lazyload": "^1.2.6",
+    "vue-router": "^3.0.2",
+    "vue2-transitions": "^0.2.3"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
-    "@vitejs/plugin-vue": "^5.2.3",
-    "@vue/eslint-config-prettier": "^10.2.0",
-    "eslint": "^9.22.0",
-    "eslint-plugin-oxlint": "^0.16.0",
-    "eslint-plugin-vue": "~10.0.0",
-    "globals": "^16.0.0",
-    "npm-run-all2": "^7.0.2",
-    "oxlint": "^0.16.0",
-    "prettier": "3.5.3",
-    "vite": "^6.2.4",
-    "vite-plugin-vue-devtools": "^7.7.2"
+    "@vue/cli-plugin-babel": "^3.4.0",
+    "@vue/cli-plugin-eslint": "^3.4.0",
+    "@vue/cli-plugin-pwa": "^3.4.0",
+    "@vue/cli-service": "^3.4.0",
+    "node-sass": "^9.0.0",
+    "sass-loader": "10.5.2",
+    "vue-template-compiler": "^2.6.6",
+    "cross-env": "^7.0.3"
   }
 }

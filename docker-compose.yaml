@@ -30,7 +30,7 @@ services:
       - "./frontend:/app"
     command: "sh -c 'while true; do sleep 1; done'"
     ports:
-      - "8732:5173"
+      - "8732:8080"
 
   tool:
     container_name: ${PROJECTNAME}-tool

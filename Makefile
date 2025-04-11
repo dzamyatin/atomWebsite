@@ -19,7 +19,7 @@ sh:
 shf:
 	docker exec -ti $(PROJECTNAME)-frontend sh
 dev:
-	docker exec -ti $(PROJECTNAME)-frontend yarn dev
+	docker exec -ti $(PROJECTNAME)-frontend yarn serve
 gen:
 	docker exec -ti $(PROJECTNAME)-tool bash -c "go generate --tags wireinject ./..."
 migration-up:
