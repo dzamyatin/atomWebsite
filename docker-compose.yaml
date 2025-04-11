@@ -19,6 +19,19 @@ services:
     working_dir: /app
     command: "./app"
 
+  frontend:
+    container_name: ${PROJECTNAME}-frontend
+    build:
+      dockerfile: Dockerfile
+      context: frontend
+    working_dir:
+      /app
+    volumes:
+      - "./frontend:/app"
+    command: "sh -c 'while true; do sleep 1; done'"
+    ports:
+      - "8732:5173"
+
   tool:
     container_name: ${PROJECTNAME}-tool
     volumes:

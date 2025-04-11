@@ -16,6 +16,10 @@ logs:
 	docker logs -f $(PROJECTNAME)-tool
 sh:
 	docker exec -ti $(PROJECTNAME)-tool bash
+shf:
+	docker exec -ti $(PROJECTNAME)-frontend sh
+dev:
+	docker exec -ti $(PROJECTNAME)-frontend yarn dev
 gen:
 	docker exec -ti $(PROJECTNAME)-tool bash -c "go generate --tags wireinject ./..."
 migration-up:
