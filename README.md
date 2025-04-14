@@ -21,7 +21,7 @@
   - <span style="color:green">DONE</span> postgress provider
     - <span style="color:green">DONE</span> pg dispatch
     - <span style="color:green">DONE</span> pg handler
-- vue js admin
+- vue js admin (https://demos.creative-tim.com/vue-argon-design-system/documentation/?_ga=2.135621303.708551717.1744408739-559679860.1744408739)
   - login
   - payment
   - personal cabinet
