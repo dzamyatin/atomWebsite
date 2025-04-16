@@ -20,14 +20,20 @@
             <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
             </ul>
             <ul class="navbar-nav align-items-lg-center ml-lg-auto">
-                <li class="nav-item d-none d-lg-block ml-lg-4">
-                    <a href="https://www.creative-tim.com/product/vue-argon-design-system" target="_blank" rel="noopener"
-                       class="btn btn-neutral btn-icon">
-                <span class="btn-inner--icon">
-                  <i class="fa fa-cloud-download mr-2"></i>
-                </span>
+                <li class="nav-item">
+                  <router-link slot="brand" class="" to="/login">
+                    <base-button class="btn-3" type="primary" icon="ni ni-atom">Вход</base-button>
+                  </router-link>
+                </li>
+                <li class="nav-item">
+                  <router-link to="/download">
+                    <a href="#" target="_blank" rel="noopener" class="btn btn-neutral btn-icon">
+                        <span class="btn-inner--icon">
+                          <i class="fa fa-cloud-download mr-2"></i>
+                        </span>
                         <span class="nav-link-inner--text">Скачать</span>
                     </a>
+                  </router-link>
                 </li>
             </ul>
         </base-nav>

@@ -25,6 +25,7 @@
                           Browse Freely, Browse Securely
                         </p>
                         <div class="btn-wrapper">
+                          <router-link to="/download">
                             <base-button tag="a"
                                          href="https://www.creative-tim.com/product/vue-argon-design-system"
                                          class="mb-3 mb-sm-0"
@@ -32,6 +33,7 @@
                                          icon="ni ni-cloud-download-95">
                                 Скачать ATOM VPN
                             </base-button>
+                          </router-link>
                         </div>
                     </div>
                 </div>
