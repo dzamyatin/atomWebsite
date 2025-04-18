@@ -14,10 +14,11 @@
                     {{title}}
                 </a>
             </slot>
-            <navbar-toggle-button :toggled="toggled"
-                                  :target="contentId"
-                                  @click.native.stop="toggled = !toggled">
-            </navbar-toggle-button>
+<!--            <navbar-toggle-button :toggled="toggled"-->
+<!--                                  :target="contentId"-->
+<!--                                  @click.native.stop="toggled = !toggled"-->
+<!--            >-->
+<!--            </navbar-toggle-button>-->
 
             <slot name="container-after"></slot>
 

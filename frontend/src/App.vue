@@ -1,24 +1,20 @@
-<script setup>
-
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <div id="app">
+    <router-view name="header"></router-view>
+    <main>
+      <fade-transition origin="center" mode="out-in" :duration="250">
+        <router-view/>
+      </fade-transition>
+    </main>
+            <router-view name="footer"></router-view>
+  </div>
 </template>
+<script>
+import { FadeTransition } from "vue2-transitions";
 
-<style scoped>
-
-</style>
+export default {
+  components: {
+    FadeTransition
+  }
+};
+</script>

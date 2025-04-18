@@ -1,6 +1,23 @@
 const webpack = require('webpack');
 
 module.exports = {
+  // chainWebpack: config => {
+  //   config.resolve.alias.set('vue', '@vue/compat')
+  //
+  //   config.module
+  //       .rule('vue')
+  //       .use('vue-loader')
+  //       .tap(options => {
+  //         return {
+  //           ...options,
+  //           compilerOptions: {
+  //             compatConfig: {
+  //               MODE: 2,
+  //             },
+  //           },
+  //         }
+  //       })
+  // },
   configureWebpack: {
     // Set up all the aliases we use in our app.
     plugins: [
