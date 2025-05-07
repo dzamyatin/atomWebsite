@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { BNavbar, BNavbarDropdown, BNavbarItem } from 'buefy'
 import { useI18n } from 'vue-i18n'
+import NavProfile from "@/components/NavProfile.vue";
 
 const { t } = useI18n()
 </script>
@@ -26,18 +27,7 @@ const { t } = useI18n()
 
         <template #end>
           <b-navbar-item tag="div">
-            <div class="buttons">
-              <b-navbar-item tag="router-link" :to="{ path: '/registration' }">
-              <a class="button is-primary">
-                <strong>{{ t("nav.registration") }}</strong>
-              </a>
-              </b-navbar-item>
-              <b-navbar-item tag="router-link" :to="{ path: '/login' }">
-              <a class="button is-light" tag="router-link" :to="{ path: '/login' }">
-                {{ t("nav.signin") }}
-              </a>
-              </b-navbar-item>
-            </div>
+            <NavProfile></NavProfile>
           </b-navbar-item>
         </template>
       </b-navbar>

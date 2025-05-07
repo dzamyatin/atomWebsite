@@ -24,5 +24,14 @@ export default {
     },
     download: {
       download: "Скачать для"
-    }
+    },
+    page: {
+        registration: {
+            email: "Email адрес",
+            password: "Пароль",
+            registration: "Регистрация",
+            wrongpassword: "Пароль должен содержать символы верхнего и нижнего регистра, специальные символы и цифры",
+            wrongemail: "Email должен быть валидным",
+        },
+    },
 };
