@@ -10,6 +10,7 @@ export default {
         logoalt: "VPN Сервис"
     },
     nav: {
+        profile: "Личный кабинет",
         download: "Скачать",
         registration: `Регистрация`,
         signin: "Войти",

@@ -1,16 +1,23 @@
 <script setup>
 
 import {BNavbarItem} from "buefy";
-import { useI18n } from 'vue-i18n'
-import { useLoginStore } from './../stores/login.js'
-const { t } = useI18n()
+import {useI18n} from 'vue-i18n'
+import {useLoginStore} from './../stores/login.js'
+
+const {t} = useI18n()
 
 const store = useLoginStore();
 </script>
 
 <template>
-  <div v-if="store.isLoggedIn()">
-    Vue восхитителен!
+  <div v-if="store.isLoggedIn.valueOf()">
+    <div class="buttons">
+      <b-navbar-item tag="router-link" :to="{ path: '/profile' }">
+        <a class="button is-primary">
+          <strong>{{ t("nav.profile") }}</strong>
+        </a>
+      </b-navbar-item>
+    </div>
   </div>
   <div v-else>
     <div class="buttons">

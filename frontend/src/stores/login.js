@@ -1,26 +1,28 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
+import {ref, computed} from 'vue'
+import {defineStore} from 'pinia'
 
 export const useLoginStore = defineStore(
     'login',
     () => {
-    const jwt = ref("")
+        const jwt = ref("")
+        const isLoggedIn = ref(false)
 
-    function login(value) {
-      jwt.value = value
-    }
-    function logout() {
-      jwt.value = value
-    }
-    function isLoggedIn() {
-      return jwt.value != ""
-    }
+        function login(value) {
+            jwt.value = value
+            isLoggedIn.value = true
+        }
 
-    return {
-      jwt,
-      login,
-      logout,
-      isLoggedIn,
+        function logout() {
+            jwt.value = value
+            isLoggedIn.value = false
+        }
+
+
+        return {
+            jwt,
+            isLoggedIn,
+            login,
+            logout,
+        }
     }
-  }
 )
