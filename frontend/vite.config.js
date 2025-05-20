@@ -5,14 +5,17 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import commonjs from 'vite-plugin-commonjs'
+// import commonjs from 'vite-plugin-commonjs'
 // import commonjs from "vite-plugin-commonjs";
 // import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    'process.env': {}
+  },
   plugins: [
-    commonjs(),
+    // commonjs(),
     // nodePolyfills({
     //   // Include all Node.js polyfills
     //   include: ['process'],
@@ -26,11 +29,11 @@ export default defineConfig({
     })
   ],
 
-  build: {
-    commonjsOptions: {
-      transformMixedEsModules: true
-    },
-  },
+  // build: {
+  //   commonjsOptions: {
+  //     transformMixedEsModules: true
+  //   },
+  // },
   //   rollupOptions: {
   //     external: ['nock', 'aws-sdk', 'mock-aws-s3']
   //   },
