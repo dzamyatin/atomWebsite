@@ -22,6 +22,8 @@ dev:
 	sh -c "cd frontend && yarn dev"
 gen:
 	docker exec -ti $(PROJECTNAME)-tool bash -c "go generate --tags wireinject ./..."
+#fgen:
+#	find ./app/ -name '*.proto' | xargs pbjs -t static-module -w es6 -o ./frontend/src/gen/output.js
 migration-up:
 	docker exec -ti $(PROJECTNAME)-tool bash -c "go run ./ migration-up --config config-docker.yaml"
 migration-down:
