@@ -3,7 +3,7 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import Buefy from 'buefy';
-import 'buefy/dist/buefy.css';
+// import 'buefy/dist/buefy.css';
 import i18n from "./i18n"
 
 import App from './App.vue'

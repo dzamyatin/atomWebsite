@@ -4,33 +4,33 @@ volumes:
     driver: local
 
 services:
-  app:
-    container_name: ${PROJECTNAME}-app
-    build:
-      dockerfile: Dockerfile
-      context: app
-      target: production
-      args:
-        GRPCPORT: ${GRPCPORT}
-        GRPCSSLPORT: ${GRPCSSLPORT}
-        OPSPORT: ${OPSPORT}
-        HTTP: ${HTTP}
-        HTTPS: ${HTTPS}
-    working_dir: /app
-    command: "./app"
+#  app:
+#    container_name: ${PROJECTNAME}-app
+#    build:
+#      dockerfile: Dockerfile
+#      context: app
+#      target: production
+#      args:
+#        GRPCPORT: ${GRPCPORT}
+#        GRPCSSLPORT: ${GRPCSSLPORT}
+#        OPSPORT: ${OPSPORT}
+#        HTTP: ${HTTP}
+#        HTTPS: ${HTTPS}
+#    working_dir: /app
+#    command: "./app"
 
-  frontend:
-    container_name: ${PROJECTNAME}-frontend
-    build:
-      dockerfile: Dockerfile
-      context: frontend
-    working_dir:
-      /app
-    volumes:
-      - "./frontend:/app"
-    command: "sh -c 'while true; do sleep 1; done'"
-    ports:
-      - "5173:5173"
+#  frontend:
+#    container_name: ${PROJECTNAME}-frontend
+#    build:
+#      dockerfile: Dockerfile
+#      context: frontend
+#    working_dir:
+#      /app
+#    volumes:
+#      - "./frontend:/app"
+#    command: "sh -c 'while true; do sleep 1; done'"
+#    ports:
+#      - "5173:5173"
 
   tool:
     container_name: ${PROJECTNAME}-tool
