@@ -13,10 +13,13 @@
 
 
 import ApiClient from './ApiClient';
+import AuthLoginRequest from './model/AuthLoginRequest';
 import AuthLoginResponse from './model/AuthLoginResponse';
+import AuthRegisterRequest from './model/AuthRegisterRequest';
 import AuthRegisterResponse from './model/AuthRegisterResponse';
 import ProtobufAny from './model/ProtobufAny';
 import RpcStatus from './model/RpcStatus';
+import AuthApi from './api/AuthApi';
 
 
 /**
@@ -58,10 +61,22 @@ export {
     ApiClient,
 
     /**
+     * The AuthLoginRequest model constructor.
+     * @property {module:model/AuthLoginRequest}
+     */
+    AuthLoginRequest,
+
+    /**
      * The AuthLoginResponse model constructor.
      * @property {module:model/AuthLoginResponse}
      */
     AuthLoginResponse,
+
+    /**
+     * The AuthRegisterRequest model constructor.
+     * @property {module:model/AuthRegisterRequest}
+     */
+    AuthRegisterRequest,
 
     /**
      * The AuthRegisterResponse model constructor.
@@ -79,5 +94,11 @@ export {
      * The RpcStatus model constructor.
      * @property {module:model/RpcStatus}
      */
-    RpcStatus
+    RpcStatus,
+
+    /**
+    * The AuthApi service constructor.
+    * @property {module:api/AuthApi}
+    */
+    AuthApi
 };

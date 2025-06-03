@@ -7,13 +7,14 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write src/",
-    "client": "openapi-generator-cli generate -i ../app/proto/openapi/auth.swagger.json -g javascript -o ./src/gen/client"
+    "client": "openapi-generator-cli generate -i ../app/proto/auth.swagger.json -g javascript -o ./src/gen/client"
   },
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "^6.0.8",
     "@openapitools/openapi-generator-cli": "^2.20.2",
     "buefy": "npm:@ntohq/buefy-next@^0.2.0",
     "pinia": "^3.0.1",
+    "superagent": "^10.2.1",
     "vue": "^3.5.13",
     "vue-i18n": "^9.14.4",
     "vue-router": "^4.5.0"

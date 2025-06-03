@@ -16,8 +16,40 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1/dictionaries/positions": {
-      "get": {
+    "/login": {
+      "post": {
+        "operationId": "Auth_Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authLoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authLoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/register": {
+      "post": {
         "operationId": "Auth_Register",
         "responses": {
           "200": {
@@ -35,25 +67,12 @@
         },
         "parameters": [
           {
-            "name": "email",
-            "description": "Email of the user to register.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "description": "Password of the user to register.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "phone",
-            "description": "Either email or phone should be presented. (use messenger to send code: \"telegram\", ...)",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authRegisterRequest"
+            }
           }
         ],
         "tags": [
@@ -63,12 +82,46 @@
     }
   },
   "definitions": {
+    "authLoginRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Email of the user to login."
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the user to login."
+        },
+        "phone": {
+          "type": "string",
+          "title": "Either email or phone should be presented. (use messenger to send code: \"telegram\", ...)"
+        }
+      }
+    },
     "authLoginResponse": {
       "type": "object",
       "properties": {
         "token": {
           "type": "string",
           "description": "Auth token of the logged in user."
+        }
+      }
+    },
+    "authRegisterRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Email of the user to register."
+        },
+        "password": {
+          "type": "string",
+          "description": "Password of the user to register."
+        },
+        "phone": {
+          "type": "string",
+          "title": "Either email or phone should be presented. (use messenger to send code: \"telegram\", ...)"
         }
       }
     },

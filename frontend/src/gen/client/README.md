@@ -101,6 +101,18 @@ Please follow the [installation](#installation) instruction and execute the foll
 ```javascript
 var AuthProto = require('auth_proto');
 
+
+var api = new AuthProto.AuthApi()
+var body = new AuthProto.AuthLoginRequest(); // {AuthLoginRequest} 
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.authLogin(body, callback);
+
 ```
 
 ## Documentation for API Endpoints
@@ -109,11 +121,15 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AuthProto.AuthApi* | [**authLogin**](docs/AuthApi.md#authLogin) | **POST** /login | 
+*AuthProto.AuthApi* | [**authRegister**](docs/AuthApi.md#authRegister) | **POST** /register | 
 
 
 ## Documentation for Models
 
+ - [AuthProto.AuthLoginRequest](docs/AuthLoginRequest.md)
  - [AuthProto.AuthLoginResponse](docs/AuthLoginResponse.md)
+ - [AuthProto.AuthRegisterRequest](docs/AuthRegisterRequest.md)
  - [AuthProto.AuthRegisterResponse](docs/AuthRegisterResponse.md)
  - [AuthProto.ProtobufAny](docs/ProtobufAny.md)
  - [AuthProto.RpcStatus](docs/RpcStatus.md)

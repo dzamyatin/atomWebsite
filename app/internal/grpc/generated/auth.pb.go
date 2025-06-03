@@ -247,10 +247,10 @@ const file_auth_proto_rawDesc = "" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +
 	"\x05phone\x18\x03 \x01(\tR\x05phone\"%\n" +
 	"\rLoginResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token2\x9b\x01\n" +
-	"\x04Auth\x12a\n" +
-	"\bRegister\x12\x15.auth.RegisterRequest\x1a\x16.auth.RegisterResponse\"&\x82\xd3\xe4\x93\x02 \x12\x1e/api/v1/dictionaries/positions\x120\n" +
-	"\x05Login\x12\x12.auth.LoginRequest\x1a\x13.auth.LoginResponseB\"Z github.com/dzamyatin/atomWebsiteb\x06proto3"
+	"\x05token\x18\x01 \x01(\tR\x05token2\x9c\x01\n" +
+	"\x04Auth\x12O\n" +
+	"\bRegister\x12\x15.auth.RegisterRequest\x1a\x16.auth.RegisterResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/register\x12C\n" +
+	"\x05Login\x12\x12.auth.LoginRequest\x1a\x13.auth.LoginResponse\"\x11\x82\xd3\xe4\x93\x02\v:\x01*\"\x06/loginB\"Z github.com/dzamyatin/atomWebsiteb\x06proto3"
 
 var (
 	file_auth_proto_rawDescOnce sync.Once

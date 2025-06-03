@@ -10,10 +10,16 @@ option go_package = "github.com/dzamyatin/atomWebsite";
 service Auth {
   rpc Register (RegisterRequest) returns (RegisterResponse) {
     option(google.api.http) = {
-      get: "/api/v1/dictionaries/positions"
+      post: "/register"
+      body: "*"
     };
   };
-  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Login (LoginRequest) returns (LoginResponse) {
+    option(google.api.http) = {
+      post: "/login"
+      body: "*"
+    };
+  };
 }
 
 message RegisterRequest {

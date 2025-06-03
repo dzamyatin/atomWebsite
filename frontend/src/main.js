@@ -10,6 +10,8 @@ import router from './router'
 import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
 
+import "./client/client.js"
+
 const app = createApp(App)
 
 app.use(createPinia())
