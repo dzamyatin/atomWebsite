@@ -2,10 +2,17 @@ syntax = "proto3";
 
 package auth;
 
+import "google/api/annotations.proto";
+//import "google/api/http.proto";
+
 option go_package = "github.com/dzamyatin/atomWebsite";
 
 service Auth {
-  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc Register (RegisterRequest) returns (RegisterResponse) {
+    option(google.api.http) = {
+      get: "/api/v1/dictionaries/positions"
+    };
+  };
   rpc Login (LoginRequest) returns (LoginResponse);
 }
 

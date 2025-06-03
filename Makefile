@@ -32,3 +32,4 @@ migration-create:
 	docker exec -ti $(PROJECTNAME)-tool bash -c "go run ./ migration-create --config config-docker.yaml --name new --type sql"
 tidy:
 	sh -c "cd app && go mod tidy"
+# npm install @openapitools/openapi-generator-cli -g

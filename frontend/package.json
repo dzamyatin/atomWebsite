@@ -6,10 +6,12 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "client": "openapi-generator-cli generate -i ../app/proto/openapi/auth.swagger.json -g javascript -o ./src/gen/client"
   },
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "^6.0.8",
+    "@openapitools/openapi-generator-cli": "^2.20.2",
     "buefy": "npm:@ntohq/buefy-next@^0.2.0",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",
@@ -19,7 +21,6 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",
     "prettier": "3.5.3",
-    "ts-loader": "^8.0.14",
     "vite": "^6.3.3",
     "vite-plugin-vue-devtools": "^7.7.2"
   },
