@@ -26,6 +26,8 @@ protoc \
   ../app/proto/auth.proto
 
 
+webpack
+
 ###es6
   protoc \
     --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts \

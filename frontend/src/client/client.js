@@ -3,7 +3,8 @@ import * as AuthService from "../../ts/_proto/auth_pb_service";
 const Auth = AuthService.Auth;
 import * as AuthPb from "../../ts/_proto/auth_pb";
 
-const host = "http://localhost:9090";
+const host = "http://localhost:8502";
+// const host = "localhost:8502";
 
 console.log("tst1")
 
@@ -12,6 +13,7 @@ function Register() {
     req.setEmail("daniil@dasdas.ru")
     req.setPhone("+79297145267")
     req.setPassword("hellowirld")
+
     console.log("tst2")
 
     console.log(grpc)
