@@ -24,3 +24,14 @@ protoc \
   --go-grpc_out=./go/_proto \
   --ts_out=service=grpc-web:./ts/_proto \
   ../app/proto/auth.proto
+
+
+###es6
+  protoc \
+    --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts \
+    --plugin=protoc-gen-go=${GOBIN}/protoc-gen-go \
+    -I ../app/proto \
+    --js_out=import_style=es6,binary:./ts/_proto \
+    --go-grpc_out=./go/_proto \
+    --ts_out=service=grpc-web:./ts/_proto \
+    ../app/proto/auth.proto

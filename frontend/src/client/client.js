@@ -1,35 +1,43 @@
 import {grpc} from "@improbable-eng/grpc-web";
-import {Auth} from "../../ts/_proto/auth_pb_service";
-import {
-    RegisterRequest,
-    RegisterResponse,
-    LoginRequest,
-    LoginResponse,
-} from "../../ts/_proto/auth_pb";
+import * as AuthService from "../../ts/_proto/auth_pb_service";
+const Auth = AuthService.Auth;
+import * as AuthPb from "../../ts/_proto/auth_pb";
 
 const host = "http://localhost:9090";
 
+console.log("tst1")
+
 function Register() {
-    const req = new RegisterRequest();
+    const req = new AuthPb.RegisterRequest();
     req.setEmail("daniil@dasdas.ru")
     req.setPhone("+79297145267")
     req.setPassword("hellowirld")
+    console.log("tst2")
 
+    console.log(grpc)
     grpc.unary(
-        Auth,
+        Auth.Register,
         {
-            request: getBookRequest,
+            request: req,
             host: host,
             onEnd: res => {
-                const { status, statusMessage, headers, message, trailers } = res;
-                console.log("getBook.onEnd.status", status, statusMessage);
-                console.log("getBook.onEnd.headers", headers);
+                console.log("tst3")
+                const {
+                    status,
+                    statusMessage,
+                    headers,
+                    message,
+                    trailers
+                } = res;
+                console.log("Register.onEnd.status", status, statusMessage);
+                console.log("Register.onEnd.headers", headers);
                 if (status === grpc.Code.OK && message) {
-                    console.log("getBook.onEnd.message", message.toObject());
+                    console.log("Register.onEnd.message", message.toObject());
                 }
-                console.log("getBook.onEnd.trailers", trailers);
+                console.log("Register.onEnd.trailers", trailers);
             }
         }
     )
 }
+
 Register()

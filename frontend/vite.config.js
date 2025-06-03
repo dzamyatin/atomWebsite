@@ -1,13 +1,9 @@
 import { fileURLToPath, URL } from 'node:url'
-import { resolve, dirname } from 'node:path'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-// import commonjs from 'vite-plugin-commonjs'
-// import commonjs from "vite-plugin-commonjs";
-// import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import commonjs from 'vite-plugin-commonjs'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,12 +11,7 @@ export default defineConfig({
     'process.env': {}
   },
   plugins: [
-    // commonjs(),
-    // nodePolyfills({
-    //   // Include all Node.js polyfills
-    //   include: ['process'],
-    // }),
-    // commonjs(),
+    commonjs(),
     vue(),
     vueDevTools(),
     VueI18nPlugin({
@@ -29,18 +20,11 @@ export default defineConfig({
     })
   ],
 
-  // build: {
-  //   commonjsOptions: {
-  //     transformMixedEsModules: true
-  //   },
-  // },
-  //   rollupOptions: {
-  //     external: ['nock', 'aws-sdk', 'mock-aws-s3']
-  //   },
-  //   commonjsOptions: {
-  //     transformMixedEsModules: true
-  //   },
-  // },
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
