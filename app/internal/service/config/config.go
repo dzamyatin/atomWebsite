@@ -14,6 +14,7 @@ type AppConfig struct {
 	Db         DbConfig `mapstructure:"db"`
 	AddrMetric string   `mapstructure:"addr_metric"`
 	AddrGrpc   string   `mapstructure:"addr_grpc"`
+	AddHttp    string   `mapstructure:"addr_http"`
 }
 
 type DbConfig struct {

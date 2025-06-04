@@ -32,12 +32,17 @@ func newGRPCProcessManager(
 	listener *process.SignalListener,
 	db *sql.DB,
 	metric *metric.Registry,
+	server *grpcservice2.HTTPServer,
 ) *process.ProcessManager {
 	return process.NewProcessManager(
 		logger,
 		process.Process{
 			Name:   "grpc server",
 			Object: serv,
+		},
+		process.Process{
+			Name:   "http server",
+			Object: server,
 		},
 		process.Process{
 			Name:   "signal listener",
@@ -197,5 +202,14 @@ func newJWT(logger *zap.Logger) *serviceauth.JWT {
 		"hella1245912dasdas",
 		128*time.Hour,
 		logger,
+	)
+}
+
+func newHTTPServer(
+	server grpcservice2.AuthServer,
+) *grpcservice2.HTTPServer {
+	return grpcservice2.NewHTTPServer(
+		server,
+		getConfig().AddHttp,
 	)
 }

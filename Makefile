@@ -8,8 +8,6 @@ up:
 	docker compose -f docker-compose.yaml up -d
 down:
 	 docker compose -f docker-compose.yaml down
-dev:
-	sh -c "cd frontend && yarn dev"
 gen:
 	go generate --tags wireinject ./...
 migration-up:
@@ -20,6 +18,8 @@ migration-create:
 	go run ./ migration-create --config config-docker.yaml --name new --type sql
 tidy:
 	sh -c "cd app && go mod tidy"
+wire:
+	sh -c "cd app/internal/di && go tool wire"
 grpc:
 	sh -c "cd app && go run ./ grpc --config config-local.yaml"
 dev:
