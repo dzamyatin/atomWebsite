@@ -18,3 +18,15 @@ GRPC localhost:8502/auth.Auth/Register
 
 ###
 GET http://localhost:9090/metrics
+
+###
+POST localhost:8503/register
+
+{
+  "email": "test@test.ru",
+  "password": "pwd",
+  "phone": "+79991112233"
+}
+
+###
+OPTIONS localhost:8503/register
