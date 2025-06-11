@@ -27,7 +27,6 @@
   - personal cabinet
   - download app
 - nginx for static
-- begin transaction should return "metric" tx
 - registration
   - email verification
     - smtp server
@@ -40,24 +39,28 @@
   - statefulset for postgress
   - deploy for app
   - volume
+- phone verifiction
+  - telegram verify
+  - whatsup|vk / rollback messager
 
 ## backlog
 - test cover
 - kafka instead of postgress
+- websockets (notify for some events) discovery a way how to handle communication
 - code generation of decorators (find a package) to add metrics
 - helm
-- phone verifiction
-  - telegram verify
-  - whatsup|vk / rollback messager
-- metric prometheus (see: https://habr.com/ru/companies/otus/articles/769806/)
-  - prometeus
-  - grafana
-    - dashboard
-      0) GC metric (mem, cpu, GC time, heap size)
-      1) all request timing
-      2) average request time
-      3) all db query timing (should looks like bukets .01, .1, ... 10) To IDatabase
-      4) average query time
+- metrics:
+  - db metrics should be done through context and some decarator to handle it
+  - ?begin transaction should return "metric" tx (for metric decorator)
+  - metric prometheus (see: https://habr.com/ru/companies/otus/articles/769806/)
+    - prometeus
+    - grafana
+      - dashboard
+        0) GC metric (mem, cpu, GC time, heap size)
+        1) all request timing
+        2) average request time
+        3) all db query timing (should looks like bukets .01, .1, ... 10) To IDatabase
+        4) average query time
 
 ## interesting
 - check http to grpc proxy (see: https://habr.com/ru/articles/658769/)
