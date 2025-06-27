@@ -9,13 +9,13 @@ up:
 down:
 	 docker compose -f docker-compose.yaml down
 gen:
-	go generate --tags wireinject ./...
+	sh -c "cd app &&go generate --tags wireinject ./..."
 migration-up:
-	go run ./ migration-up --config config-docker.yaml
+	sh -c "cd app &&go run ./ migration-up --config config-local.yaml"
 migration-down:
-	go run ./ migration-down --config config-docker.yaml
+	sh -c "cd app &&go run ./ migration-down --config config-local.yaml"
 migration-create:
-	go run ./ migration-create --config config-docker.yaml --name new --type sql
+	sh -c "cd app &&go run ./ migration-create --config config-local.yaml --name new --type sql"
 tidy:
 	sh -c "cd app && go mod tidy"
 wire:

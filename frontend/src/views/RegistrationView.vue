@@ -3,12 +3,14 @@ import {useI18n} from 'vue-i18n'
 import {useLoginStore} from './../stores/login.js'
 import {ref} from "vue";
 import router from "@/router/index.js";
+import {register} from "./../client/client"
 
 const {t} = useI18n()
 const store = useLoginStore()
 
 const email = ref("")
 const password = ref("")
+const errorMessage = ref("")
 
 const disableRegisterButton = ref(false)
 
@@ -59,17 +61,34 @@ function checkPassword() {
   return false
 }
 
-function registration() {
+async function registration() {
   disableRegisterButton.value = true
 
-  setTimeout(function () {
-        disableRegisterButton.value = false
-        router.push('/profile')
-        console.log(store.isLoggedIn)
-        store.login("some")
-      },
-      1000,
+  let response = await register(
+      email.value,
+      password.value,
   )
+
+  console.log("done")
+  console.log(response)
+
+  if (response.error != null) {
+    disableRegisterButton.value = false
+    errorMessage.value = response.response?.body?.message
+    return
+  }
+
+  router.push('/profile')
+  store.login("some")
+
+  // setTimeout(function () {
+  //       disableRegisterButton.value = false
+  //       router.push('/profile')
+  //       console.log(store.isLoggedIn)
+  //       store.login("some")
+  //     },
+  //     1000,
+  // )
 }
 </script>
 <template>
@@ -94,6 +113,7 @@ function registration() {
                    :message="wrongPasswordMessage">
             <b-input v-model="password"></b-input>
           </b-field>
+          {{errorMessage}}
           <b-button
               v-on:click="registration"
               :disabled="disableRegisterButton"
