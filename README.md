@@ -22,14 +22,15 @@
     - <span style="color:green">DONE</span> pg dispatch
     - <span style="color:green">DONE</span> pg handler
 - vue js admin (https://demos.creative-tim.com/vue-argon-design-system/documentation/?_ga=2.135621303.708551717.1744408739-559679860.1744408739)
+  - <span style="color:green">DONE</span> registration
   - login
   - payment
   - personal cabinet
   - download app
-- nginx for static
 - registration
   - email verification
     - smtp server
+- nginx for static
 - grpc client
 - reserch which payment method are better (yandexpay)
 - payment implementation

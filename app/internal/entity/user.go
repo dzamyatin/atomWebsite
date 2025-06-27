@@ -1,15 +1,18 @@
 package entity
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"github.com/guregu/null/v6"
+)
 
 type User struct {
-	UUID         uuid.UUID `db:"uuid"`
-	Email        string    `db:"email"`
-	Phone        string    `db:"phone"`
-	PasswordHash string    `db:"password"`
+	UUID         uuid.UUID          `db:"uuid"`
+	Email        null.Value[string] `db:"email"`
+	Phone        null.Value[string] `db:"phone"`
+	PasswordHash string             `db:"password"`
 }
 
-func NewUser(email, phone string) *User {
+func NewUser(email, phone null.Value[string]) *User {
 	return &User{
 		Email: email,
 		Phone: phone,

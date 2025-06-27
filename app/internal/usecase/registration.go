@@ -5,7 +5,6 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	"github.com/dzamyatin/atomWebsite/internal/request"
-	"github.com/dzamyatin/atomWebsite/internal/validator"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -17,21 +16,21 @@ var (
 type Registration struct {
 	userRepository  repository.IUserRepository
 	passwordEncoder entity.PasswordEncoder
-	validator       validator.IRegistrationValidator
-	logger          *zap.Logger
+	//validator       validator.IRegistrationValidator
+	logger *zap.Logger
 }
 
 func NewRegistration(
 	userRepository repository.IUserRepository,
 	passwordEncoder entity.PasswordEncoder,
-	validator validator.IRegistrationValidator,
+	//validator validator.IRegistrationValidator,
 	logger *zap.Logger,
 ) *Registration {
 	return &Registration{
 		userRepository:  userRepository,
 		passwordEncoder: passwordEncoder,
-		validator:       validator,
-		logger:          logger,
+		//validator:       validator,
+		logger: logger,
 	}
 }
 
@@ -40,7 +39,10 @@ func (r *Registration) Execute(ctx context.Context, request request.Registration
 		return err
 	}
 
-	user := entity.NewUser(request.Email, request.Phone)
+	user := entity.NewUser(
+		request.Email,
+		request.Phone,
+	)
 
 	if request.Password != "" {
 		err := user.AddPassword(request.Password, r.passwordEncoder)
@@ -59,32 +61,39 @@ func (r *Registration) Execute(ctx context.Context, request request.Registration
 }
 
 func (r *Registration) validate(ctx context.Context, request request.RegistrationRequest) error {
-	if err := r.validator.Validate(request); err != nil {
-		return err
+	//if err := r.validator.Validate(request); err != nil {
+	//	return err
+	//}
+	if !request.Phone.Valid && !request.Email.Valid {
+		return errors.New("one of phone or email should be specified")
 	}
 
-	_, err := r.userRepository.GetUserByPhone(ctx, request.Phone)
+	if request.Phone.Valid {
+		_, err := r.userRepository.GetUserByPhone(ctx, request.Phone.V)
 
-	if err == nil {
-		return ErrUserAlreadyExists
+		if err == nil {
+			return ErrUserAlreadyExists
+		}
+
+		if !errors.Is(err, repository.ErrUserNotFound) {
+			r.logger.Error("User repository error get by phone", zap.Error(err))
+
+			return errors.Wrap(err, "cant get user by phone")
+		}
 	}
 
-	if !errors.Is(err, repository.ErrUserNotFound) {
-		r.logger.Error("User repository error get by phone", zap.Error(err))
+	if request.Email.Valid {
+		_, err := r.userRepository.GetUserByEmail(ctx, request.Email.V)
 
-		return errors.Wrap(err, "cant get user by phone")
-	}
+		if err == nil {
+			return ErrUserAlreadyExists
+		}
 
-	_, err = r.userRepository.GetUserByEmail(ctx, request.Email)
+		if !errors.Is(err, repository.ErrUserNotFound) {
+			r.logger.Error("User repository error get by email", zap.Error(err))
 
-	if err == nil {
-		return ErrUserAlreadyExists
-	}
-
-	if !errors.Is(err, repository.ErrUserNotFound) {
-		r.logger.Error("User repository error get by email", zap.Error(err))
-
-		return errors.Wrap(err, "cant get user by email")
+			return errors.Wrap(err, "cant get user by email")
+		}
 	}
 
 	return nil

@@ -6,6 +6,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/request"
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
+	"github.com/guregu/null/v6"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -33,9 +34,9 @@ func (r AuthServer) Register(ctx context.Context, req *atomWebsite.RegisterReque
 	err := r.registerUseCase.Execute(
 		ctx,
 		request.RegistrationRequest{
-			Email:    req.Email,
+			Email:    null.NewValue(req.Email, req.Email != ""),
 			Password: req.Password,
-			Phone:    req.Phone,
+			Phone:    null.NewValue(req.Phone, req.Phone != ""),
 		},
 	)
 

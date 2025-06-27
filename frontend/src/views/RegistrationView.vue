@@ -113,7 +113,9 @@ async function registration() {
                    :message="wrongPasswordMessage">
             <b-input v-model="password"></b-input>
           </b-field>
-          {{errorMessage}}
+          <div v-if="errorMessage" class="notification is-danger">
+            {{errorMessage}}
+          </div>
           <b-button
               v-on:click="registration"
               :disabled="disableRegisterButton"

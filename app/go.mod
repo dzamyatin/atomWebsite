@@ -17,6 +17,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
+	github.com/guregu/null/v6 v6.0.0
 	github.com/huandu/go-sqlbuilder v1.34.0
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/jmoiron/sqlx v1.4.0
