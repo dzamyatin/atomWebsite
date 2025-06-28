@@ -20,7 +20,20 @@ service Auth {
       body: "*"
     };
   };
+  rpc ConfirmEmail (ConfirmEmailRequest) returns (ConfirmEmailResponse) {
+    option(google.api.http) = {
+      post: "/confirm-email"
+      body: "*"
+    };
+  };
 }
+
+message ConfirmEmailRequest {
+  string email = 1;
+  string code = 2;
+}
+
+message ConfirmEmailResponse {}
 
 message RegisterRequest {
   string email = 1; // Email of the user to register.

@@ -78,7 +78,8 @@ async function registration() {
     return
   }
 
-  router.push('/profile')
+  // router.push('/profile')
+  router.push('/email-confirmation')
   store.login("some")
 
   // setTimeout(function () {

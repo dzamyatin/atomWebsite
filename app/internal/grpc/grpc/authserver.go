@@ -30,6 +30,13 @@ func NewAuthServer(
 	}
 }
 
+func (r AuthServer) ConfirmEmail(
+	context.Context,
+	*atomWebsite.ConfirmEmailRequest,
+) (*atomWebsite.ConfirmEmailResponse, error) {
+	return nil, nil
+}
+
 func (r AuthServer) Register(ctx context.Context, req *atomWebsite.RegisterRequest) (*atomWebsite.RegisterResponse, error) {
 	err := r.registerUseCase.Execute(
 		ctx,

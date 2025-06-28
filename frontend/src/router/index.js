@@ -5,6 +5,7 @@ import RegistrationView from '../views/RegistrationView.vue'
 import LoginView from "../views/LoginView.vue"
 import ProfileView from "../views/ProfileView.vue"
 import PayView from "../views/PayView.vue"
+import EmailConfirmation from "@/views/EmailConfirmation.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,11 @@ const router = createRouter({
       path: '/registration',
       name: 'registration',
       component: RegistrationView,
+    },
+    {
+      path: '/email-confirmation',
+      name: 'email-confirmation',
+      component: EmailConfirmation,
     },
     {
       path: '/login',

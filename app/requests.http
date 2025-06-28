@@ -30,3 +30,11 @@ POST localhost:8503/register
 
 ###
 OPTIONS localhost:8503/register
+
+###
+POST localhost:8503/confirm-email
+
+{
+  "email": "test@test.ru",
+  "code": "123"
+}

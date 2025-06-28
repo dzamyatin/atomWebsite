@@ -5,6 +5,7 @@ export default {
       pay: "Оплата",
       profile: "Личный кабинет",
       registration: "Регистрация",
+      emailconfirmation: "Подтвердите email"
     },
     header: {
         logoalt: "VPN Сервис"
@@ -27,6 +28,9 @@ export default {
       download: "Скачать для"
     },
     page: {
+        "email-confirmation": {
+            send: "Отправить"
+        },
         registration: {
             email: "Email адрес",
             password: "Пароль",
