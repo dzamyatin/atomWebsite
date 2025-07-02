@@ -27,6 +27,7 @@ require (
 	github.com/prometheus/client_golang v1.21.1
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.10.0
+	github.com/wneessen/go-mail v0.6.2
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.33.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20250303144028-a0af3efb3deb
