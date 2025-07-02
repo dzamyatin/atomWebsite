@@ -24,12 +24,29 @@
 - vue js admin (https://demos.creative-tim.com/vue-argon-design-system/documentation/?_ga=2.135621303.708551717.1744408739-559679860.1744408739)
   - <span style="color:green">DONE</span> registration
   - login
+  - email-confirm
   - payment
   - personal cabinet
   - download app
 - registration
   - email verification
     - smtp server
+    ```
+    https://dev.to/wneessen/sending-mails-in-go-the-easy-way-1lm7
+    
+    some info? https://habr.com/ru/articles/564750/
+    
+    smtp server: https://habr.com/ru/articles/673700/
+    
+    msmtp as alternative to sendmail https://askubuntu.com/questions/1363136/configuring-sendmail-on-ubuntu-20-04
+    
+    try as smtp https://smtp.bz/
+    
+    https://poste.io/doc/getting-started
+    
+    https://docs.mailcow.email/getstarted/prerequisite-dns/#dkim-spf-and-dmarc
+    ```
+    
 - nginx for static
 - grpc client
 - reserch which payment method are better (yandexpay)
