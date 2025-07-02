@@ -7,13 +7,13 @@ import (
 )
 
 type MailerAtLeastOneSuccess struct {
-	mailers []IMailerService
+	mailers []IMailer
 	logger  *zap.Logger
 }
 
 func NewMailerAtLeastOneSuccess(
 	logger *zap.Logger,
-	mailers []IMailerService,
+	mailers []IMailer,
 ) *MailerAtLeastOneSuccess {
 	return &MailerAtLeastOneSuccess{
 		logger:  logger,
@@ -22,6 +22,10 @@ func NewMailerAtLeastOneSuccess(
 }
 
 func (r *MailerAtLeastOneSuccess) SendMail(ctx context.Context, to, subject, body string) error {
+	if len(r.mailers) == 0 {
+		return errors.New("mailers is empty")
+	}
+
 	var err error
 	for _, mailer := range r.mailers {
 		err = mailer.SendMail(ctx, to, subject, body)

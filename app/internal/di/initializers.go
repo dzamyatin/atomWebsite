@@ -8,6 +8,8 @@ import (
 	grpcservice2 "github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
+	"github.com/dzamyatin/atomWebsite/internal/service/config"
+	servicemail "github.com/dzamyatin/atomWebsite/internal/service/mail"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -17,6 +19,7 @@ import (
 	_ "github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"golang.org/x/exp/slices"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -25,6 +28,54 @@ import (
 	"os"
 	"time"
 )
+
+func newMailer(
+	logger *zap.Logger,
+) servicemail.IMailer {
+	smtpMap := getConfig().Mailer.Smtp
+
+	smtps := make([]config.SmtpConfig, len(smtpMap))
+
+	i := 0
+	for _, smtp := range smtpMap {
+		smtps[i] = smtp
+		i++
+	}
+
+	slices.SortFunc(
+		smtps,
+		func(a, b config.SmtpConfig) int {
+			if a.Weight > b.Weight {
+				return 1
+			}
+
+			if a.Weight < b.Weight {
+				return -1
+			}
+
+			return 0
+		},
+	)
+
+	mailers := make([]servicemail.IMailer, len(smtps))
+	for i, smtp := range smtps {
+		mailers[i] = servicemail.NewMailerGomailSmtp(
+			smtp.Host,
+			smtp.Port,
+			smtp.Username,
+			smtp.Password,
+			logger,
+			smtp.Sender,
+			smtp.SSL,
+			smtp.Timeout,
+		)
+	}
+
+	return servicemail.NewMailerAtLeastOneSuccess(
+		logger,
+		mailers,
+	)
+}
 
 func newGRPCProcessManager(
 	logger *zap.Logger,

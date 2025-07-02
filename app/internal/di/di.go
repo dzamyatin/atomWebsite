@@ -15,6 +15,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/handler"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
+	"github.com/dzamyatin/atomWebsite/internal/service/time"
 	userservice "github.com/dzamyatin/atomWebsite/internal/service/user"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
 	usecasemigration "github.com/dzamyatin/atomWebsite/internal/usecase/migration"
@@ -65,6 +66,11 @@ var set = wire.NewSet(
 	newPostgresBus,
 	executors.NewBusProcessCommand,
 	newHTTPServer,
+	newMailer,
+	servicetime.NewTime,
+	wire.Bind(new(servicetime.ITime), new(*servicetime.Time)),
+	repository.NewRandomizerRepository,
+	wire.Bind(new(repository.IRandomizerRepository), new(*repository.RandomizerRepository)),
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

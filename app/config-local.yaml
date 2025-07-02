@@ -7,3 +7,23 @@ db:
 addr_metric: ":9090"
 addr_grpc: ":8502"
 addr_http: ":8503"
+mailer:
+  smtp:
+    yandex1:
+      weight: 100
+      host: "smtp.yandex.com"
+      port: 465
+      username: "dvzamiatin@yandex.ru"
+      password: "ugiriayxnmundnex"
+      sender: "dvzamiatin@yandex.ru"
+      ssl: true
+      timeout: "1s"
+    yandex2:
+      weight: 10
+      host: "smtp.yandex.com"
+      port: 465
+      username: "dvzamiatin@yandex.ru"
+      password: "ugiriayxnmundnex"
+      sender: "dvzamiatin@yandex.ru"
+      ssl: true
+      timeout: "1s"

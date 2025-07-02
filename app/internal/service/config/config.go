@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"github.com/spf13/viper"
+	"time"
 )
 
 var (
@@ -10,11 +11,27 @@ var (
 	ErrConfigUnmarshalling = errors.New("config unmarshalling failed")
 )
 
+type SmtpConfig struct {
+	Weight   uint64        `mapstructure:"weight"`
+	Host     string        `mapstructure:"host"`
+	Port     uint32        `mapstructure:"port"`
+	Username string        `mapstructure:"username"`
+	Password string        `mapstructure:"password"`
+	Sender   string        `mapstructure:"sender"`
+	SSL      bool          `mapstructure:"ssl"`
+	Timeout  time.Duration `mapstructure:"timeout"`
+}
+
+type MailerConfig struct {
+	Smtp map[string]SmtpConfig `mapstructure:"smtp"`
+}
+
 type AppConfig struct {
-	Db         DbConfig `mapstructure:"db"`
-	AddrMetric string   `mapstructure:"addr_metric"`
-	AddrGrpc   string   `mapstructure:"addr_grpc"`
-	AddHttp    string   `mapstructure:"addr_http"`
+	Db         DbConfig     `mapstructure:"db"`
+	AddrMetric string       `mapstructure:"addr_metric"`
+	AddrGrpc   string       `mapstructure:"addr_grpc"`
+	AddHttp    string       `mapstructure:"addr_http"`
+	Mailer     MailerConfig `mapstructure:"mailer"`
 }
 
 type DbConfig struct {
