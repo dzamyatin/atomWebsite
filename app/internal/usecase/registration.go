@@ -92,6 +92,7 @@ func (r *Registration) validate(ctx context.Context, request request.Registratio
 	//if err := r.validator.Validate(request); err != nil {
 	//	return err
 	//}
+
 	if !request.Phone.Valid && !request.Email.Valid {
 		return errors.New("one of phone or email should be specified")
 	}

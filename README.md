@@ -25,12 +25,22 @@
   - <span style="color:green">DONE</span> registration
   - login
   - email-confirm
+    - <span style="color:green">DONE</span> yandex smtp
+    - google smtp
+    - mail smtp
+  - phone-confirm
+    - telegram
+    - whatsapp
+    - vk
   - payment
   - personal cabinet
   - download app
+  - forgot password
+    - for email
+    - for phone
 - registration
   - email verification
-    - smtp server
+    - <span style="color:lightblue">WONT DO</span> smtp server (decided to use yandex.ru smtp, google smtp etc. instead)
     ```
     https://dev.to/wneessen/sending-mails-in-go-the-easy-way-1lm7
     
@@ -83,3 +93,6 @@
 ## interesting
 - check http to grpc proxy (see: https://habr.com/ru/articles/658769/)
 - http server (which point?)
+
+## dont forgot
+to add traffic limit to jwt key
