@@ -6,10 +6,12 @@ import (
 )
 
 type User struct {
-	UUID         uuid.UUID          `db:"uuid"`
-	Email        null.Value[string] `db:"email"`
-	Phone        null.Value[string] `db:"phone"`
-	PasswordHash string             `db:"password"`
+	UUID           uuid.UUID          `db:"uuid"`
+	Email          null.Value[string] `db:"email"`
+	Phone          null.Value[string] `db:"phone"`
+	PasswordHash   string             `db:"password"`
+	ConfirmedEmail bool               `db:"confirmed_email"`
+	ConfirmedPhone bool               `db:"confirmed_phone"`
 }
 
 func NewUser(email, phone null.Value[string]) *User {
