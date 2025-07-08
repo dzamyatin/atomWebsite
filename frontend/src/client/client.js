@@ -55,6 +55,31 @@ export async function register(
     return promise
 }
 
+export async function login(
+    email,
+    password,
+    phone
+) {
+    let promise = new Promise((resolve, reject) => {
+        auth.authLogin(
+            {
+                'email': email,
+                'password': password,
+                'phone': phone,
+            },
+            function callback(error, data, response) {
+                resolve(new Result(
+                    error,
+                    data,
+                    response,
+                ))
+            }
+        )
+    });
+
+    return promise
+}
+
 class Result {
     constructor(
         error,

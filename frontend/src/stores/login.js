@@ -4,19 +4,24 @@ import {defineStore} from 'pinia'
 export const useLoginStore = defineStore(
     'login',
     () => {
-        const jwt = ref("")
-        const isLoggedIn = ref(false)
+        // Initialize from session storage if available
+        const storedJwt = sessionStorage.getItem('jwt') || ""
+        const jwt = ref(storedJwt)
+        const isLoggedIn = ref(storedJwt !== "")
 
         function login(value) {
             jwt.value = value
             isLoggedIn.value = true
+            // Store in session storage
+            sessionStorage.setItem('jwt', value)
         }
 
         function logout() {
-            jwt.value = value
+            jwt.value = ""
             isLoggedIn.value = false
+            // Remove from session storage
+            sessionStorage.removeItem('jwt')
         }
-
 
         return {
             jwt,

@@ -25,5 +25,3 @@ src/model/AuthRegisterResponse.js
 src/model/AuthSendEmailConfirmationRequest.js
 src/model/ProtobufAny.js
 src/model/RpcStatus.js
-test/model/AuthConfirmEmailRequest.spec.js
-test/model/AuthSendEmailConfirmationRequest.spec.js
