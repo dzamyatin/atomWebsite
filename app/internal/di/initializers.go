@@ -10,6 +10,7 @@ import (
 	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/config"
 	servicemail "github.com/dzamyatin/atomWebsite/internal/service/mail"
+	servicemessenger "github.com/dzamyatin/atomWebsite/internal/service/messenger"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -28,6 +29,17 @@ import (
 	"os"
 	"time"
 )
+
+func newMessenger(
+	logger *zap.Logger,
+) servicemessenger.IMessengerService {
+	return servicemessenger.NewAggrigatorMessenger(
+		logger,
+		[]servicemessenger.IMessengerService{
+			servicemessenger.NewTelegramMessenger(logger),
+		},
+	)
+}
 
 func newMailer(
 	logger *zap.Logger,

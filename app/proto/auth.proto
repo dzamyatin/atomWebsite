@@ -20,6 +20,12 @@ service Auth {
       body: "*"
     };
   };
+  rpc RememberPassword (RememberPasswordRequest) returns (RememberPasswordResponse) {
+    option(google.api.http) = {
+      post: "/remember-password-by-email"
+      body: "*"
+    };
+  };
   rpc ConfirmEmail (ConfirmEmailRequest) returns (ConfirmEmailResponse) {
     option(google.api.http) = {
       post: "/confirm-email"
@@ -33,6 +39,13 @@ service Auth {
     };
   };
 }
+
+message RememberPasswordRequest {
+  optional string email = 1;
+  optional string phone = 2;
+}
+
+message RememberPasswordResponse {}
 
 message SendEmailConfirmationRequest {
   string email = 1;
@@ -58,9 +71,9 @@ message RegisterResponse {
 }
 
 message LoginRequest {
-  string email = 1; // Email of the user to login.
+  optional string email = 1; // Email of the user to login.
   string password = 2; // Password of the user to login.
-  string phone = 3; // Either email or phone should be presented. (use messenger to send code: "telegram", ...)
+  optional string phone = 3; // Either email or phone should be presented. (use messenger to send code: "telegram", ...)
 }
 
 message LoginResponse {

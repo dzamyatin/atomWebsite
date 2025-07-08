@@ -101,9 +101,9 @@ func (r AuthServer) Register(ctx context.Context, req *atomWebsite.RegisterReque
 
 func (r AuthServer) Login(ctx context.Context, req *atomWebsite.LoginRequest) (*atomWebsite.LoginResponse, error) {
 	res, err := r.loginUseCase.Execute(ctx, request.LoginRequest{
-		Email:    req.Email,
+		Email:    req.GetEmail(),
 		Password: req.Password,
-		Phone:    req.Phone,
+		Phone:    req.GetPhone(),
 	})
 
 	if err != nil {

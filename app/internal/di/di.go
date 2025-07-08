@@ -73,6 +73,7 @@ var set = wire.NewSet(
 	wire.Bind(new(repository.IRandomizerRepository), new(*repository.RandomizerRepository)),
 	usecase.NewConfirmEmailUseCase,
 	usecase.NewSendEmailConfirmationUseCase,
+	newMessenger,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

@@ -21,25 +21,24 @@
   - <span style="color:green">DONE</span> postgress provider
     - <span style="color:green">DONE</span> pg dispatch
     - <span style="color:green">DONE</span> pg handler
-- vue js admin (https://demos.creative-tim.com/vue-argon-design-system/documentation/?_ga=2.135621303.708551717.1744408739-559679860.1744408739)
-  - <span style="color:green">DONE</span> registration
-  - login
-  - <span style="color:lightgreen">MVP</span> email-confirm
-    - <span style="color:green">DONE</span> yandex smtp
-    - google smtp
-    - mail smtp
-  - phone-confirm
-    - telegram
-    - whatsapp
-    - vk
-  - payment
-  - personal cabinet
-  - download app
-  - forgot password
-    - for email
-    - for phone
-- registration
-  - email verification
+- <span style="color:green">DONE</span> registration
+- <span style="color:green">DONE</span> login
+- <span style="color:lightgreen">MVP</span> email-confirm
+  - <span style="color:green">DONE</span> yandex smtp
+  - google smtp
+  - mail smtp
+- phone-confirm
+  - telegram
+  - whatsapp
+  - vk
+- remember password
+  - <span style="color:yellow">IN PROGRESS</span> for email
+  - for phone
+- payment
+- personal cabinet
+- download app
+- <span style="color:green">DONE</span> registration
+  - <span style="color:green">DONE</span> email verification
     - <span style="color:lightblue">WONT DO</span> smtp server (decided to use yandex.ru smtp, google smtp etc. instead)
     ```
     https://dev.to/wneessen/sending-mails-in-go-the-easy-way-1lm7
@@ -58,7 +57,6 @@
     ```
     
 - nginx for static
-- grpc client
 - reserch which payment method are better (yandexpay)
 - payment implementation
 - reserch which crypt method are better
@@ -94,6 +92,7 @@
 ## interesting
 - check http to grpc proxy (see: https://habr.com/ru/articles/658769/)
 - http server (which point?)
+- vue js admin (https://demos.creative-tim.com/vue-argon-design-system/documentation/?_ga=2.135621303.708551717.1744408739-559679860.1744408739)
 
 ## dont forgot
 to add traffic limit to jwt key
