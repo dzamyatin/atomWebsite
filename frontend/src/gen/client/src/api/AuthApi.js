@@ -13,10 +13,12 @@
 
 
 import ApiClient from "../ApiClient";
+import AuthConfirmEmailRequest from '../model/AuthConfirmEmailRequest';
 import AuthLoginRequest from '../model/AuthLoginRequest';
 import AuthLoginResponse from '../model/AuthLoginResponse';
 import AuthRegisterRequest from '../model/AuthRegisterRequest';
 import AuthRegisterResponse from '../model/AuthRegisterResponse';
+import AuthSendEmailConfirmationRequest from '../model/AuthSendEmailConfirmationRequest';
 import RpcStatus from '../model/RpcStatus';
 
 /**
@@ -37,6 +39,46 @@ export default class AuthApi {
         this.apiClient = apiClient || ApiClient.instance;
     }
 
+
+    /**
+     * Callback function to receive the result of the authConfirmEmail operation.
+     * @callback module:api/AuthApi~authConfirmEmailCallback
+     * @param {String} error Error message, if any.
+     * @param {Object} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {module:model/AuthConfirmEmailRequest} body 
+     * @param {module:api/AuthApi~authConfirmEmailCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Object}
+     */
+    authConfirmEmail(body, callback) {
+      let postBody = body;
+      // verify the required parameter 'body' is set
+      if (body === undefined || body === null) {
+        throw new Error("Missing the required parameter 'body' when calling authConfirmEmail");
+      }
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = Object;
+      return this.apiClient.callApi(
+        '/confirm-email', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
 
     /**
      * Callback function to receive the result of the authLogin operation.
@@ -113,6 +155,46 @@ export default class AuthApi {
       let returnType = AuthRegisterResponse;
       return this.apiClient.callApi(
         '/register', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
+
+    /**
+     * Callback function to receive the result of the authSendEmailConfirmation operation.
+     * @callback module:api/AuthApi~authSendEmailConfirmationCallback
+     * @param {String} error Error message, if any.
+     * @param {Object} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {module:model/AuthSendEmailConfirmationRequest} body 
+     * @param {module:api/AuthApi~authSendEmailConfirmationCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Object}
+     */
+    authSendEmailConfirmation(body, callback) {
+      let postBody = body;
+      // verify the required parameter 'body' is set
+      if (body === undefined || body === null) {
+        throw new Error("Missing the required parameter 'body' when calling authSendEmailConfirmation");
+      }
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = Object;
+      return this.apiClient.callApi(
+        '/send-email-confirmation', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, null, callback
       );

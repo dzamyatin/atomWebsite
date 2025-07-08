@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { ref, onMounted } from "vue";
 import { useRoute } from 'vue-router';
+import {confirmEmail} from "./../client/client"
 
 const { t } = useI18n()
 const route = useRoute();
@@ -68,12 +69,28 @@ async function confirm() {
   successMessage.value = "";
 
   try {
+    disableSendButton.value = true
+
+    let response = await confirmEmail(
+        email.value,
+        confirmationCode.value,
+    )
+
+    if (response.error != null) {
+      disableSendButton.value = false
+      errorMessage.value = response.response?.body?.message
+      return
+    }
+
+    router.push('/login')
+    // store.login("some")
+
     // Here you would call your API to confirm the email
     // For example:
     // const response = await confirmEmail(email.value, confirmationCode.value);
 
     // Simulating API call for now
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Success message
     successMessage.value = "Email confirmed successfully!";

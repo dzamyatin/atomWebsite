@@ -3,10 +3,12 @@
 .travis.yml
 README.md
 docs/AuthApi.md
+docs/AuthConfirmEmailRequest.md
 docs/AuthLoginRequest.md
 docs/AuthLoginResponse.md
 docs/AuthRegisterRequest.md
 docs/AuthRegisterResponse.md
+docs/AuthSendEmailConfirmationRequest.md
 docs/ProtobufAny.md
 docs/RpcStatus.md
 git_push.sh
@@ -15,9 +17,13 @@ package.json
 src/ApiClient.js
 src/api/AuthApi.js
 src/index.js
+src/model/AuthConfirmEmailRequest.js
 src/model/AuthLoginRequest.js
 src/model/AuthLoginResponse.js
 src/model/AuthRegisterRequest.js
 src/model/AuthRegisterResponse.js
+src/model/AuthSendEmailConfirmationRequest.js
 src/model/ProtobufAny.js
 src/model/RpcStatus.js
+test/model/AuthConfirmEmailRequest.spec.js
+test/model/AuthSendEmailConfirmationRequest.spec.js

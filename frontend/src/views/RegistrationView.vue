@@ -69,9 +69,6 @@ async function registration() {
       password.value,
   )
 
-  console.log("done")
-  console.log(response)
-
   if (response.error != null) {
     disableRegisterButton.value = false
     errorMessage.value = response.response?.body?.message

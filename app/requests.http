@@ -33,7 +33,7 @@ POST localhost:8503/register
 
 {
   "email": "zamyatin.daniil@gmail.com",
-  "password": "pwd123",
+  "password": "123@asdX",
   "phone": ""
 }
 

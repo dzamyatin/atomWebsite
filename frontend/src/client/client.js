@@ -7,6 +7,29 @@ client.timeout = 60000;
 
 let auth = new Auth.AuthApi(client)
 
+export async function confirmEmail(
+    email,
+    code,
+) {
+    let promise = new Promise((resolve, reject) => {
+        auth.authConfirmEmail(
+            {
+                'email': email,
+                'code': code,
+            },
+            function callback(error, data, response) {
+                resolve(new Result(
+                    error,
+                    data,
+                    response,
+                ))
+            }
+        )
+    });
+
+    return promise
+}
+
 export async function register(
     email,
     password,
