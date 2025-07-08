@@ -13,11 +13,13 @@
 
 
 import ApiClient from "../ApiClient";
+import AuthChangePasswordRequest from '../model/AuthChangePasswordRequest';
 import AuthConfirmEmailRequest from '../model/AuthConfirmEmailRequest';
 import AuthLoginRequest from '../model/AuthLoginRequest';
 import AuthLoginResponse from '../model/AuthLoginResponse';
 import AuthRegisterRequest from '../model/AuthRegisterRequest';
 import AuthRegisterResponse from '../model/AuthRegisterResponse';
+import AuthRememberPasswordRequest from '../model/AuthRememberPasswordRequest';
 import AuthSendEmailConfirmationRequest from '../model/AuthSendEmailConfirmationRequest';
 import RpcStatus from '../model/RpcStatus';
 
@@ -39,6 +41,46 @@ export default class AuthApi {
         this.apiClient = apiClient || ApiClient.instance;
     }
 
+
+    /**
+     * Callback function to receive the result of the authChangePassword operation.
+     * @callback module:api/AuthApi~authChangePasswordCallback
+     * @param {String} error Error message, if any.
+     * @param {Object} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {module:model/AuthChangePasswordRequest} body 
+     * @param {module:api/AuthApi~authChangePasswordCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Object}
+     */
+    authChangePassword(body, callback) {
+      let postBody = body;
+      // verify the required parameter 'body' is set
+      if (body === undefined || body === null) {
+        throw new Error("Missing the required parameter 'body' when calling authChangePassword");
+      }
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = Object;
+      return this.apiClient.callApi(
+        '/change-password', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
 
     /**
      * Callback function to receive the result of the authConfirmEmail operation.
@@ -155,6 +197,46 @@ export default class AuthApi {
       let returnType = AuthRegisterResponse;
       return this.apiClient.callApi(
         '/register', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
+
+    /**
+     * Callback function to receive the result of the authRememberPassword operation.
+     * @callback module:api/AuthApi~authRememberPasswordCallback
+     * @param {String} error Error message, if any.
+     * @param {Object} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {module:model/AuthRememberPasswordRequest} body 
+     * @param {module:api/AuthApi~authRememberPasswordCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link Object}
+     */
+    authRememberPassword(body, callback) {
+      let postBody = body;
+      // verify the required parameter 'body' is set
+      if (body === undefined || body === null) {
+        throw new Error("Missing the required parameter 'body' when calling authRememberPassword");
+      }
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = Object;
+      return this.apiClient.callApi(
+        '/remember-password', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, null, callback
       );

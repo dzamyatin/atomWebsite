@@ -103,7 +103,7 @@ var AuthProto = require('auth_proto');
 
 
 var api = new AuthProto.AuthApi()
-var body = new AuthProto.AuthConfirmEmailRequest(); // {AuthConfirmEmailRequest} 
+var body = new AuthProto.AuthChangePasswordRequest(); // {AuthChangePasswordRequest} 
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -111,7 +111,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.authConfirmEmail(body, callback);
+api.authChangePassword(body, callback);
 
 ```
 
@@ -121,19 +121,23 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AuthProto.AuthApi* | [**authChangePassword**](docs/AuthApi.md#authChangePassword) | **POST** /change-password | 
 *AuthProto.AuthApi* | [**authConfirmEmail**](docs/AuthApi.md#authConfirmEmail) | **POST** /confirm-email | 
 *AuthProto.AuthApi* | [**authLogin**](docs/AuthApi.md#authLogin) | **POST** /login | 
 *AuthProto.AuthApi* | [**authRegister**](docs/AuthApi.md#authRegister) | **POST** /register | 
+*AuthProto.AuthApi* | [**authRememberPassword**](docs/AuthApi.md#authRememberPassword) | **POST** /remember-password | 
 *AuthProto.AuthApi* | [**authSendEmailConfirmation**](docs/AuthApi.md#authSendEmailConfirmation) | **POST** /send-email-confirmation | 
 
 
 ## Documentation for Models
 
+ - [AuthProto.AuthChangePasswordRequest](docs/AuthChangePasswordRequest.md)
  - [AuthProto.AuthConfirmEmailRequest](docs/AuthConfirmEmailRequest.md)
  - [AuthProto.AuthLoginRequest](docs/AuthLoginRequest.md)
  - [AuthProto.AuthLoginResponse](docs/AuthLoginResponse.md)
  - [AuthProto.AuthRegisterRequest](docs/AuthRegisterRequest.md)
  - [AuthProto.AuthRegisterResponse](docs/AuthRegisterResponse.md)
+ - [AuthProto.AuthRememberPasswordRequest](docs/AuthRememberPasswordRequest.md)
  - [AuthProto.AuthSendEmailConfirmationRequest](docs/AuthSendEmailConfirmationRequest.md)
  - [AuthProto.ProtobufAny](docs/ProtobufAny.md)
  - [AuthProto.RpcStatus](docs/RpcStatus.md)

@@ -13,11 +13,13 @@
 
 
 import ApiClient from './ApiClient';
+import AuthChangePasswordRequest from './model/AuthChangePasswordRequest';
 import AuthConfirmEmailRequest from './model/AuthConfirmEmailRequest';
 import AuthLoginRequest from './model/AuthLoginRequest';
 import AuthLoginResponse from './model/AuthLoginResponse';
 import AuthRegisterRequest from './model/AuthRegisterRequest';
 import AuthRegisterResponse from './model/AuthRegisterResponse';
+import AuthRememberPasswordRequest from './model/AuthRememberPasswordRequest';
 import AuthSendEmailConfirmationRequest from './model/AuthSendEmailConfirmationRequest';
 import ProtobufAny from './model/ProtobufAny';
 import RpcStatus from './model/RpcStatus';
@@ -63,6 +65,12 @@ export {
     ApiClient,
 
     /**
+     * The AuthChangePasswordRequest model constructor.
+     * @property {module:model/AuthChangePasswordRequest}
+     */
+    AuthChangePasswordRequest,
+
+    /**
      * The AuthConfirmEmailRequest model constructor.
      * @property {module:model/AuthConfirmEmailRequest}
      */
@@ -91,6 +99,12 @@ export {
      * @property {module:model/AuthRegisterResponse}
      */
     AuthRegisterResponse,
+
+    /**
+     * The AuthRememberPasswordRequest model constructor.
+     * @property {module:model/AuthRememberPasswordRequest}
+     */
+    AuthRememberPasswordRequest,
 
     /**
      * The AuthSendEmailConfirmationRequest model constructor.
