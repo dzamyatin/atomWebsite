@@ -17,6 +17,11 @@ const store = useLoginStore();
           <strong>{{ t("nav.profile") }}</strong>
         </a>
       </b-navbar-item>
+      <b-navbar-item>
+        <a class="button is-light" @click="store.logout">
+          {{ t("nav.logout") || "Logout" }}
+        </a>
+      </b-navbar-item>
     </div>
   </div>
   <div v-else>

@@ -15,6 +15,7 @@ export default {
         download: "Скачать",
         registration: `Регистрация`,
         signin: "Войти",
+        logout: "Выйти",
     },
     home: {
         subtitle: "Ваша свобода в сети — наша миссия!",
