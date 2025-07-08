@@ -22,27 +22,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type ResendConfirmationEmailRequest struct {
+type SendEmailConfirmationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ResendConfirmationEmailRequest) Reset() {
-	*x = ResendConfirmationEmailRequest{}
+func (x *SendEmailConfirmationRequest) Reset() {
+	*x = SendEmailConfirmationRequest{}
 	mi := &file_auth_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ResendConfirmationEmailRequest) String() string {
+func (x *SendEmailConfirmationRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ResendConfirmationEmailRequest) ProtoMessage() {}
+func (*SendEmailConfirmationRequest) ProtoMessage() {}
 
-func (x *ResendConfirmationEmailRequest) ProtoReflect() protoreflect.Message {
+func (x *SendEmailConfirmationRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_auth_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,38 +54,38 @@ func (x *ResendConfirmationEmailRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ResendConfirmationEmailRequest.ProtoReflect.Descriptor instead.
-func (*ResendConfirmationEmailRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use SendEmailConfirmationRequest.ProtoReflect.Descriptor instead.
+func (*SendEmailConfirmationRequest) Descriptor() ([]byte, []int) {
 	return file_auth_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ResendConfirmationEmailRequest) GetEmail() string {
+func (x *SendEmailConfirmationRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-type ResendConfirmationEmailResponse struct {
+type SendEmailConfirmationResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ResendConfirmationEmailResponse) Reset() {
-	*x = ResendConfirmationEmailResponse{}
+func (x *SendEmailConfirmationResponse) Reset() {
+	*x = SendEmailConfirmationResponse{}
 	mi := &file_auth_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ResendConfirmationEmailResponse) String() string {
+func (x *SendEmailConfirmationResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ResendConfirmationEmailResponse) ProtoMessage() {}
+func (*SendEmailConfirmationResponse) ProtoMessage() {}
 
-func (x *ResendConfirmationEmailResponse) ProtoReflect() protoreflect.Message {
+func (x *SendEmailConfirmationResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_auth_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -97,8 +97,8 @@ func (x *ResendConfirmationEmailResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ResendConfirmationEmailResponse.ProtoReflect.Descriptor instead.
-func (*ResendConfirmationEmailResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use SendEmailConfirmationResponse.ProtoReflect.Descriptor instead.
+func (*SendEmailConfirmationResponse) Descriptor() ([]byte, []int) {
 	return file_auth_proto_rawDescGZIP(), []int{1}
 }
 
@@ -403,10 +403,10 @@ var File_auth_proto protoreflect.FileDescriptor
 const file_auth_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"auth.proto\x12\x04auth\x1a\x1cgoogle/api/annotations.proto\"6\n" +
-	"\x1eResendConfirmationEmailRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"!\n" +
-	"\x1fResendConfirmationEmailResponse\"?\n" +
+	"auth.proto\x12\x04auth\x1a\x1cgoogle/api/annotations.proto\"4\n" +
+	"\x1cSendEmailConfirmationRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"\x1f\n" +
+	"\x1dSendEmailConfirmationResponse\"?\n" +
 	"\x13ConfirmEmailRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x12\n" +
 	"\x04code\x18\x02 \x01(\tR\x04code\"\x16\n" +
@@ -422,12 +422,12 @@ const file_auth_proto_rawDesc = "" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +
 	"\x05phone\x18\x03 \x01(\tR\x05phone\"%\n" +
 	"\rLoginResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token2\x8e\x03\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token2\x86\x03\n" +
 	"\x04Auth\x12O\n" +
 	"\bRegister\x12\x15.auth.RegisterRequest\x1a\x16.auth.RegisterResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/register\x12C\n" +
 	"\x05Login\x12\x12.auth.LoginRequest\x1a\x13.auth.LoginResponse\"\x11\x82\xd3\xe4\x93\x02\v:\x01*\"\x06/login\x12`\n" +
-	"\fConfirmEmail\x12\x19.auth.ConfirmEmailRequest\x1a\x1a.auth.ConfirmEmailResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/confirm-email\x12\x8d\x01\n" +
-	"\x17ResendConfirmationEmail\x12$.auth.ResendConfirmationEmailRequest\x1a%.auth.ResendConfirmationEmailResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/resend-confirmation-emailB\"Z github.com/dzamyatin/atomWebsiteb\x06proto3"
+	"\fConfirmEmail\x12\x19.auth.ConfirmEmailRequest\x1a\x1a.auth.ConfirmEmailResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/confirm-email\x12\x85\x01\n" +
+	"\x15SendEmailConfirmation\x12\".auth.SendEmailConfirmationRequest\x1a#.auth.SendEmailConfirmationResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/send-email-confirmationB\"Z github.com/dzamyatin/atomWebsiteb\x06proto3"
 
 var (
 	file_auth_proto_rawDescOnce sync.Once
@@ -443,24 +443,24 @@ func file_auth_proto_rawDescGZIP() []byte {
 
 var file_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_auth_proto_goTypes = []any{
-	(*ResendConfirmationEmailRequest)(nil),  // 0: auth.ResendConfirmationEmailRequest
-	(*ResendConfirmationEmailResponse)(nil), // 1: auth.ResendConfirmationEmailResponse
-	(*ConfirmEmailRequest)(nil),             // 2: auth.ConfirmEmailRequest
-	(*ConfirmEmailResponse)(nil),            // 3: auth.ConfirmEmailResponse
-	(*RegisterRequest)(nil),                 // 4: auth.RegisterRequest
-	(*RegisterResponse)(nil),                // 5: auth.RegisterResponse
-	(*LoginRequest)(nil),                    // 6: auth.LoginRequest
-	(*LoginResponse)(nil),                   // 7: auth.LoginResponse
+	(*SendEmailConfirmationRequest)(nil),  // 0: auth.SendEmailConfirmationRequest
+	(*SendEmailConfirmationResponse)(nil), // 1: auth.SendEmailConfirmationResponse
+	(*ConfirmEmailRequest)(nil),           // 2: auth.ConfirmEmailRequest
+	(*ConfirmEmailResponse)(nil),          // 3: auth.ConfirmEmailResponse
+	(*RegisterRequest)(nil),               // 4: auth.RegisterRequest
+	(*RegisterResponse)(nil),              // 5: auth.RegisterResponse
+	(*LoginRequest)(nil),                  // 6: auth.LoginRequest
+	(*LoginResponse)(nil),                 // 7: auth.LoginResponse
 }
 var file_auth_proto_depIdxs = []int32{
 	4, // 0: auth.Auth.Register:input_type -> auth.RegisterRequest
 	6, // 1: auth.Auth.Login:input_type -> auth.LoginRequest
 	2, // 2: auth.Auth.ConfirmEmail:input_type -> auth.ConfirmEmailRequest
-	0, // 3: auth.Auth.ResendConfirmationEmail:input_type -> auth.ResendConfirmationEmailRequest
+	0, // 3: auth.Auth.SendEmailConfirmation:input_type -> auth.SendEmailConfirmationRequest
 	5, // 4: auth.Auth.Register:output_type -> auth.RegisterResponse
 	7, // 5: auth.Auth.Login:output_type -> auth.LoginResponse
 	3, // 6: auth.Auth.ConfirmEmail:output_type -> auth.ConfirmEmailResponse
-	1, // 7: auth.Auth.ResendConfirmationEmail:output_type -> auth.ResendConfirmationEmailResponse
+	1, // 7: auth.Auth.SendEmailConfirmation:output_type -> auth.SendEmailConfirmationResponse
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

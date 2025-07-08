@@ -112,14 +112,14 @@
         ]
       }
     },
-    "/resend-confirmation-email": {
+    "/send-email-confirmation": {
       "post": {
-        "operationId": "Auth_ResendConfirmationEmail",
+        "operationId": "Auth_SendEmailConfirmation",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/authResendConfirmationEmailResponse"
+              "$ref": "#/definitions/authSendEmailConfirmationResponse"
             }
           },
           "default": {
@@ -135,7 +135,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/authResendConfirmationEmailRequest"
+              "$ref": "#/definitions/authSendEmailConfirmationRequest"
             }
           }
         ],
@@ -213,7 +213,7 @@
         }
       }
     },
-    "authResendConfirmationEmailRequest": {
+    "authSendEmailConfirmationRequest": {
       "type": "object",
       "properties": {
         "email": {
@@ -221,7 +221,7 @@
         }
       }
     },
-    "authResendConfirmationEmailResponse": {
+    "authSendEmailConfirmationResponse": {
       "type": "object"
     },
     "protobufAny": {

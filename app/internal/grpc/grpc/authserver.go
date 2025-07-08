@@ -14,10 +14,11 @@ import (
 
 type AuthServer struct {
 	atomWebsite.UnimplementedAuthServer
-	bus                 bus.IBus
-	registerUseCase     *usecase.Registration
-	loginUseCase        *usecase.Login
-	confirmEmailUseCase *usecase.ConfirmEmailUseCase
+	bus                          bus.IBus
+	registerUseCase              *usecase.Registration
+	loginUseCase                 *usecase.Login
+	confirmEmailUseCase          *usecase.ConfirmEmailUseCase
+	sendEmailConfirmationUseCase *usecase.SendEmailConfirmationUseCase
 }
 
 func NewAuthServer(
@@ -25,13 +26,27 @@ func NewAuthServer(
 	loginUseCase *usecase.Login,
 	confirmEmailUseCase *usecase.ConfirmEmailUseCase,
 	bus bus.IBus,
+	sendEmailConfirmationUseCase *usecase.SendEmailConfirmationUseCase,
 ) AuthServer {
 	return AuthServer{
-		registerUseCase:     registerUseCase,
-		loginUseCase:        loginUseCase,
-		bus:                 bus,
-		confirmEmailUseCase: confirmEmailUseCase,
+		registerUseCase:              registerUseCase,
+		loginUseCase:                 loginUseCase,
+		bus:                          bus,
+		confirmEmailUseCase:          confirmEmailUseCase,
+		sendEmailConfirmationUseCase: sendEmailConfirmationUseCase,
 	}
+}
+
+func (r AuthServer) SendEmailConfirmation(
+	ctx context.Context,
+	req *atomWebsite.SendEmailConfirmationRequest,
+) (*atomWebsite.SendEmailConfirmationResponse, error) {
+	err := r.sendEmailConfirmationUseCase.Execute(ctx, req.GetEmail())
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "send failed: %s", err.Error())
+	}
+
+	return &atomWebsite.SendEmailConfirmationResponse{}, nil
 }
 
 func (r AuthServer) ConfirmEmail(

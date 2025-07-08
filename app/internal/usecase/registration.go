@@ -8,8 +8,6 @@ import (
 	servicemail "github.com/dzamyatin/atomWebsite/internal/service/mail"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"strings"
-	"time"
 )
 
 var (
@@ -20,9 +18,10 @@ type Registration struct {
 	userRepository  repository.IUserRepository
 	passwordEncoder entity.PasswordEncoder
 	//validator       validator.IRegistrationValidator
-	logger               *zap.Logger
-	mailer               servicemail.IMailer
-	randomizerRepository repository.IRandomizerRepository
+	logger                       *zap.Logger
+	mailer                       servicemail.IMailer
+	randomizerRepository         repository.IRandomizerRepository
+	sendEmailConfirmationUseCase *SendEmailConfirmationUseCase
 }
 
 func NewRegistration(
@@ -32,14 +31,16 @@ func NewRegistration(
 	logger *zap.Logger,
 	mailer servicemail.IMailer,
 	randomizerRepository repository.IRandomizerRepository,
+	sendEmailConfirmationUseCase *SendEmailConfirmationUseCase,
 ) *Registration {
 	return &Registration{
 		userRepository:  userRepository,
 		passwordEncoder: passwordEncoder,
 		//validator:       validator,
-		logger:               logger,
-		mailer:               mailer,
-		randomizerRepository: randomizerRepository,
+		logger:                       logger,
+		mailer:                       mailer,
+		randomizerRepository:         randomizerRepository,
+		sendEmailConfirmationUseCase: sendEmailConfirmationUseCase,
 	}
 }
 
@@ -67,18 +68,8 @@ func (r *Registration) Execute(ctx context.Context, request request.Registration
 	}
 
 	if request.Email.V != "" {
-		confirmationCode, err := r.randomizerRepository.CreateRandomCode(ctx, request.Email.V, 1*time.Hour)
-		if err != nil {
-			r.logger.Warn("failed to generate confirmation code", zap.Error(err))
-			return errors.Wrap(err, "failed to generate confirmation code")
-		}
+		err = r.sendEmailConfirmationUseCase.Execute(ctx, request.Email.V)
 
-		err = r.mailer.SendMail(
-			ctx,
-			request.Email.V,
-			"Registration success",
-			"Your confirmation code is "+strings.ToUpper(confirmationCode),
-		)
 		if err != nil {
 			r.logger.Warn("failed to send email", zap.Error(err))
 			return errors.Wrap(err, "send confirmation email")

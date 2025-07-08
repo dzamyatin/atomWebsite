@@ -26,19 +26,19 @@ service Auth {
       body: "*"
     };
   };
-  rpc ResendConfirmationEmail (ResendConfirmationEmailRequest) returns (ResendConfirmationEmailResponse) {
+  rpc SendEmailConfirmation (SendEmailConfirmationRequest) returns (SendEmailConfirmationResponse) {
     option(google.api.http) = {
-      post: "/resend-confirmation-email"
+      post: "/send-email-confirmation"
       body: "*"
     };
   };
 }
 
-message ResendConfirmationEmailRequest {
+message SendEmailConfirmationRequest {
   string email = 1;
 }
 
-message ResendConfirmationEmailResponse {}
+message SendEmailConfirmationResponse {}
 
 message ConfirmEmailRequest {
   string email = 1;

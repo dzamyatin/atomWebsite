@@ -81,7 +81,8 @@ func InitializeBusProcessCommand(ctx context.Context) (*executors.BusProcessComm
 	iMailer := newMailer(logger)
 	time := servicetime.NewTime()
 	randomizerRepository := repository.NewRandomizerRepository(logger, database, time)
-	registration := usecase.NewRegistration(userRepository, passwordEncoder, logger, iMailer, randomizerRepository)
+	sendEmailConfirmationUseCase := usecase.NewSendEmailConfirmationUseCase(logger, iMailer, randomizerRepository)
+	registration := usecase.NewRegistration(userRepository, passwordEncoder, logger, iMailer, randomizerRepository, sendEmailConfirmationUseCase)
 	registerHandler := handler.NewRegisterHandler(registration)
 	handlerRegistry := newHandlerRegistry(registerHandler)
 	mainBus := newBus(postgresBus, memoryBus, handlerRegistry, logger)
@@ -107,7 +108,8 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 	iMailer := newMailer(logger)
 	time := servicetime.NewTime()
 	randomizerRepository := repository.NewRandomizerRepository(logger, database, time)
-	registration := usecase.NewRegistration(userRepository, passwordEncoder, logger, iMailer, randomizerRepository)
+	sendEmailConfirmationUseCase := usecase.NewSendEmailConfirmationUseCase(logger, iMailer, randomizerRepository)
+	registration := usecase.NewRegistration(userRepository, passwordEncoder, logger, iMailer, randomizerRepository, sendEmailConfirmationUseCase)
 	sequentialProvider := newSequentialProvider(userRepository, logger, passwordEncoder)
 	jwt := newJWT(logger)
 	login := usecase.NewLogin(logger, sequentialProvider, jwt)
@@ -117,7 +119,7 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 	registerHandler := handler.NewRegisterHandler(registration)
 	handlerRegistry := newHandlerRegistry(registerHandler)
 	mainBus := newBus(postgresBus, memoryBus, handlerRegistry, logger)
-	authServer := grpc.NewAuthServer(registration, login, confirmEmailUseCase, mainBus)
+	authServer := grpc.NewAuthServer(registration, login, confirmEmailUseCase, mainBus, sendEmailConfirmationUseCase)
 	registry := metric.NewRegistry(logger)
 	metricMetric := metric.NewMetric(logger, registry)
 	server := newGrpcServer(authServer, metricMetric)
@@ -142,5 +144,5 @@ var set = wire.NewSet(
 	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistration, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
 	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)), validator.NewRegistrationValidator, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry, usecase.NewLogin, wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)), newSequentialProvider, wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)), newJWT, wire.Bind(new(bus.IBus), new(*bus.MainBus)), newBus,
 	newHandlerRegistry, bus.NewMemoryBus, handler.NewRegisterHandler, executors.NewMigrationCreateCommand, executors.NewMigrationDownCommand, executors.NewMigrationUpCommand, newPostgresBus, executors.NewBusProcessCommand, newHTTPServer,
-	newMailer, servicetime.NewTime, wire.Bind(new(servicetime.ITime), new(*servicetime.Time)), repository.NewRandomizerRepository, wire.Bind(new(repository.IRandomizerRepository), new(*repository.RandomizerRepository)), usecase.NewConfirmEmailUseCase,
+	newMailer, servicetime.NewTime, wire.Bind(new(servicetime.ITime), new(*servicetime.Time)), repository.NewRandomizerRepository, wire.Bind(new(repository.IRandomizerRepository), new(*repository.RandomizerRepository)), usecase.NewConfirmEmailUseCase, usecase.NewSendEmailConfirmationUseCase,
 )

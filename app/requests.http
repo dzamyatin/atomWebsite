@@ -47,3 +47,10 @@ POST localhost:8503/confirm-email
   "email": "zamyatin.daniil@gmail.com",
   "code": "QPWTY"
 }
+
+###
+POST localhost:8503/send-email-confirmation
+
+{
+  "email": "zamyatin.daniil@gmail.com"
+}
