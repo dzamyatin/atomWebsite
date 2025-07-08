@@ -111,6 +111,38 @@
           "Auth"
         ]
       }
+    },
+    "/resend-confirmation-email": {
+      "post": {
+        "operationId": "Auth_ResendConfirmationEmail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authResendConfirmationEmailResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authResendConfirmationEmailRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
     }
   },
   "definitions": {
@@ -180,6 +212,17 @@
           "title": "User ID of the registered user.[ITR] Импорт очередей Я.Трекер"
         }
       }
+    },
+    "authResendConfirmationEmailRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "authResendConfirmationEmailResponse": {
+      "type": "object"
     },
     "protobufAny": {
       "type": "object",

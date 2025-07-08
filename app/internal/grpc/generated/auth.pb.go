@@ -22,6 +22,86 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type ResendConfirmationEmailRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResendConfirmationEmailRequest) Reset() {
+	*x = ResendConfirmationEmailRequest{}
+	mi := &file_auth_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResendConfirmationEmailRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResendConfirmationEmailRequest) ProtoMessage() {}
+
+func (x *ResendConfirmationEmailRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResendConfirmationEmailRequest.ProtoReflect.Descriptor instead.
+func (*ResendConfirmationEmailRequest) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *ResendConfirmationEmailRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+type ResendConfirmationEmailResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResendConfirmationEmailResponse) Reset() {
+	*x = ResendConfirmationEmailResponse{}
+	mi := &file_auth_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResendConfirmationEmailResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResendConfirmationEmailResponse) ProtoMessage() {}
+
+func (x *ResendConfirmationEmailResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResendConfirmationEmailResponse.ProtoReflect.Descriptor instead.
+func (*ResendConfirmationEmailResponse) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{1}
+}
+
 type ConfirmEmailRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
@@ -32,7 +112,7 @@ type ConfirmEmailRequest struct {
 
 func (x *ConfirmEmailRequest) Reset() {
 	*x = ConfirmEmailRequest{}
-	mi := &file_auth_proto_msgTypes[0]
+	mi := &file_auth_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +124,7 @@ func (x *ConfirmEmailRequest) String() string {
 func (*ConfirmEmailRequest) ProtoMessage() {}
 
 func (x *ConfirmEmailRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_proto_msgTypes[0]
+	mi := &file_auth_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +137,7 @@ func (x *ConfirmEmailRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfirmEmailRequest.ProtoReflect.Descriptor instead.
 func (*ConfirmEmailRequest) Descriptor() ([]byte, []int) {
-	return file_auth_proto_rawDescGZIP(), []int{0}
+	return file_auth_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ConfirmEmailRequest) GetEmail() string {
@@ -82,7 +162,7 @@ type ConfirmEmailResponse struct {
 
 func (x *ConfirmEmailResponse) Reset() {
 	*x = ConfirmEmailResponse{}
-	mi := &file_auth_proto_msgTypes[1]
+	mi := &file_auth_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -94,7 +174,7 @@ func (x *ConfirmEmailResponse) String() string {
 func (*ConfirmEmailResponse) ProtoMessage() {}
 
 func (x *ConfirmEmailResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_proto_msgTypes[1]
+	mi := &file_auth_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -107,7 +187,7 @@ func (x *ConfirmEmailResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfirmEmailResponse.ProtoReflect.Descriptor instead.
 func (*ConfirmEmailResponse) Descriptor() ([]byte, []int) {
-	return file_auth_proto_rawDescGZIP(), []int{1}
+	return file_auth_proto_rawDescGZIP(), []int{3}
 }
 
 type RegisterRequest struct {
@@ -121,7 +201,7 @@ type RegisterRequest struct {
 
 func (x *RegisterRequest) Reset() {
 	*x = RegisterRequest{}
-	mi := &file_auth_proto_msgTypes[2]
+	mi := &file_auth_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -133,7 +213,7 @@ func (x *RegisterRequest) String() string {
 func (*RegisterRequest) ProtoMessage() {}
 
 func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_proto_msgTypes[2]
+	mi := &file_auth_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -146,7 +226,7 @@ func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRequest.ProtoReflect.Descriptor instead.
 func (*RegisterRequest) Descriptor() ([]byte, []int) {
-	return file_auth_proto_rawDescGZIP(), []int{2}
+	return file_auth_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *RegisterRequest) GetEmail() string {
@@ -179,7 +259,7 @@ type RegisterResponse struct {
 
 func (x *RegisterResponse) Reset() {
 	*x = RegisterResponse{}
-	mi := &file_auth_proto_msgTypes[3]
+	mi := &file_auth_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -191,7 +271,7 @@ func (x *RegisterResponse) String() string {
 func (*RegisterResponse) ProtoMessage() {}
 
 func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_proto_msgTypes[3]
+	mi := &file_auth_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -204,7 +284,7 @@ func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterResponse.ProtoReflect.Descriptor instead.
 func (*RegisterResponse) Descriptor() ([]byte, []int) {
-	return file_auth_proto_rawDescGZIP(), []int{3}
+	return file_auth_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *RegisterResponse) GetUserId() int64 {
@@ -225,7 +305,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_auth_proto_msgTypes[4]
+	mi := &file_auth_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -237,7 +317,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_proto_msgTypes[4]
+	mi := &file_auth_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -250,7 +330,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_auth_proto_rawDescGZIP(), []int{4}
+	return file_auth_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LoginRequest) GetEmail() string {
@@ -283,7 +363,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_auth_proto_msgTypes[5]
+	mi := &file_auth_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -295,7 +375,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_proto_msgTypes[5]
+	mi := &file_auth_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -308,7 +388,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_auth_proto_rawDescGZIP(), []int{5}
+	return file_auth_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *LoginResponse) GetToken() string {
@@ -323,7 +403,10 @@ var File_auth_proto protoreflect.FileDescriptor
 const file_auth_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"auth.proto\x12\x04auth\x1a\x1cgoogle/api/annotations.proto\"?\n" +
+	"auth.proto\x12\x04auth\x1a\x1cgoogle/api/annotations.proto\"6\n" +
+	"\x1eResendConfirmationEmailRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"!\n" +
+	"\x1fResendConfirmationEmailResponse\"?\n" +
 	"\x13ConfirmEmailRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x12\n" +
 	"\x04code\x18\x02 \x01(\tR\x04code\"\x16\n" +
@@ -339,11 +422,12 @@ const file_auth_proto_rawDesc = "" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +
 	"\x05phone\x18\x03 \x01(\tR\x05phone\"%\n" +
 	"\rLoginResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token2\xfe\x01\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token2\x8e\x03\n" +
 	"\x04Auth\x12O\n" +
 	"\bRegister\x12\x15.auth.RegisterRequest\x1a\x16.auth.RegisterResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/register\x12C\n" +
 	"\x05Login\x12\x12.auth.LoginRequest\x1a\x13.auth.LoginResponse\"\x11\x82\xd3\xe4\x93\x02\v:\x01*\"\x06/login\x12`\n" +
-	"\fConfirmEmail\x12\x19.auth.ConfirmEmailRequest\x1a\x1a.auth.ConfirmEmailResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/confirm-emailB\"Z github.com/dzamyatin/atomWebsiteb\x06proto3"
+	"\fConfirmEmail\x12\x19.auth.ConfirmEmailRequest\x1a\x1a.auth.ConfirmEmailResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/confirm-email\x12\x8d\x01\n" +
+	"\x17ResendConfirmationEmail\x12$.auth.ResendConfirmationEmailRequest\x1a%.auth.ResendConfirmationEmailResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/resend-confirmation-emailB\"Z github.com/dzamyatin/atomWebsiteb\x06proto3"
 
 var (
 	file_auth_proto_rawDescOnce sync.Once
@@ -357,24 +441,28 @@ func file_auth_proto_rawDescGZIP() []byte {
 	return file_auth_proto_rawDescData
 }
 
-var file_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_auth_proto_goTypes = []any{
-	(*ConfirmEmailRequest)(nil),  // 0: auth.ConfirmEmailRequest
-	(*ConfirmEmailResponse)(nil), // 1: auth.ConfirmEmailResponse
-	(*RegisterRequest)(nil),      // 2: auth.RegisterRequest
-	(*RegisterResponse)(nil),     // 3: auth.RegisterResponse
-	(*LoginRequest)(nil),         // 4: auth.LoginRequest
-	(*LoginResponse)(nil),        // 5: auth.LoginResponse
+	(*ResendConfirmationEmailRequest)(nil),  // 0: auth.ResendConfirmationEmailRequest
+	(*ResendConfirmationEmailResponse)(nil), // 1: auth.ResendConfirmationEmailResponse
+	(*ConfirmEmailRequest)(nil),             // 2: auth.ConfirmEmailRequest
+	(*ConfirmEmailResponse)(nil),            // 3: auth.ConfirmEmailResponse
+	(*RegisterRequest)(nil),                 // 4: auth.RegisterRequest
+	(*RegisterResponse)(nil),                // 5: auth.RegisterResponse
+	(*LoginRequest)(nil),                    // 6: auth.LoginRequest
+	(*LoginResponse)(nil),                   // 7: auth.LoginResponse
 }
 var file_auth_proto_depIdxs = []int32{
-	2, // 0: auth.Auth.Register:input_type -> auth.RegisterRequest
-	4, // 1: auth.Auth.Login:input_type -> auth.LoginRequest
-	0, // 2: auth.Auth.ConfirmEmail:input_type -> auth.ConfirmEmailRequest
-	3, // 3: auth.Auth.Register:output_type -> auth.RegisterResponse
-	5, // 4: auth.Auth.Login:output_type -> auth.LoginResponse
-	1, // 5: auth.Auth.ConfirmEmail:output_type -> auth.ConfirmEmailResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	4, // 0: auth.Auth.Register:input_type -> auth.RegisterRequest
+	6, // 1: auth.Auth.Login:input_type -> auth.LoginRequest
+	2, // 2: auth.Auth.ConfirmEmail:input_type -> auth.ConfirmEmailRequest
+	0, // 3: auth.Auth.ResendConfirmationEmail:input_type -> auth.ResendConfirmationEmailRequest
+	5, // 4: auth.Auth.Register:output_type -> auth.RegisterResponse
+	7, // 5: auth.Auth.Login:output_type -> auth.LoginResponse
+	3, // 6: auth.Auth.ConfirmEmail:output_type -> auth.ConfirmEmailResponse
+	1, // 7: auth.Auth.ResendConfirmationEmail:output_type -> auth.ResendConfirmationEmailResponse
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -391,7 +479,7 @@ func file_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_proto_rawDesc), len(file_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
