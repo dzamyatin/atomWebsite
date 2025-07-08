@@ -22,7 +22,13 @@ service Auth {
   };
   rpc RememberPassword (RememberPasswordRequest) returns (RememberPasswordResponse) {
     option(google.api.http) = {
-      post: "/remember-password-by-email"
+      post: "/remember-password"
+      body: "*"
+    };
+  };
+  rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse) {
+    option(google.api.http) = {
+      post: "/change-password"
       body: "*"
     };
   };
@@ -39,6 +45,16 @@ service Auth {
     };
   };
 }
+
+message ChangePasswordRequest {
+  optional string email = 1;
+  optional string phone = 2;
+  optional string code = 3;
+  string new_password = 4;
+  optional string old_password = 5;
+}
+
+message ChangePasswordResponse {}
 
 message RememberPasswordRequest {
   optional string email = 1;

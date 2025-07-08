@@ -104,6 +104,11 @@ async function loginUser() {
           <div v-if="errorMessage" class="notification is-danger">
             {{errorMessage}}
           </div>
+          <p>
+            <b-navbar-item tag="router-link" :to="{ path: '/remember-password' }">
+              <a>{{ t("page.login.remember-password") }}</a>
+            </b-navbar-item>
+          </p>
           <b-button
               v-on:click="loginUser"
               :disabled="disableLoginButton"

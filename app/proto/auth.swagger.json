@@ -16,6 +16,38 @@
     "application/json"
   ],
   "paths": {
+    "/change-password": {
+      "post": {
+        "operationId": "Auth_ChangePassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authChangePasswordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authChangePasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/confirm-email": {
       "post": {
         "operationId": "Auth_ConfirmEmail",
@@ -112,7 +144,7 @@
         ]
       }
     },
-    "/remember-password-by-email": {
+    "/remember-password": {
       "post": {
         "operationId": "Auth_RememberPassword",
         "responses": {
@@ -178,6 +210,29 @@
     }
   },
   "definitions": {
+    "authChangePasswordRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "newPassword": {
+          "type": "string"
+        },
+        "oldPassword": {
+          "type": "string"
+        }
+      }
+    },
+    "authChangePasswordResponse": {
+      "type": "object"
+    },
     "authConfirmEmailRequest": {
       "type": "object",
       "properties": {

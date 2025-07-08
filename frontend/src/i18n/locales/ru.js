@@ -1,5 +1,6 @@
 export default {
     pageheaders: {
+      "remember-password": "Вспомнить пароль",
       download: "Скачать",
       login: "Вход",
       pay: "Оплата",
@@ -29,6 +30,9 @@ export default {
       download: "Скачать для"
     },
     page: {
+        login: {
+            "remember-password": "Вспомнить пароль"
+        },
         "email-confirmation": {
             send: "Отправить"
         },

@@ -22,6 +22,7 @@ const (
 	Auth_Register_FullMethodName              = "/auth.Auth/Register"
 	Auth_Login_FullMethodName                 = "/auth.Auth/Login"
 	Auth_RememberPassword_FullMethodName      = "/auth.Auth/RememberPassword"
+	Auth_ChangePassword_FullMethodName        = "/auth.Auth/ChangePassword"
 	Auth_ConfirmEmail_FullMethodName          = "/auth.Auth/ConfirmEmail"
 	Auth_SendEmailConfirmation_FullMethodName = "/auth.Auth/SendEmailConfirmation"
 )
@@ -33,6 +34,7 @@ type AuthClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	RememberPassword(ctx context.Context, in *RememberPasswordRequest, opts ...grpc.CallOption) (*RememberPasswordResponse, error)
+	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	ConfirmEmail(ctx context.Context, in *ConfirmEmailRequest, opts ...grpc.CallOption) (*ConfirmEmailResponse, error)
 	SendEmailConfirmation(ctx context.Context, in *SendEmailConfirmationRequest, opts ...grpc.CallOption) (*SendEmailConfirmationResponse, error)
 }
@@ -75,6 +77,16 @@ func (c *authClient) RememberPassword(ctx context.Context, in *RememberPasswordR
 	return out, nil
 }
 
+func (c *authClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ChangePasswordResponse)
+	err := c.cc.Invoke(ctx, Auth_ChangePassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authClient) ConfirmEmail(ctx context.Context, in *ConfirmEmailRequest, opts ...grpc.CallOption) (*ConfirmEmailResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ConfirmEmailResponse)
@@ -102,6 +114,7 @@ type AuthServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	RememberPassword(context.Context, *RememberPasswordRequest) (*RememberPasswordResponse, error)
+	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 	ConfirmEmail(context.Context, *ConfirmEmailRequest) (*ConfirmEmailResponse, error)
 	SendEmailConfirmation(context.Context, *SendEmailConfirmationRequest) (*SendEmailConfirmationResponse, error)
 	mustEmbedUnimplementedAuthServer()
@@ -122,6 +135,9 @@ func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginResp
 }
 func (UnimplementedAuthServer) RememberPassword(context.Context, *RememberPasswordRequest) (*RememberPasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RememberPassword not implemented")
+}
+func (UnimplementedAuthServer) ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
 }
 func (UnimplementedAuthServer) ConfirmEmail(context.Context, *ConfirmEmailRequest) (*ConfirmEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmEmail not implemented")
@@ -204,6 +220,24 @@ func _Auth_RememberPassword_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangePasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ChangePassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ChangePassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ChangePassword(ctx, req.(*ChangePasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Auth_ConfirmEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConfirmEmailRequest)
 	if err := dec(in); err != nil {
@@ -258,6 +292,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RememberPassword",
 			Handler:    _Auth_RememberPassword_Handler,
+		},
+		{
+			MethodName: "ChangePassword",
+			Handler:    _Auth_ChangePassword_Handler,
 		},
 		{
 			MethodName: "ConfirmEmail",
