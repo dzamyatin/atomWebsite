@@ -16,6 +16,10 @@ import (
 type IRandomizerRepository interface {
 	CreateRandomCode(ctx context.Context, key string, ttl time.Duration) (string, error)
 	CompareWithLast(ctx context.Context, key, code string) (bool, error)
+	CountCodes(
+		ctx context.Context,
+		key string,
+	) (uint64, error)
 }
 
 type RandomizerRepository struct {
@@ -34,6 +38,36 @@ func NewRandomizerRepository(
 		db:     db,
 		time:   time,
 	}
+}
+
+func (r *RandomizerRepository) CountCodes(
+	ctx context.Context,
+	key string,
+) (uint64, error) {
+	sb := Builder.NewSelectBuilder()
+
+	sb.From("randomizer")
+	sb.Select("COUNT(*)")
+	sb.Where(
+		sb.Equal("key", strings.ToLower(key)),
+		sb.GT("expired_at", time.Now()),
+	)
+	sb.Limit(1)
+
+	q, args := sb.Build()
+
+	var res uint64
+	err := r.db.Get(ctx, &res, q, args...)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, nil
+		}
+
+		r.logger.Error("calculate count", zap.Error(err))
+		return 0, errors.Wrap(err, "calculate count")
+	}
+
+	return res, nil
 }
 
 func (r *RandomizerRepository) CreateRandomCode(
