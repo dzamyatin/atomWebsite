@@ -24,7 +24,7 @@
 - vue js admin (https://demos.creative-tim.com/vue-argon-design-system/documentation/?_ga=2.135621303.708551717.1744408739-559679860.1744408739)
   - <span style="color:green">DONE</span> registration
   - login
-  - email-confirm
+  - <span style="color:lightgreen">MVP</span> email-confirm
     - <span style="color:green">DONE</span> yandex smtp
     - google smtp
     - mail smtp
@@ -72,6 +72,7 @@
   - whatsup|vk / rollback messager
 
 ## backlog
+- yandex metrics
 - test cover
 - kafka instead of postgress
 - websockets (notify for some events) discovery a way how to handle communication
