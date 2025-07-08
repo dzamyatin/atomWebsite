@@ -6,6 +6,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/request"
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
+	"github.com/dzamyatin/atomWebsite/internal/validator"
 	"github.com/guregu/null/v6"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
@@ -19,6 +20,8 @@ type AuthServer struct {
 	loginUseCase                 *usecase.Login
 	confirmEmailUseCase          *usecase.ConfirmEmailUseCase
 	sendEmailConfirmationUseCase *usecase.SendEmailConfirmationUseCase
+	rememberPasswordUseCase      *usecase.RememberPasswordUseCase
+	validator                    *validator.Validator
 }
 
 func NewAuthServer(
@@ -27,14 +30,41 @@ func NewAuthServer(
 	confirmEmailUseCase *usecase.ConfirmEmailUseCase,
 	bus bus.IBus,
 	sendEmailConfirmationUseCase *usecase.SendEmailConfirmationUseCase,
+	rememberPasswordUseCase *usecase.RememberPasswordUseCase,
+	validator *validator.Validator,
 ) AuthServer {
 	return AuthServer{
+		validator:                    validator,
 		registerUseCase:              registerUseCase,
 		loginUseCase:                 loginUseCase,
 		bus:                          bus,
 		confirmEmailUseCase:          confirmEmailUseCase,
 		sendEmailConfirmationUseCase: sendEmailConfirmationUseCase,
+		rememberPasswordUseCase:      rememberPasswordUseCase,
 	}
+}
+
+func (r AuthServer) RememberPassword(
+	ctx context.Context,
+	req *atomWebsite.RememberPasswordRequest,
+) (*atomWebsite.RememberPasswordResponse, error) {
+	if err := r.validator.ValidateRememberPassword(req); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	err := r.rememberPasswordUseCase.Execute(
+		ctx,
+		usecase.RememberPasswordRequest{
+			Email: req.GetEmail(),
+			Phone: req.GetPhone(),
+		},
+	)
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &atomWebsite.RememberPasswordResponse{}, nil
 }
 
 func (r AuthServer) SendEmailConfirmation(

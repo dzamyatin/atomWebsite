@@ -54,3 +54,19 @@ POST localhost:8503/send-email-confirmation
 {
   "email": "zamyatin.daniil@gmail.com"
 }
+
+###
+POST localhost:8503/remember-password
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "phone": "+79297145267"
+}
+
+###
+POST localhost:8503/remember-password
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "phone": ""
+}

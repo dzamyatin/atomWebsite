@@ -80,6 +80,29 @@ export async function login(
     return promise
 }
 
+export async function rememberPassword(
+    email,
+    phone
+) {
+    let promise = new Promise((resolve, reject) => {
+        auth.authRememberPassword(
+            {
+                'email': email,
+                'phone': phone,
+            },
+            function callback(error, data, response) {
+                resolve(new Result(
+                    error,
+                    data,
+                    response,
+                ))
+            }
+        )
+    });
+
+    return promise
+}
+
 class Result {
     constructor(
         error,

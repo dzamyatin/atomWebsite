@@ -8,6 +8,27 @@ export default {
       registration: "Регистрация",
       emailconfirmation: "Подтвердите email"
     },
+    fields: {
+      email: "Email",
+      phone: "Телефон"
+    },
+    placeholders: {
+      email: "Введите ваш email",
+      phone: "Введите ваш телефон"
+    },
+    help: {
+      provide_email_or_phone: "Укажите email или телефон для восстановления пароля"
+    },
+    buttons: {
+      reset_password: "Восстановить пароль"
+    },
+    errors: {
+      provide_email_or_phone: "Пожалуйста, укажите email или телефон",
+      unknown_error: "Произошла неизвестная ошибка"
+    },
+    success: {
+      password_reset_sent: "Инструкции по восстановлению пароля отправлены"
+    },
     header: {
         logoalt: "VPN Сервис"
     },

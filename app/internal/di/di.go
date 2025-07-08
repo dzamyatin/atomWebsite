@@ -44,8 +44,6 @@ var set = wire.NewSet(
 	wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)),
 	wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)),
 	userservice.NewPasswordEncoder,
-	wire.Bind(new(validator.IRegistrationValidator), new(*validator.RegistrationValidator)),
-	validator.NewRegistrationValidator,
 	usecasemigration.NewUp,
 	usecasemigration.NewDown,
 	metric.NewMetric,
@@ -75,6 +73,7 @@ var set = wire.NewSet(
 	usecase.NewSendEmailConfirmationUseCase,
 	newMessenger,
 	usecase.NewRememberPasswordUseCase,
+	validator.NewValidator,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
