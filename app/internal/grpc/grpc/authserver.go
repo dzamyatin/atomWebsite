@@ -7,34 +7,55 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
 	"github.com/guregu/null/v6"
+	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type AuthServer struct {
 	atomWebsite.UnimplementedAuthServer
-	bus             bus.IBus
-	registerUseCase *usecase.Registration
-	loginUseCase    *usecase.Login
+	bus                 bus.IBus
+	registerUseCase     *usecase.Registration
+	loginUseCase        *usecase.Login
+	confirmEmailUseCase *usecase.ConfirmEmailUseCase
 }
 
 func NewAuthServer(
 	registerUseCase *usecase.Registration,
 	loginUseCase *usecase.Login,
+	confirmEmailUseCase *usecase.ConfirmEmailUseCase,
 	bus bus.IBus,
 ) AuthServer {
 	return AuthServer{
-		registerUseCase: registerUseCase,
-		loginUseCase:    loginUseCase,
-		bus:             bus,
+		registerUseCase:     registerUseCase,
+		loginUseCase:        loginUseCase,
+		bus:                 bus,
+		confirmEmailUseCase: confirmEmailUseCase,
 	}
 }
 
 func (r AuthServer) ConfirmEmail(
-	context.Context,
-	*atomWebsite.ConfirmEmailRequest,
+	ctx context.Context,
+	req *atomWebsite.ConfirmEmailRequest,
 ) (*atomWebsite.ConfirmEmailResponse, error) {
-	return nil, nil
+
+	err := r.confirmEmailUseCase.Execute(
+		ctx,
+		usecase.ConfirmEmailRequest{
+			UserEmail:        req.GetEmail(),
+			ConfirmationCode: req.GetCode(),
+		},
+	)
+
+	if err != nil {
+		if errors.Is(err, usecase.ErrWrongCode) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &atomWebsite.ConfirmEmailResponse{}, nil
 }
 
 func (r AuthServer) Register(ctx context.Context, req *atomWebsite.RegisterRequest) (*atomWebsite.RegisterResponse, error) {

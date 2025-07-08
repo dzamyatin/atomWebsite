@@ -23,9 +23,18 @@ GET http://localhost:9090/metrics
 POST localhost:8503/register
 
 {
-  "email": "test@test.ru",
-  "password": "pwd",
+  "email": "zamyatin.daniil@gmail.com",
+  "password": "pwd123",
   "phone": "+79991112233"
+}
+
+###
+POST localhost:8503/register
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "password": "pwd123",
+  "phone": ""
 }
 
 ###
@@ -35,6 +44,6 @@ OPTIONS localhost:8503/register
 POST localhost:8503/confirm-email
 
 {
-  "email": "test@test.ru",
-  "code": "123"
+  "email": "zamyatin.daniil@gmail.com",
+  "code": "QPWTY"
 }

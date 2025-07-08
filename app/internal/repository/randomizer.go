@@ -75,7 +75,7 @@ func (r *RandomizerRepository) CompareWithLast(ctx context.Context, key, code st
 	q, args := sb.Build()
 
 	var res string
-	err := r.db.Get(ctx, &res, q, args)
+	err := r.db.Get(ctx, &res, q, args...)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return false, nil
