@@ -27,3 +27,5 @@ dev:
 	sh -c "cd app && go generate --tags wireinject ./..."
 	sh -c "cd frontend && npm run client"
 	sh -c "cd frontend && npm run dev"
+telegrambot:
+	sh -c "cd app && go run ./ telegrambot --config config-local.yaml"

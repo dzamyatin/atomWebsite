@@ -10,6 +10,20 @@ const defaultHelp = "There is no special conditions"
 
 func init() {
 	GetRegistry().Register(
+		"telegrambot",
+		NewCommand[executors.ArgTelegramBotProcess](
+			func(ctx context.Context) IExecuter[executors.ArgTelegramBotProcess] {
+				v, err := di.InitializeTelegramBotProcessCommand(ctx)
+				if err != nil {
+					panic(err)
+				}
+
+				return v
+			},
+			defaultHelp,
+		),
+	)
+	GetRegistry().Register(
 		"bus",
 		NewCommand[executors.ArgBusProcess](
 			func(ctx context.Context) IExecuter[executors.ArgBusProcess] {

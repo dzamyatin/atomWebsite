@@ -33,3 +33,9 @@ func InitializeBusProcessCommand(ctx context.Context) (*executors.BusProcessComm
 
 	return &executors.BusProcessCommand{}, nil
 }
+
+func InitializeTelegramBotProcessCommand(ctx context.Context) (*executors.TelegramBotProcessCommand, error) {
+	wire.Build(set)
+
+	return &executors.TelegramBotProcessCommand{}, nil
+}

@@ -11,6 +11,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/config"
 	servicemail "github.com/dzamyatin/atomWebsite/internal/service/mail"
 	servicemessenger "github.com/dzamyatin/atomWebsite/internal/service/messenger"
+	messengertelegram "github.com/dzamyatin/atomWebsite/internal/service/messenger/telegram"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -29,6 +30,15 @@ import (
 	"os"
 	"time"
 )
+
+func newTelegramBotServer(
+	logger *zap.Logger,
+) *messengertelegram.TelegramBotServer {
+	return messengertelegram.NewTelegramBotServer(
+		getConfig().TelegramBotConfig.Token,
+		logger,
+	)
+}
 
 func newMessenger(
 	logger *zap.Logger,

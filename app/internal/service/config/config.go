@@ -27,11 +27,16 @@ type MailerConfig struct {
 }
 
 type AppConfig struct {
-	Db         DbConfig     `mapstructure:"db"`
-	AddrMetric string       `mapstructure:"addr_metric"`
-	AddrGrpc   string       `mapstructure:"addr_grpc"`
-	AddHttp    string       `mapstructure:"addr_http"`
-	Mailer     MailerConfig `mapstructure:"mailer"`
+	Db                DbConfig          `mapstructure:"db"`
+	AddrMetric        string            `mapstructure:"addr_metric"`
+	AddrGrpc          string            `mapstructure:"addr_grpc"`
+	AddHttp           string            `mapstructure:"addr_http"`
+	Mailer            MailerConfig      `mapstructure:"mailer"`
+	TelegramBotConfig TelegramBotConfig `mapstructure:"telegram_bot"`
+}
+
+type TelegramBotConfig struct {
+	Token string `mapstructure:"token"`
 }
 
 type DbConfig struct {

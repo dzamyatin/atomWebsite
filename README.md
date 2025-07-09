@@ -36,6 +36,7 @@
   - for phone
 - cart
 - payment
+  - check telegram payment https://core.telegram.org/bots/api#payments 
   - reserch which payment method are better (yandexpay)
   - payment implementation
   - reserch which crypt method are better

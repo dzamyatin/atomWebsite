@@ -7,6 +7,8 @@ db:
 addr_metric: ":9090"
 addr_grpc: ":8502"
 addr_http: ":8503"
+telegram_bot:
+  token: "7358655876:AAF3QEyTt1wp31TpM03yFigx9DHcO63_7wI" #t.me/AtomVPNProjectSuperBot
 mailer:
   smtp:
     yandex1:
