@@ -7,11 +7,19 @@ import (
 )
 
 type Validator struct {
-	emailRegex *regexp.Regexp
-	phoneRegex *regexp.Regexp
+	emailRegex    *regexp.Regexp
+	phoneRegex    *regexp.Regexp
+	passwordRegex *regexp.Regexp
 }
 
 func NewValidator() *Validator {
+	passwordRegex, err := regexp.Compile(
+		`^[A-Za-z\d!@#$%^&*()_+]{8,}$`,
+	)
+	if err != nil {
+		panic(err)
+	}
+
 	emailRegex, err := regexp.Compile(
 		`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`,
 	)
@@ -25,9 +33,42 @@ func NewValidator() *Validator {
 	}
 
 	return &Validator{
-		emailRegex: emailRegex,
-		phoneRegex: phoneRegex,
+		emailRegex:    emailRegex,
+		phoneRegex:    phoneRegex,
+		passwordRegex: passwordRegex,
 	}
+}
+
+func (r Validator) ValidateChangePasswordRequest(req *atomWebsite.ChangePasswordRequest) error {
+	if req.GetEmail() == "" && req.GetPhone() == "" {
+		return errors.New("email and phone are required")
+	}
+
+	if req.GetEmail() != "" {
+		if !r.emailRegex.MatchString(req.GetEmail()) {
+			return errors.New("invalid email")
+		}
+	}
+
+	if req.GetPhone() != "" {
+		if !r.phoneRegex.MatchString(req.GetPhone()) {
+			return errors.New("invalid phone")
+		}
+	}
+
+	if req.GetOldPassword() == "" && req.GetCode() == "" {
+		return errors.New("old password or verification code is required")
+	}
+
+	if req.GetNewPassword() == "" {
+		return errors.New("new password is required")
+	}
+
+	if !r.passwordRegex.MatchString(req.GetNewPassword()) {
+		return errors.New("new passwords should contain english letters, numbers, and special characters")
+	}
+
+	return nil
 }
 
 func (r Validator) ValidateRememberPassword(req *atomWebsite.RememberPasswordRequest) error {

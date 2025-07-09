@@ -47,7 +47,7 @@ function checkEmail() {
 }
 
 function checkPassword() {
-  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+  const regex = /^[A-Za-z\d!@#$%^&*()_+]{8,}$/;
   if (regex.test(password.value)) {
     wrongPasswordType.value = "is-success"
     wrongPasswordMessage.value = ""

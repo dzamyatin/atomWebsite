@@ -103,6 +103,35 @@ export async function rememberPassword(
     return promise
 }
 
+export async function changePassword(
+    newPassword,
+    oldPassword,
+    email,
+    phone,
+    code
+) {
+    let promise = new Promise((resolve, reject) => {
+        auth.authChangePassword(
+            {
+                'newPassword': newPassword,
+                'oldPassword': oldPassword,
+                'email': email,
+                'phone': phone,
+                'code': code,
+            },
+            function callback(error, data, response) {
+                resolve(new Result(
+                    error,
+                    data,
+                    response,
+                ))
+            }
+        )
+    });
+
+    return promise
+}
+
 class Result {
     constructor(
         error,

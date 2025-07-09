@@ -94,12 +94,13 @@ func (r *UserRepository) UpdateUser(ctx context.Context, user entity.User) error
 	ub := Builder.NewUpdateBuilder()
 
 	ub.Update("users")
+	ub.Where(ub.Equal("uuid", user.UUID))
 
 	cols := r.getInsertCols()
 	vals := r.getInsertVal(user)
 
 	for i, col := range cols {
-		ub.Set(ub.Assign(col, vals[i]))
+		ub.SetMore(ub.Assign(col, vals[i]))
 	}
 
 	sql, args := ub.Build()
@@ -107,5 +108,5 @@ func (r *UserRepository) UpdateUser(ctx context.Context, user entity.User) error
 
 	_, err := r.db.Exec(ctx, sql, args...)
 
-	return errors.Wrap(err, "error adding user")
+	return errors.Wrap(err, "error update user")
 }

@@ -22,6 +22,7 @@ type AuthServer struct {
 	sendEmailConfirmationUseCase *usecase.SendEmailConfirmationUseCase
 	rememberPasswordUseCase      *usecase.RememberPasswordUseCase
 	validator                    *validator.Validator
+	changePasswordUseCase        *usecase.ChangePasswordUseCase
 }
 
 func NewAuthServer(
@@ -32,9 +33,11 @@ func NewAuthServer(
 	sendEmailConfirmationUseCase *usecase.SendEmailConfirmationUseCase,
 	rememberPasswordUseCase *usecase.RememberPasswordUseCase,
 	validator *validator.Validator,
+	changePasswordUseCase *usecase.ChangePasswordUseCase,
 ) AuthServer {
 	return AuthServer{
 		validator:                    validator,
+		changePasswordUseCase:        changePasswordUseCase,
 		registerUseCase:              registerUseCase,
 		loginUseCase:                 loginUseCase,
 		bus:                          bus,
@@ -42,6 +45,32 @@ func NewAuthServer(
 		sendEmailConfirmationUseCase: sendEmailConfirmationUseCase,
 		rememberPasswordUseCase:      rememberPasswordUseCase,
 	}
+}
+
+func (r AuthServer) ChangePassword(
+	ctx context.Context,
+	req *atomWebsite.ChangePasswordRequest,
+) (*atomWebsite.ChangePasswordResponse, error) {
+	if err := r.validator.ValidateChangePasswordRequest(req); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "validation error %s", err.Error())
+	}
+
+	err := r.changePasswordUseCase.Execute(
+		ctx,
+		usecase.ChangePasswordRequest{
+			Email:       req.GetEmail(),
+			Phone:       req.GetPhone(),
+			Code:        req.GetCode(),
+			NewPassword: req.GetNewPassword(),
+			OldPassword: req.GetOldPassword(),
+		},
+	)
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &atomWebsite.ChangePasswordResponse{}, nil
 }
 
 func (r AuthServer) RememberPassword(

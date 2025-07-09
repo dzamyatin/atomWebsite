@@ -76,6 +76,9 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 	}
 
 	r.server = &http.Server{
+		//ReadTimeout:  5 * time.Second,
+		//WriteTimeout: 5 * time.Second,
+		//IdleTimeout:  5 * time.Second,
 		Addr:    r.httpAddr,
 		Handler: NewHandler(mux),
 		BaseContext: func(l net.Listener) context.Context {

@@ -11,24 +11,35 @@ export default {
     },
     fields: {
       email: "Email",
-      phone: "Телефон"
+      phone: "Телефон",
+      oldPassword: "Старый пароль",
+      newPassword: "Новый пароль",
+      code: "Код подтверждения"
     },
     placeholders: {
       email: "Введите ваш email",
-      phone: "Введите ваш телефон"
+      phone: "Введите ваш телефон",
+      oldPassword: "Введите ваш старый пароль",
+      newPassword: "Введите ваш новый пароль",
+      code: "Введите код подтверждения"
     },
     help: {
       provide_email_or_phone: "Укажите email или телефон для восстановления пароля"
     },
     buttons: {
-      reset_password: "Восстановить пароль"
+      reset_password: "Восстановить пароль",
+      change_password: "Изменить пароль"
     },
     errors: {
       provide_email_or_phone: "Пожалуйста, укажите email или телефон",
-      unknown_error: "Произошла неизвестная ошибка"
+      unknown_error: "Произошла неизвестная ошибка",
+      provide_both_passwords: "Пожалуйста, укажите старый и новый пароли",
+      provide_new_password: "Пожалуйста, укажите новый пароль",
+      provide_verification_code: "Пожалуйста, укажите код подтверждения"
     },
     success: {
-      password_reset_sent: "Инструкции по восстановлению пароля отправлены"
+      password_reset_sent: "Инструкции по восстановлению пароля отправлены",
+      password_changed: "Пароль успешно изменен"
     },
     header: {
         logoalt: "VPN Сервис"

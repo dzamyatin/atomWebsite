@@ -74,6 +74,7 @@ var set = wire.NewSet(
 	newMessenger,
 	usecase.NewRememberPasswordUseCase,
 	validator.NewValidator,
+	usecase.NewChangePasswordUseCase,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
