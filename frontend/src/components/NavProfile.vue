@@ -3,10 +3,16 @@
 import {BNavbarItem} from "buefy";
 import {useI18n} from 'vue-i18n'
 import {useLoginStore} from './../stores/login.js'
-
+import router from "@/router/index.js";
 const {t} = useI18n()
 
 const store = useLoginStore();
+
+function logout() {
+  store.logout()
+  router.push('/login')
+}
+
 </script>
 
 <template>
@@ -18,7 +24,7 @@ const store = useLoginStore();
         </a>
       </b-navbar-item>
       <b-navbar-item>
-        <a class="button is-light" @click="store.logout">
+        <a class="button is-light" @click="logout">
           {{ t("nav.logout") || "Logout" }}
         </a>
       </b-navbar-item>
