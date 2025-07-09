@@ -4,8 +4,10 @@ import {useLoginStore} from './../stores/login.js'
 import {ref} from "vue";
 import router from "@/router/index.js";
 import {changePassword} from "./../client/client"
+import {useRoute} from "vue-router";
 
 const {t} = useI18n()
+const route = useRoute();
 const store = useLoginStore()
 
 // Form fields
@@ -82,6 +84,8 @@ async function submitForm() {
     } else {
       successMessage.value = t('success.password_changed')
       clearForm()
+
+      router.push('/login')
     }
   } catch (error) {
     errorMessage.value = error.message || t('errors.unknown_error')
