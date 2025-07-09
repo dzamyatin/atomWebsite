@@ -37,6 +37,8 @@ async function submitForm() {
       // Clear form after successful submission
       email.value = ''
       phone.value = ''
+
+      router.push('/change-password')
     }
   } catch (error) {
     errorMessage.value = error.message || t('errors.unknown_error')

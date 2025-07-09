@@ -6,7 +6,8 @@ export default {
       pay: "Оплата",
       profile: "Личный кабинет",
       registration: "Регистрация",
-      emailconfirmation: "Подтвердите email"
+      emailconfirmation: "Подтвердите email",
+      changepassword: "Изменить пароль"
     },
     fields: {
       email: "Email",
@@ -51,6 +52,10 @@ export default {
       download: "Скачать для"
     },
     page: {
+        changepassword: {
+          bypass: "По паролю",
+          bycode: "По коду",
+        },
         login: {
             "remember-password": "Вспомнить пароль"
         },
