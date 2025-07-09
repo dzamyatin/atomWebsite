@@ -52,7 +52,26 @@ func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (*ent
 }
 
 func (r *UserRepository) GetUserByPhone(ctx context.Context, phone string) (*entity.User, error) {
-	return &entity.User{}, ErrUserNotFound
+	sb := sqlbuilder.Select(r.getInsertCols()...)
+
+	sb.From("users")
+	sb.Where(sb.ILike("phone", phone))
+
+	q, args := sb.Build()
+
+	q = r.db.Rebind(sb.String())
+
+	user := entity.User{}
+	err := r.db.Get(ctx, &user, q, args...)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrUserNotFound
+		}
+		return nil, errors.Wrap(err, "get user by phone")
+	}
+
+	return &user, nil
 }
 
 func (r *UserRepository) AddUser(ctx context.Context, user entity.User) error {
