@@ -1,5 +1,7 @@
 export default {
     pageheaders: {
+      placeorder: "Заказ",
+      cart: "Корзина",
       "remember-password": "Вспомнить пароль",
       download: "Скачать",
       login: "Вход",

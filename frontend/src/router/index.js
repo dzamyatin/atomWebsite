@@ -8,6 +8,8 @@ import PayView from "../views/PayView.vue"
 import EmailConfirmation from "@/views/EmailConfirmation.vue";
 import RememberPasswordView from "@/views/RememberPasswordView.vue";
 import ChangePasswordView from "@/views/ChangePasswordView.vue";
+import CartView from "@/views/CartView.vue";
+import PlaceOrderView from "@/views/PlaceOrderView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +23,16 @@ const router = createRouter({
       path: '/download',
       name: 'download',
       component: DownloadView,
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: CartView,
+    },
+    {
+      path: '/place-order',
+      name: 'place-order',
+      component: PlaceOrderView,
     },
     {
       path: '/registration',

@@ -28,13 +28,18 @@
   - google smtp
   - mail smtp
 - phone-confirm
-  - telegram
+  - <span style="color:yellow">IN PROGRESS</span> telegram
   - whatsapp
   - vk
 - remember password
-  - <span style="color:yellow">IN PROGRESS</span> for email
+  - <span style="color:green">DONE</span> for email
   - for phone
+- cart
 - payment
+  - reserch which payment method are better (yandexpay)
+  - payment implementation
+  - reserch which crypt method are better
+  - crypt payment method
 - personal cabinet
 - download app
 - <span style="color:green">DONE</span> registration
@@ -57,17 +62,10 @@
     ```
     
 - nginx for static
-- reserch which payment method are better (yandexpay)
-- payment implementation
-- reserch which crypt method are better
-- crypt payment method
 - kubernetes deploy
   - statefulset for postgress
   - deploy for app
   - volume
-- phone verifiction
-  - telegram verify
-  - whatsup|vk / rollback messager
 
 ## backlog
 - yandex metrics
