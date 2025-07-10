@@ -24,7 +24,7 @@
       <div class="box">
         <div class="columns is-mobile">
           <div class="column is-half is-offset-one-quarter">
-            <p class="bd-notification is-primary">
+            <div class="bd-notification is-primary">
               <table class="table">
                 <thead>
                 <tr>
@@ -52,7 +52,7 @@
                 </tr>
                 </tbody>
               </table>
-            </p>
+            </div>
           </div>
         </div>
       </div>

@@ -42,10 +42,10 @@ func newTelegramBotServer(
 
 func newMessenger(
 	logger *zap.Logger,
-) servicemessenger.IMessengerService {
-	return servicemessenger.NewAggrigatorMessenger(
+) servicemessenger.ISenderService {
+	return servicemessenger.NewAggrigatorSender(
 		logger,
-		[]servicemessenger.IMessengerService{
+		[]servicemessenger.ISenderService{
 			servicemessenger.NewTelegramMessenger(logger),
 		},
 	)

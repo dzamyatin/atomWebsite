@@ -25,7 +25,7 @@ type RememberPasswordUseCase struct {
 	logger               *zap.Logger
 	mailer               servicemail.IMailer
 	randomizerRepository repository.IRandomizerRepository
-	messenger            servicemessenger.IMessengerService
+	messenger            servicemessenger.ISenderService
 }
 
 func NewRememberPasswordUseCase(
@@ -34,7 +34,7 @@ func NewRememberPasswordUseCase(
 	logger *zap.Logger,
 	mailer servicemail.IMailer,
 	randomizerRepository repository.IRandomizerRepository,
-	messenger servicemessenger.IMessengerService,
+	messenger servicemessenger.ISenderService,
 ) *RememberPasswordUseCase {
 	return &RememberPasswordUseCase{
 		userRepository:       userRepository,

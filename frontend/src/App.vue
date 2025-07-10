@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import { BNavbar, BNavbarDropdown, BNavbarItem } from 'buefy'
 import { useI18n } from 'vue-i18n'
 import NavProfile from "@/components/NavProfile.vue";
+import SocialNetworks from "./components/SocialNetworks.vue";
 
 const { t } = useI18n()
 </script>
@@ -44,6 +45,9 @@ const { t } = useI18n()
         <br/>
         <a href="/download"> {{t("footer.download")}}</a>
       </p>
+    </div>
+    <div class="content has-text-centered">
+      <SocialNetworks/>
     </div>
   </footer>
 </template>

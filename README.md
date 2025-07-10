@@ -35,6 +35,8 @@
   - <span style="color:green">DONE</span> for email
   - for phone
 - cart
+- place-order
+- key-list to obtain
 - payment
   - check telegram payment https://core.telegram.org/bots/api#payments 
   - reserch which payment method are better (yandexpay)

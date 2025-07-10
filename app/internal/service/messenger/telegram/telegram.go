@@ -111,6 +111,10 @@ func (r *TelegramBotServer) Shutdown() error {
 	return nil
 }
 
+func (r *TelegramBotServer) SendMessage(ctx context.Context) error {
+	return nil
+}
+
 func receiveUpdates(ctx context.Context, updates tgbotapi.UpdatesChannel) {
 	// `for {` means the loop is infinite until we manually stop it
 	for {

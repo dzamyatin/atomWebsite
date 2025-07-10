@@ -2,6 +2,6 @@ package servicemessenger
 
 import "context"
 
-type IMessengerService interface {
+type ISenderService interface {
 	Send(ctx context.Context, phone string, message string) error
 }

@@ -6,22 +6,22 @@ import (
 	"go.uber.org/zap"
 )
 
-type AggrigatorMessenger struct {
+type AggregatorSender struct {
 	logger     *zap.Logger
-	messengers []IMessengerService
+	messengers []ISenderService
 }
 
-func NewAggrigatorMessenger(
+func NewAggrigatorSender(
 	logger *zap.Logger,
-	messengers []IMessengerService,
-) *AggrigatorMessenger {
-	return &AggrigatorMessenger{
+	messengers []ISenderService,
+) *AggregatorSender {
+	return &AggregatorSender{
 		logger:     logger,
 		messengers: messengers,
 	}
 }
 
-func (r *AggrigatorMessenger) Send(ctx context.Context, phone string, message string) error {
+func (r *AggregatorSender) Send(ctx context.Context, phone string, message string) error {
 	var err error
 
 	for _, m := range r.messengers {

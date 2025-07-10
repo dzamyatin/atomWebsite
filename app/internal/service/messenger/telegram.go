@@ -5,18 +5,18 @@ import (
 	"go.uber.org/zap"
 )
 
-type TelegramMessenger struct {
+type TelegramSender struct {
 	logger *zap.Logger
 }
 
 func NewTelegramMessenger(
 	logger *zap.Logger,
-) *TelegramMessenger {
-	return &TelegramMessenger{
+) *TelegramSender {
+	return &TelegramSender{
 		logger: logger,
 	}
 }
 
-func (r *TelegramMessenger) Send(ctx context.Context, phone string, message string) error {
+func (r *TelegramSender) Send(ctx context.Context, phone string, message string) error {
 	return nil
 }
