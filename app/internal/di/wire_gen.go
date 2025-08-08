@@ -92,8 +92,8 @@ func InitializeBusProcessCommand(ctx context.Context) (*executors.BusProcessComm
 
 func InitializeTelegramBotProcessCommand(ctx context.Context) (*executors.TelegramBotProcessCommand, error) {
 	logger := newLogger()
-	telegramBotServer := newTelegramBotServer(logger)
-	telegramBotProcessCommand := executors.NewTelegramBotProcessCommand(logger, telegramBotServer)
+	bot := newTelegramBotServer(logger)
+	telegramBotProcessCommand := executors.NewTelegramBotProcessCommand(logger, bot)
 	return telegramBotProcessCommand, nil
 }
 

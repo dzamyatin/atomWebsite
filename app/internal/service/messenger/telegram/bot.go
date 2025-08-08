@@ -78,7 +78,7 @@ func (r *Bot) ReceiveUpdates(
 	u.Timeout = 60
 	u.Offset = offset
 
-	updates := bot.GetUpdatesChan(u)
+	updates := r.botAPI.GetUpdatesChan(u)
 
 	select {
 	case <-ctx.Done():
@@ -94,6 +94,11 @@ func (r *Bot) ReceiveUpdates(
 }
 
 func (r *Bot) SendMessage(chatId int64, message string) error {
+	err := r.setMe()
+	if err != nil {
+		return errors.Wrap(err, "botAPI.setMe")
+	}
+
 	msg := tgbotapi.NewMessage(chatId, message)
 
 	//msg.Entities = append(
@@ -105,7 +110,7 @@ func (r *Bot) SendMessage(chatId int64, message string) error {
 	//	},
 	//)
 
-	_, err := bot.Send(msg)
+	_, err = r.botAPI.Send(msg)
 
 	if err != nil {
 		return errors.Wrap(err, "bot.SendMessage")

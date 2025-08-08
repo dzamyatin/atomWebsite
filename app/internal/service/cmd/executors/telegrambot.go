@@ -5,6 +5,7 @@ import (
 	mainarg "github.com/dzamyatin/atomWebsite/internal/service/arg"
 	messengertelegram "github.com/dzamyatin/atomWebsite/internal/service/messenger/telegram"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"go.uber.org/zap"
 )
 
@@ -14,24 +15,33 @@ type ArgTelegramBotProcess struct {
 
 type TelegramBotProcessCommand struct {
 	logger            *zap.Logger
-	telegramBotServer *messengertelegram.TelegramBotServer
+	telegramBotServer *messengertelegram.Bot
 }
 
-func NewTelegramBotProcessCommand(logger *zap.Logger, telegramBotServer *messengertelegram.TelegramBotServer) *TelegramBotProcessCommand {
+func NewTelegramBotProcessCommand(logger *zap.Logger, telegramBotServer *messengertelegram.Bot) *TelegramBotProcessCommand {
 	return &TelegramBotProcessCommand{logger: logger, telegramBotServer: telegramBotServer}
 }
 
 func (r *TelegramBotProcessCommand) Execute(ctx context.Context, u ArgTelegramBotProcess) error {
+	ctx, cancel := context.WithCancel(ctx)
+
 	return process.NewProcessManager(
 		r.logger,
 		process.Process{
 			Name: "telegrambot-process",
 			Object: process.NewProcessor(
 				func(ctx context.Context) error {
-					return r.telegramBotServer.Serve(ctx)
+					return r.telegramBotServer.ReceiveUpdates(
+						ctx,
+						0,
+						func(update tgbotapi.Update, bot *messengertelegram.Bot) error {
+							return nil
+						},
+					)
 				},
 				func() error {
-					return r.telegramBotServer.Shutdown()
+					cancel()
+					return nil
 				},
 			),
 		},

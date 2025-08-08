@@ -33,8 +33,8 @@ import (
 
 func newTelegramBotServer(
 	logger *zap.Logger,
-) *messengertelegram.TelegramBotServer {
-	return messengertelegram.NewTelegramBotServer(
+) *messengertelegram.Bot {
+	return messengertelegram.NewBot(
 		getConfig().TelegramBotConfig.Token,
 		logger,
 	)
@@ -46,7 +46,7 @@ func newMessenger(
 	return servicemessenger.NewAggrigatorSender(
 		logger,
 		[]servicemessenger.ISenderService{
-			servicemessenger.NewTelegramMessenger(logger),
+			servicemessenger.NewTelegramSender(logger),
 		},
 	)
 }

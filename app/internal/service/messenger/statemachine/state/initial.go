@@ -17,6 +17,7 @@ func (r *InitialState) State() servicemessengerstatemachine.StateName {
 func (r *InitialState) ReceiveMessage(
 	ctx context.Context,
 	message servicemessengermessage.IMessage,
+	machine servicemessengerstatemachine.IStateMachine,
 ) error {
 	return nil
 }

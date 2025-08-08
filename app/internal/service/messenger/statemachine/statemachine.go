@@ -42,10 +42,6 @@ func (r *StateMachine) Load(messenger, phone, chatID string) (entity.Chat, error
 	return chat, nil
 }
 
-func (r *StateMachine) ReceiveMessage(ctx context.Context, message servicemessengermessage.IMessage) error {
-	return r.currentState.ReceiveMessage(ctx, message)
-}
-
 func (r *StateMachine) Move(state StateName) error {
 	newState, err := r.stateRegistry.Get(state)
 	if err != nil {
@@ -61,4 +57,12 @@ func (r *StateMachine) Move(state StateName) error {
 	}
 
 	return nil
+}
+
+func (r *StateMachine) ReceiveMessage(
+	ctx context.Context,
+	message servicemessengermessage.IMessage,
+	_ StateMachine,
+) error {
+	return r.currentState.ReceiveMessage(ctx, message, r)
 }

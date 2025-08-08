@@ -2,6 +2,7 @@ package servicemessenger
 
 import (
 	"context"
+	servicemessengermessage "github.com/dzamyatin/atomWebsite/internal/service/messenger/message"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
@@ -32,4 +33,9 @@ func (r *AggregatorSender) Send(ctx context.Context, phone string, message strin
 	}
 
 	return errors.Wrap(err, "messenger send")
+}
+
+func (r *AggregatorSender) Init(_ context.Context, data servicemessengermessage.IMessage) error {
+	r.logger.Error("undefined sender to init", zap.Any("message", data))
+	return nil
 }

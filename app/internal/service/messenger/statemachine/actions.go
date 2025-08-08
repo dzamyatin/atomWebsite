@@ -6,5 +6,9 @@ import (
 )
 
 type IStateActions interface {
-	ReceiveMessage(ctx context.Context, message servicemessengermessage.IMessage) error
+	ReceiveMessage(
+		ctx context.Context,
+		message servicemessengermessage.IMessage,
+		machine IStateMachine,
+	) error
 }
