@@ -13,6 +13,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/cmd/executors"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/handler"
+	servicemessengerstatemachinestate "github.com/dzamyatin/atomWebsite/internal/service/messenger/statemachine/state"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	"github.com/dzamyatin/atomWebsite/internal/service/time"
@@ -79,6 +80,9 @@ var set = wire.NewSet(
 	executors.NewTelegramBotProcessCommand,
 	wire.Bind(new(repository.IChatRepository), new(*repository.ChatRepository)),
 	repository.NewChatRepository,
+	servicemessengerstatemachinestate.NewInitialState,
+	servicemessengerstatemachinestate.NewWaitForPhone,
+	newStateRegistry,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

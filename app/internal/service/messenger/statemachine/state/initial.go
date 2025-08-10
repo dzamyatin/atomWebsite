@@ -12,6 +12,10 @@ type InitialState struct {
 	logger *zap.Logger
 }
 
+func NewInitialState(logger *zap.Logger) *InitialState {
+	return &InitialState{logger: logger}
+}
+
 func (r *InitialState) State() servicemessengerstatemachine.StateName {
 	return servicemessengerstatemachine.StateInitial
 }

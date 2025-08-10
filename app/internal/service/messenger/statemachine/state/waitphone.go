@@ -12,6 +12,10 @@ type WaitForPhone struct {
 	logger *zap.Logger
 }
 
+func NewWaitForPhone(logger *zap.Logger) *WaitForPhone {
+	return &WaitForPhone{logger: logger}
+}
+
 func (r *WaitForPhone) State() servicemessengerstatemachine.StateName {
 	return servicemessengerstatemachine.StateWaitPhone
 }
