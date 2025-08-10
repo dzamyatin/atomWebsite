@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
-	servicemessengermessage "github.com/dzamyatin/atomWebsite/internal/service/messenger/message"
+	servicemessengermessage "github.com/dzamyatin/atomWebsite/internal/service/messenger/driver"
 	"github.com/pkg/errors"
 )
 

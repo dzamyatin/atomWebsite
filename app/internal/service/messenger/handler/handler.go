@@ -2,7 +2,7 @@ package servicemessengerhandler
 
 import (
 	"context"
-	servicemessengermessage "github.com/dzamyatin/atomWebsite/internal/service/messenger/message"
+	servicemessengermessage "github.com/dzamyatin/atomWebsite/internal/service/messenger/driver"
 )
 
 type IServiceMessengerHandler interface {

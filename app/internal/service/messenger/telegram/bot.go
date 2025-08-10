@@ -80,17 +80,97 @@ func (r *Bot) ReceiveUpdates(
 
 	updates := r.botAPI.GetUpdatesChan(u)
 
-	select {
-	case <-ctx.Done():
-		return ctx.Err()
-	case update := <-updates:
-		err = handler(update, r)
-		if err != nil {
-			return errors.Wrap(err, "handler")
+	for {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case update := <-updates:
+			err = handler(update, r)
+			if err != nil {
+				return errors.Wrap(err, "handler")
+			}
+
+			// >>
+			//msg := tgbotapi.NewMessage(
+			//	update.Message.Chat.ID,
+			//	"hello",
+			//)
+			//
+			//msg := tgbotapi.NewEditMessageTextAndMarkup(
+			//	update.Message.Chat.ID,
+			//	update.Message.MessageID,
+			//	"test",
+			//	tgbotapi.InlineKeyboardMarkup{
+			//		InlineKeyboard: make([][]tgbotapi.InlineKeyboardButton, 0),
+			//	},
+			//)
+			//
+
+			//msg := tgbotapi.EditMessageReplyMarkupConfig{
+			//
+			//}
+			//msg.ReplyMarkup = tgbotapi.NewReplyKeyboard().Keyboard
+
+			//r.botAPI.Send(msg)
+
+			//kb := tgbotapi.NewReplyKeyboard().Keyboard
+			////
+			//msg := tgbotapi.NewEditMessageTextAndMarkup(
+			//	update.Message.Chat.ID,
+			//	update.Message.MessageID,
+			//	"test",
+			//	tgbotapi.InlineKeyboardMarkup{
+			//		InlineKeyboard: [][]tgbotapi.InlineKeyboardButton{
+			//			{
+			//				tgbotapi.InlineKeyboardButton{
+			//					Text:                         "<UNK>",
+			//					URL:                          nil,
+			//					LoginURL:                     nil,
+			//					CallbackData:                 nil,
+			//					SwitchInlineQuery:            nil,
+			//					SwitchInlineQueryCurrentChat: nil,
+			//					CallbackGame:                 nil,
+			//					Pay:                          false,
+			//				},
+			//			},
+			//		},
+			//		//InlineKeyboard: kb.Keyboard,
+			//		//
+			//
+			//	},
+			//)
+
+			//tgbotapi.NewReplyKeyboard()
+			r.logger.Info(
+				"telegram update received",
+				zap.String("message", update.Message.Text),
+				zap.String("user", update.Message.From.UserName),
+				zap.Int64("user_id", update.Message.From.ID),
+				zap.String("contact", update.Message.Contact.PhoneNumber),
+				zap.Int64("contact_id", update.Message.Contact.UserID),
+			)
+
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "tst1")
+			kb := tgbotapi.NewReplyKeyboard()
+			//kb.Keyboard = [][]tgbotapi.KeyboardButton{}
+			kb.Keyboard = [][]tgbotapi.KeyboardButton{
+				{
+					tgbotapi.NewKeyboardButtonContact("tst2"),
+				},
+			}
+
+			msg.ReplyMarkup = kb
+			msg.ReplyToMessageID = update.Message.MessageID
+			msg.AllowSendingWithoutReply = true
+			//msg.DisableNotification = true
+
+			r.botAPI.Send(msg)
+
+			// <<
 		}
 	}
 
-	return nil
+	//return nil
 }
 
 func (r *Bot) SendMessage(chatId int64, message string) error {
