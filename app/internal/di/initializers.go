@@ -46,7 +46,7 @@ func newMessenger(
 	return servicemessenger.NewAggrigatorSender(
 		logger,
 		[]servicemessenger.ISenderService{
-			servicemessenger.NewTelegramSender(logger),
+			//servicemessenger.NewTelegramSender(logger),
 		},
 	)
 }
