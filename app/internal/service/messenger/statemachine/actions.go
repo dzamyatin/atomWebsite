@@ -8,6 +8,7 @@ import (
 type IStateActions interface {
 	ReceiveMessage(
 		ctx context.Context,
+		driver servicemessengermessage.IMessengerDriver,
 		message servicemessengermessage.Message,
 		machine IStateMachine,
 	) error

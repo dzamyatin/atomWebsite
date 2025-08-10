@@ -10,8 +10,6 @@ import (
 
 type InitialState struct {
 	logger *zap.Logger
-	servicemessengerstatemachine.BaseState
-	driver servicemessengermessage.IMessengerDriver
 }
 
 func (r *InitialState) State() servicemessengerstatemachine.StateName {
@@ -20,10 +18,11 @@ func (r *InitialState) State() servicemessengerstatemachine.StateName {
 
 func (r *InitialState) ReceiveMessage(
 	ctx context.Context,
+	driver servicemessengermessage.IMessengerDriver,
 	message servicemessengermessage.Message,
 	machine servicemessengerstatemachine.IStateMachine,
 ) error {
-	err := r.driver.SendMessage(
+	err := driver.SendMessage(
 		servicemessengermessage.NewAnswer(message, "Hello! What is your phone number?"),
 	)
 	if err != nil {
@@ -31,7 +30,7 @@ func (r *InitialState) ReceiveMessage(
 		return errors.Wrap(err, "failed to send message")
 	}
 
-	if err = machine.Move(servicemessengerstatemachine.StateWaitPhone); err != nil {
+	if err = machine.Move(ctx, servicemessengerstatemachine.StateWaitPhone); err != nil {
 		r.logger.Error("move message", zap.Error(err))
 		return errors.Wrap(err, "move message")
 	}

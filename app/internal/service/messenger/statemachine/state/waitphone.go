@@ -8,22 +8,21 @@ import (
 	"go.uber.org/zap"
 )
 
-type InitialAskPhone struct {
+type WaitForPhone struct {
 	logger *zap.Logger
-	servicemessengerstatemachine.BaseState
-	driver servicemessengermessage.IMessengerDriver
 }
 
-func (r *InitialAskPhone) State() servicemessengerstatemachine.StateName {
+func (r *WaitForPhone) State() servicemessengerstatemachine.StateName {
 	return servicemessengerstatemachine.StateWaitPhone
 }
 
-func (r *InitialAskPhone) ReceiveMessage(
+func (r *WaitForPhone) ReceiveMessage(
 	ctx context.Context,
+	driver servicemessengermessage.IMessengerDriver,
 	message servicemessengermessage.Message,
 	machine servicemessengerstatemachine.IStateMachine,
 ) error {
-	if err := r.driver.SendMessage(
+	if err := driver.SendMessage(
 		servicemessengermessage.NewAnswer(
 			message,
 			"Please give me your phone!",

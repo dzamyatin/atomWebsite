@@ -10,8 +10,7 @@ import (
 )
 
 type IStateMachine interface {
-	Move(state StateName) error
-	//Load(messenger, chatID string) (entity.Chat, error)
+	Move(ctx context.Context, state StateName) error
 }
 
 type StateMachine struct {
@@ -38,29 +37,7 @@ func NewStateMachine(
 	}
 }
 
-func (r *StateMachine) Load(messenger, chatID string) (entity.Chat, error) {
-	chat, exist, err := r.chatRepo.Get(messenger, chatID)
-	if err != nil {
-		return entity.Chat{}, errors.Wrap(err, "load chat")
-	}
-
-	if !exist {
-		chat = entity.Chat{
-			Messenger: messenger,
-			ChatID:    chatID,
-			State:     string(StateInitial),
-		}
-
-		err = r.chatRepo.Save(chat)
-		if err != nil {
-			return entity.Chat{}, errors.Wrap(err, "save chat")
-		}
-	}
-
-	return chat, nil
-}
-
-func (r *StateMachine) Move(state StateName) error {
+func (r *StateMachine) Move(ctx context.Context, state StateName) error {
 	if r.currentState.State() == state {
 		r.logger.Warn("try to move to the same state")
 		return nil
@@ -74,7 +51,7 @@ func (r *StateMachine) Move(state StateName) error {
 	r.currentState = newState
 	r.chat.State = string(state)
 
-	err = r.chatRepo.Save(r.chat)
+	err = r.chatRepo.Save(ctx, r.chat)
 	if err != nil {
 		return errors.Wrap(err, "save chat")
 	}
