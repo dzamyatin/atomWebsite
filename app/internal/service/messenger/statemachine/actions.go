@@ -8,7 +8,7 @@ import (
 type IStateActions interface {
 	ReceiveMessage(
 		ctx context.Context,
-		message servicemessengermessage.IMessage,
+		message servicemessengermessage.Message,
 		machine IStateMachine,
 	) error
 }

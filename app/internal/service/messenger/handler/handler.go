@@ -6,5 +6,5 @@ import (
 )
 
 type IServiceMessengerHandler interface {
-	Handle(ctx context.Context, message servicemessengermessage.IMessage) error
+	Handle(ctx context.Context, message servicemessengermessage.Message) error
 }

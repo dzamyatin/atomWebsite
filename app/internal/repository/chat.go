@@ -4,5 +4,5 @@ import "github.com/dzamyatin/atomWebsite/internal/entity"
 
 type IChatRepository interface {
 	Save(e entity.Chat) error
-	Get(messenger, phone string) (entity.Chat, bool, error)
+	Get(messenger, chatID string) (entity.Chat, bool, error)
 }

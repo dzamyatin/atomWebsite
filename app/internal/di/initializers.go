@@ -33,8 +33,8 @@ import (
 
 func newTelegramBotServer(
 	logger *zap.Logger,
-) *messengertelegram.Bot {
-	return messengertelegram.NewBot(
+) *messengertelegram.TelegramDriver {
+	return messengertelegram.NewTelegramDriver(
 		getConfig().TelegramBotConfig.Token,
 		logger,
 	)

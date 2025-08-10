@@ -1,7 +1,8 @@
-package messengertelegram
+package servicemessengertelegram
 
 import (
 	"context"
+	servicemessengermessage "github.com/dzamyatin/atomWebsite/internal/service/messenger/driver"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -13,20 +14,67 @@ import (
 
 type Handler func(
 	update tgbotapi.Update,
-	bot *Bot,
+	bot *TelegramDriver,
 ) error
 
-type Bot struct {
+type TelegramDriver struct {
 	token  string
 	logger *zap.Logger
 	botAPI *tgbotapi.BotAPI
 	lockMe *sync.RWMutex
 }
 
-func NewBot(
+func (r *TelegramDriver) SendMessage(message servicemessengermessage.Message) error {
+	err := r.setMe()
+	if err != nil {
+		return errors.Wrap(err, "botAPI.setMe")
+	}
+
+	msg := tgbotapi.NewMessage(message.ChatLink.Telegram.ChatID, message.Text)
+
+	//msg.Entities = append(
+	//	msg.Entities,
+	//	tgbotapi.MessageEntity{
+	//		Type: "mention", //(@username),
+	//		Offset: 0,
+	//		Length: len(message),
+	//	},
+	//)
+
+	_, err = r.botAPI.Send(msg)
+
+	if err != nil {
+		r.logger.Error("servicemessengertelegram.SendMessage", zap.Error(err))
+		return errors.Wrap(err, "servicemessengertelegram.SendMessage")
+	}
+
+	return nil
+}
+
+func (r *TelegramDriver) AskPhone(link servicemessengermessage.ChatLink) error {
+	msg := tgbotapi.NewMessage(link.Telegram.ChatID, "tst1")
+	kb := tgbotapi.NewReplyKeyboard()
+	//kb.Keyboard = [][]tgbotapi.KeyboardButton{}
+	kb.Keyboard = [][]tgbotapi.KeyboardButton{
+		{
+			tgbotapi.NewKeyboardButtonContact("tst2"),
+		},
+	}
+
+	msg.ReplyMarkup = kb
+	//msg.ReplyToMessageID = update.Message.MessageID
+	msg.AllowSendingWithoutReply = true
+	//msg.DisableNotification = true
+
+	_, err := r.botAPI.Send(msg)
+
+	return errors.Wrap(err, "botAPI.Send")
+}
+
+func NewTelegramDriver(
 	token string,
 	logger *zap.Logger,
-) *Bot {
+) *TelegramDriver {
 	b := &tgbotapi.BotAPI{
 		Token:  token,
 		Client: &http.Client{},
@@ -35,7 +83,7 @@ func NewBot(
 
 	b.SetAPIEndpoint(tgbotapi.APIEndpoint)
 
-	return &Bot{
+	return &TelegramDriver{
 		token:  token,
 		logger: logger,
 		botAPI: b,
@@ -43,7 +91,7 @@ func NewBot(
 	}
 }
 
-func (r *Bot) setMe() error {
+func (r *TelegramDriver) setMe() error {
 	r.lockMe.Lock()
 	defer r.lockMe.Unlock()
 
@@ -61,7 +109,7 @@ func (r *Bot) setMe() error {
 	return nil
 }
 
-func (r *Bot) ReceiveUpdates(
+func (r *TelegramDriver) ReceiveUpdates(
 	ctx context.Context,
 	offset int,
 	handler Handler,
@@ -173,28 +221,28 @@ func (r *Bot) ReceiveUpdates(
 	//return nil
 }
 
-func (r *Bot) SendMessage(chatId int64, message string) error {
-	err := r.setMe()
-	if err != nil {
-		return errors.Wrap(err, "botAPI.setMe")
-	}
-
-	msg := tgbotapi.NewMessage(chatId, message)
-
-	//msg.Entities = append(
-	//	msg.Entities,
-	//	tgbotapi.MessageEntity{
-	//		Type: "mention", //(@username),
-	//		Offset: 0,
-	//		Length: len(message),
-	//	},
-	//)
-
-	_, err = r.botAPI.Send(msg)
-
-	if err != nil {
-		return errors.Wrap(err, "bot.SendMessage")
-	}
-
-	return nil
-}
+//func (r *TelegramDriver) SendMessage(chatId int64, message string) error {
+//	err := r.setMe()
+//	if err != nil {
+//		return errors.Wrap(err, "botAPI.setMe")
+//	}
+//
+//	msg := tgbotapi.NewMessage(chatId, message)
+//
+//	//msg.Entities = append(
+//	//	msg.Entities,
+//	//	tgbotapi.MessageEntity{
+//	//		Type: "mention", //(@username),
+//	//		Offset: 0,
+//	//		Length: len(message),
+//	//	},
+//	//)
+//
+//	_, err = r.botAPI.Send(msg)
+//
+//	if err != nil {
+//		return errors.Wrap(err, "bot.SendMessage")
+//	}
+//
+//	return nil
+//}

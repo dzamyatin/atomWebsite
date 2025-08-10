@@ -15,10 +15,10 @@ type ArgTelegramBotProcess struct {
 
 type TelegramBotProcessCommand struct {
 	logger            *zap.Logger
-	telegramBotServer *messengertelegram.Bot
+	telegramBotServer *messengertelegram.TelegramDriver
 }
 
-func NewTelegramBotProcessCommand(logger *zap.Logger, telegramBotServer *messengertelegram.Bot) *TelegramBotProcessCommand {
+func NewTelegramBotProcessCommand(logger *zap.Logger, telegramBotServer *messengertelegram.TelegramDriver) *TelegramBotProcessCommand {
 	return &TelegramBotProcessCommand{logger: logger, telegramBotServer: telegramBotServer}
 }
 
@@ -34,7 +34,7 @@ func (r *TelegramBotProcessCommand) Execute(ctx context.Context, u ArgTelegramBo
 					return r.telegramBotServer.ReceiveUpdates(
 						ctx,
 						0,
-						func(update tgbotapi.Update, bot *messengertelegram.Bot) error {
+						func(update tgbotapi.Update, bot *messengertelegram.TelegramDriver) error {
 							return nil
 						},
 					)

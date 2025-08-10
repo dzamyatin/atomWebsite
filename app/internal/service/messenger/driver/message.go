@@ -1,4 +1,4 @@
-package driver
+package servicemessengerdriver
 
 type MessengerType string
 
@@ -6,17 +6,32 @@ const (
 	MessengerTypeTelegram MessengerType = "telegram"
 )
 
-type IMessage interface {
-	GetUsername() string
-	GetMessengerType() MessengerType
-	GetChatLink() IChatLint
-	GetText() string
+type ChatLink struct {
+	Telegram struct {
+		ChatID int64
+	}
 }
 
-type IChatLint interface {
-	GetChatLink() ChatLint
+type Message struct {
+	Username      string
+	MessengerType MessengerType
+	ChatLink      ChatLink
+	Text          string
 }
 
-type ChatLint struct {
-	ChatID string
+func NewAnswer(
+	answer Message,
+	text string,
+) Message {
+	return Message{
+		Username:      answer.Username,
+		MessengerType: answer.MessengerType,
+		ChatLink:      answer.ChatLink,
+		Text:          text,
+	}
 }
+
+//type ContactFormMessage struct {
+//	Username string
+//	Phone    string
+//}
