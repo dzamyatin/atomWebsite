@@ -35,6 +35,7 @@ func (r *TelegramBotProcessCommand) Execute(ctx context.Context, u ArgTelegramBo
 						ctx,
 						0,
 						func(update tgbotapi.Update, bot *messengertelegram.TelegramDriver) error {
+							//
 							return nil
 						},
 					)

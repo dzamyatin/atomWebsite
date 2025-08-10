@@ -135,6 +135,7 @@ func (r *TelegramDriver) ReceiveUpdates(
 		case update := <-updates:
 			err = handler(update, r)
 			if err != nil {
+				r.logger.Error("servicemessengertelegram.ReceiveUpdates", zap.Error(err))
 				return errors.Wrap(err, "handler")
 			}
 
@@ -189,30 +190,30 @@ func (r *TelegramDriver) ReceiveUpdates(
 			//)
 
 			//tgbotapi.NewReplyKeyboard()
-			r.logger.Info(
-				"telegram update received",
-				zap.String("message", update.Message.Text),
-				zap.String("user", update.Message.From.UserName),
-				zap.Int64("user_id", update.Message.From.ID),
-				zap.String("contact", update.Message.Contact.PhoneNumber),
-				zap.Int64("contact_id", update.Message.Contact.UserID),
-			)
-
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "tst1")
-			kb := tgbotapi.NewReplyKeyboard()
-			//kb.Keyboard = [][]tgbotapi.KeyboardButton{}
-			kb.Keyboard = [][]tgbotapi.KeyboardButton{
-				{
-					tgbotapi.NewKeyboardButtonContact("tst2"),
-				},
-			}
-
-			msg.ReplyMarkup = kb
-			msg.ReplyToMessageID = update.Message.MessageID
-			msg.AllowSendingWithoutReply = true
-			//msg.DisableNotification = true
-
-			r.botAPI.Send(msg)
+			//r.logger.Info(
+			//	"telegram update received",
+			//	zap.String("message", update.Message.Text),
+			//	zap.String("user", update.Message.From.UserName),
+			//	zap.Int64("user_id", update.Message.From.ID),
+			//	zap.String("contact", update.Message.Contact.PhoneNumber),
+			//	zap.Int64("contact_id", update.Message.Contact.UserID),
+			//)
+			//
+			//msg := tgbotapi.NewMessage(update.Message.Chat.ID, "tst1")
+			//kb := tgbotapi.NewReplyKeyboard()
+			////kb.Keyboard = [][]tgbotapi.KeyboardButton{}
+			//kb.Keyboard = [][]tgbotapi.KeyboardButton{
+			//	{
+			//		tgbotapi.NewKeyboardButtonContact("tst2"),
+			//	},
+			//}
+			//
+			//msg.ReplyMarkup = kb
+			//msg.ReplyToMessageID = update.Message.MessageID
+			//msg.AllowSendingWithoutReply = true
+			////msg.DisableNotification = true
+			//
+			//r.botAPI.Send(msg)
 
 			// <<
 		}
