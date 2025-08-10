@@ -77,6 +77,8 @@ var set = wire.NewSet(
 	usecase.NewChangePasswordUseCase,
 	newTelegramBotServer,
 	executors.NewTelegramBotProcessCommand,
+	wire.Bind(new(repository.IChatRepository), new(*repository.ChatRepository)),
+	repository.NewChatRepository,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
