@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"net/http"
+	"strconv"
 	"sync"
 )
 
@@ -22,6 +23,10 @@ type TelegramDriver struct {
 	logger *zap.Logger
 	botAPI *tgbotapi.BotAPI
 	lockMe *sync.RWMutex
+}
+
+func (r *TelegramDriver) GetChatID(message servicemessengermessage.Message) (string, error) {
+	return strconv.FormatInt(message.ChatLink.Telegram.ChatID, 10), nil
 }
 
 func (r *TelegramDriver) SendMessage(message servicemessengermessage.Message) error {

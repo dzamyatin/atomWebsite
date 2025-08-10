@@ -61,8 +61,9 @@ func (r *StateMachine) Move(ctx context.Context, state StateName) error {
 
 func (r *StateMachine) ReceiveMessage(
 	ctx context.Context,
+	driver servicemessengermessage.IMessengerDriver,
 	message servicemessengermessage.Message,
-	_ StateMachine,
+	_ IStateMachine,
 ) error {
-	return r.currentState.ReceiveMessage(ctx, message, r)
+	return r.currentState.ReceiveMessage(ctx, driver, message, r)
 }

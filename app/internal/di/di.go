@@ -13,12 +13,14 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/cmd/executors"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/handler"
+	servicemessengerstatemachine "github.com/dzamyatin/atomWebsite/internal/service/messenger/statemachine"
 	servicemessengerstatemachinestate "github.com/dzamyatin/atomWebsite/internal/service/messenger/statemachine/state"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	"github.com/dzamyatin/atomWebsite/internal/service/time"
 	userservice "github.com/dzamyatin/atomWebsite/internal/service/user"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
+	usecasemessenger "github.com/dzamyatin/atomWebsite/internal/usecase/messenger"
 	usecasemigration "github.com/dzamyatin/atomWebsite/internal/usecase/migration"
 	"github.com/dzamyatin/atomWebsite/internal/validator"
 	"github.com/google/wire"
@@ -83,6 +85,8 @@ var set = wire.NewSet(
 	servicemessengerstatemachinestate.NewInitialState,
 	servicemessengerstatemachinestate.NewWaitForPhone,
 	newStateRegistry,
+	usecasemessenger.NewReceiveMessageUseCase,
+	servicemessengerstatemachine.NewStateMachineFactory,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
