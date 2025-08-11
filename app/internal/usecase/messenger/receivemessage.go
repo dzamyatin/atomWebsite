@@ -13,8 +13,8 @@ type ReceiveMessageInput struct {
 	message servicemessengerdriver.Message
 }
 
-func NewReceiveMessageInput(driver servicemessengerdriver.IMessengerDriver, message servicemessengerdriver.Message) *ReceiveMessageInput {
-	return &ReceiveMessageInput{driver: driver, message: message}
+func NewReceiveMessageInput(driver servicemessengerdriver.IMessengerDriver, message servicemessengerdriver.Message) ReceiveMessageInput {
+	return ReceiveMessageInput{driver: driver, message: message}
 }
 
 type ReceiveMessageUseCase struct {
