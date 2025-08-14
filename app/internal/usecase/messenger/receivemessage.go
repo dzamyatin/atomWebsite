@@ -19,11 +19,17 @@ func NewReceiveMessageInput(driver servicemessengerdriver.IMessengerDriver, mess
 
 type ReceiveMessageUseCase struct {
 	logger       *zap.Logger
-	stateFactory servicemessengerstatemachine.StateMachineFactory
+	stateFactory *servicemessengerstatemachine.StateMachineFactory
 }
 
-func NewReceiveMessageUseCase(logger *zap.Logger, stateFactory servicemessengerstatemachine.StateMachineFactory) *ReceiveMessageUseCase {
-	return &ReceiveMessageUseCase{logger: logger, stateFactory: stateFactory}
+func NewReceiveMessageUseCase(
+	logger *zap.Logger,
+	stateFactory *servicemessengerstatemachine.StateMachineFactory,
+) *ReceiveMessageUseCase {
+	return &ReceiveMessageUseCase{
+		logger:       logger,
+		stateFactory: stateFactory,
+	}
 }
 
 func (r *ReceiveMessageUseCase) Execute(ctx context.Context, input ReceiveMessageInput) error {

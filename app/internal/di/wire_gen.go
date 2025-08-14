@@ -96,7 +96,22 @@ func InitializeBusProcessCommand(ctx context.Context) (*executors.BusProcessComm
 func InitializeTelegramBotProcessCommand(ctx context.Context) (*executors.TelegramBotProcessCommand, error) {
 	logger := newLogger()
 	telegramDriver := newTelegramBotServer(logger)
-	telegramBotProcessCommand := executors.NewTelegramBotProcessCommand(logger, telegramDriver)
+	sqlDB, err := newDb(ctx)
+	if err != nil {
+		return nil, err
+	}
+	sqlxDB, err := newDbx(sqlDB)
+	if err != nil {
+		return nil, err
+	}
+	database := db.NewDatabase(sqlxDB)
+	chatRepository := repository.NewChatRepository(logger, database)
+	initialState := servicemessengerstatemachinestate.NewInitialState(logger)
+	waitForPhone := servicemessengerstatemachinestate.NewWaitForPhone(logger)
+	iStateRegistry := newStateRegistry(logger, initialState, waitForPhone)
+	stateMachineFactory := servicemessengerstatemachine.NewStateMachineFactory(logger, chatRepository, iStateRegistry)
+	receiveMessageUseCase := usecasemessenger.NewReceiveMessageUseCase(logger, stateMachineFactory)
+	telegramBotProcessCommand := executors.NewTelegramBotProcessCommand(logger, telegramDriver, receiveMessageUseCase)
 	return telegramBotProcessCommand, nil
 }
 

@@ -26,6 +26,10 @@ type TelegramDriver struct {
 }
 
 func (r *TelegramDriver) GetChatID(message servicemessengermessage.Message) (string, error) {
+	if message.ChatLink.Telegram.ChatID == 0 {
+		return "", errors.New("chat ID undefined")
+	}
+
 	return strconv.FormatInt(message.ChatLink.Telegram.ChatID, 10), nil
 }
 

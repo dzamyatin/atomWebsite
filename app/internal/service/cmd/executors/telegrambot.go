@@ -21,8 +21,16 @@ type TelegramBotProcessCommand struct {
 	receive           *usecasemessenger.ReceiveMessageUseCase
 }
 
-func NewTelegramBotProcessCommand(logger *zap.Logger, telegramBotServer *messengertelegram.TelegramDriver) *TelegramBotProcessCommand {
-	return &TelegramBotProcessCommand{logger: logger, telegramBotServer: telegramBotServer}
+func NewTelegramBotProcessCommand(
+	logger *zap.Logger,
+	telegramBotServer *messengertelegram.TelegramDriver,
+	receive *usecasemessenger.ReceiveMessageUseCase,
+) *TelegramBotProcessCommand {
+	return &TelegramBotProcessCommand{
+		logger:            logger,
+		telegramBotServer: telegramBotServer,
+		receive:           receive,
+	}
 }
 
 func (r *TelegramBotProcessCommand) Execute(ctx context.Context, u ArgTelegramBotProcess) error {
@@ -42,10 +50,14 @@ func (r *TelegramBotProcessCommand) Execute(ctx context.Context, u ArgTelegramBo
 							return r.receive.Execute(ctx, usecasemessenger.NewReceiveMessageInput(
 								bot,
 								servicemessengerdriver.Message{
-									Username:      "",
-									MessengerType: "",
-									ChatLink:      servicemessengerdriver.ChatLink{},
-									Text:          "",
+									Username:      update.Message.From.UserName,
+									MessengerType: servicemessengerdriver.MessengerTypeTelegram,
+									ChatLink: servicemessengerdriver.ChatLink{
+										Telegram: struct{ ChatID int64 }{
+											ChatID: update.Message.Chat.ID,
+										},
+									},
+									Text: update.Message.Text,
 								},
 							))
 
