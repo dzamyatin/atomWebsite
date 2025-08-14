@@ -6,6 +6,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"iter"
 	"net/http"
 	"strconv"
 	"sync"
@@ -25,8 +26,18 @@ type TelegramDriver struct {
 	lockMe *sync.RWMutex
 }
 
+func (r *TelegramDriver) GetUserPhone(message servicemessengermessage.Message) (string, error) {
+	return message.Meta.MessageOwnerContact.PhoneNumber, nil
+}
+
 func (r *TelegramDriver) ConvertToMessage(update tgbotapi.Update) servicemessengermessage.Message {
-	return servicemessengermessage.Message{
+	if update.Message == nil ||
+		update.Message.From == nil {
+		r.logger.Error("message does not contain required fields", zap.Any("update", update))
+		return servicemessengermessage.Message{}
+	}
+
+	message := servicemessengermessage.Message{
 		Username:      update.Message.From.UserName,
 		MessengerType: servicemessengermessage.MessengerTypeTelegram,
 		ChatLink: servicemessengermessage.ChatLink{
@@ -36,6 +47,14 @@ func (r *TelegramDriver) ConvertToMessage(update tgbotapi.Update) servicemesseng
 		},
 		Text: update.Message.Text,
 	}
+
+	if update.Message.Contact != nil &&
+		update.Message.Contact.UserID == update.Message.From.ID {
+		message.Meta.MessageOwnerContact.PhoneNumber = update.Message.Contact.PhoneNumber
+		message.Meta.MessageOwnerContact.Name = update.Message.Contact.FirstName + " " + update.Message.Contact.LastName
+	}
+
+	return message
 }
 
 func (r *TelegramDriver) GetChatID(message servicemessengermessage.Message) (string, error) {
@@ -128,6 +147,37 @@ func (r *TelegramDriver) setMe() error {
 	r.botAPI.Self = u
 
 	return nil
+}
+
+func (r *TelegramDriver) ReadMessages(ctx context.Context) iter.Seq2[servicemessengermessage.Message, error] {
+	return func(yield func(servicemessengermessage.Message, error) bool) {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+
+		err := r.ReceiveUpdates(
+			ctx,
+			0,
+			func(update tgbotapi.Update, bot *TelegramDriver) error {
+				select {
+				case <-ctx.Done():
+					r.logger.Debug("context done")
+					return errors.Wrap(ctx.Err(), "ctx done")
+				default:
+					if !yield(bot.ConvertToMessage(update), nil) {
+						cancel()
+						return nil
+					}
+
+					return nil
+				}
+			},
+		)
+
+		if err != nil {
+			yield(servicemessengermessage.Message{}, err)
+			return
+		}
+	}
 }
 
 func (r *TelegramDriver) ReceiveUpdates(

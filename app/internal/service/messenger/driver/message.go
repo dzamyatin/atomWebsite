@@ -12,11 +12,19 @@ type ChatLink struct {
 	}
 }
 
+type Meta struct {
+	MessageOwnerContact struct {
+		Name        string
+		PhoneNumber string
+	}
+}
+
 type Message struct {
 	Username      string
 	MessengerType MessengerType
 	ChatLink      ChatLink
 	Text          string
+	Meta          Meta
 }
 
 func NewAnswer(

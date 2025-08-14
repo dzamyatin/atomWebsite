@@ -7,5 +7,5 @@ import (
 )
 
 type IMessengerServer interface {
-	ReadMessages(ctx context.Context) iter.Seq2[servicemessengermessage.IMessage, error]
+	ReadMessages(ctx context.Context) iter.Seq2[servicemessengermessage.Message, error]
 }

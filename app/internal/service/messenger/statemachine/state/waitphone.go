@@ -26,6 +26,17 @@ func (r *WaitForPhone) ReceiveMessage(
 	message servicemessengermessage.Message,
 	machine servicemessengerstatemachine.IStateMachine,
 ) error {
+	phone, err := driver.GetUserPhone(message)
+	if err != nil {
+		r.logger.Warn("Failed to get user phone", zap.Error(err))
+		return errors.Wrap(err, "failed to get user phone")
+	}
+
+	if phone != "" {
+
+		return nil
+	}
+
 	if err := driver.SendMessage(
 		servicemessengermessage.NewAnswer(
 			message,
