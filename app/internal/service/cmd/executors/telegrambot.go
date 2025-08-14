@@ -3,7 +3,6 @@ package executors
 import (
 	"context"
 	mainarg "github.com/dzamyatin/atomWebsite/internal/service/arg"
-	servicemessengerdriver "github.com/dzamyatin/atomWebsite/internal/service/messenger/driver"
 	messengertelegram "github.com/dzamyatin/atomWebsite/internal/service/messenger/telegram"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	usecasemessenger "github.com/dzamyatin/atomWebsite/internal/usecase/messenger"
@@ -47,19 +46,13 @@ func (r *TelegramBotProcessCommand) Execute(ctx context.Context, u ArgTelegramBo
 						0,
 						func(update tgbotapi.Update, bot *messengertelegram.TelegramDriver) error {
 							// add listening func to handle it in driver
-							return r.receive.Execute(ctx, usecasemessenger.NewReceiveMessageInput(
-								bot,
-								servicemessengerdriver.Message{
-									Username:      update.Message.From.UserName,
-									MessengerType: servicemessengerdriver.MessengerTypeTelegram,
-									ChatLink: servicemessengerdriver.ChatLink{
-										Telegram: struct{ ChatID int64 }{
-											ChatID: update.Message.Chat.ID,
-										},
-									},
-									Text: update.Message.Text,
-								},
-							))
+							return r.receive.Execute(
+								ctx,
+								usecasemessenger.NewReceiveMessageInput(
+									bot,
+									bot.ConvertToMessage(update),
+								),
+							)
 
 							//return nil
 						},

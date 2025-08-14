@@ -35,5 +35,10 @@ func (r *WaitForPhone) ReceiveMessage(
 		return errors.Wrap(err, "driver.SendMessage")
 	}
 
+	if err := driver.AskPhone(message.ChatLink); err != nil {
+		r.logger.Error("failed to ask phone", zap.Error(err))
+		return errors.Wrap(err, "driver.AskPhone")
+	}
+
 	return nil
 }

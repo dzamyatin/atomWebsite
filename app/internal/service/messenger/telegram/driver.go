@@ -25,6 +25,19 @@ type TelegramDriver struct {
 	lockMe *sync.RWMutex
 }
 
+func (r *TelegramDriver) ConvertToMessage(update tgbotapi.Update) servicemessengermessage.Message {
+	return servicemessengermessage.Message{
+		Username:      update.Message.From.UserName,
+		MessengerType: servicemessengermessage.MessengerTypeTelegram,
+		ChatLink: servicemessengermessage.ChatLink{
+			Telegram: struct{ ChatID int64 }{
+				ChatID: update.Message.Chat.ID,
+			},
+		},
+		Text: update.Message.Text,
+	}
+}
+
 func (r *TelegramDriver) GetChatID(message servicemessengermessage.Message) (string, error) {
 	if message.ChatLink.Telegram.ChatID == 0 {
 		return "", errors.New("chat ID undefined")
@@ -61,17 +74,16 @@ func (r *TelegramDriver) SendMessage(message servicemessengermessage.Message) er
 }
 
 func (r *TelegramDriver) AskPhone(link servicemessengermessage.ChatLink) error {
-	msg := tgbotapi.NewMessage(link.Telegram.ChatID, "tst1")
+	msg := tgbotapi.NewMessage(link.Telegram.ChatID, "Press share button below")
 	kb := tgbotapi.NewReplyKeyboard()
-	//kb.Keyboard = [][]tgbotapi.KeyboardButton{}
+
 	kb.Keyboard = [][]tgbotapi.KeyboardButton{
 		{
-			tgbotapi.NewKeyboardButtonContact("tst2"),
+			tgbotapi.NewKeyboardButtonContact("🔥 📞 Share phone number 📞 🔥"),
 		},
 	}
 
 	msg.ReplyMarkup = kb
-	//msg.ReplyToMessageID = update.Message.MessageID
 	msg.AllowSendingWithoutReply = true
 	//msg.DisableNotification = true
 
