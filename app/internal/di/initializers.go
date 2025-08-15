@@ -11,6 +11,8 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/config"
 	servicemail "github.com/dzamyatin/atomWebsite/internal/service/mail"
 	servicemessenger "github.com/dzamyatin/atomWebsite/internal/service/messenger"
+	servicemessengerdriver "github.com/dzamyatin/atomWebsite/internal/service/messenger/driver"
+	messengerserver "github.com/dzamyatin/atomWebsite/internal/service/messenger/server"
 	messengertelegram "github.com/dzamyatin/atomWebsite/internal/service/messenger/telegram"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
@@ -284,5 +286,15 @@ func newHTTPServer(
 	return grpcservice2.NewHTTPServer(
 		server,
 		getConfig().AddHttp,
+	)
+}
+
+func newMessengerServerRegistry(
+	telegramDriver *messengertelegram.TelegramDriver,
+) *messengerserver.MessengerServerRegistry {
+	return messengerserver.NewMessengerServerRegistry(
+		[]servicemessengerdriver.IMessengerDriver{
+			telegramDriver,
+		},
 	)
 }

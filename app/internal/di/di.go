@@ -87,6 +87,7 @@ var set = wire.NewSet(
 	newStateRegistry,
 	usecasemessenger.NewReceiveMessageUseCase,
 	servicemessengerstatemachine.NewStateMachineFactory,
+	newMessengerServerRegistry,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
