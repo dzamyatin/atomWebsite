@@ -91,6 +91,8 @@ var set = wire.NewSet(
 	repository.NewSenderRepository,
 	wire.Bind(new(repository.ISenderRepository), new(*repository.SenderRepository)),
 	servicemessengerstatemachinestate.NewPhoneStoredState,
+	repository.NewCounterRepository,
+	wire.Bind(new(repository.ICounterRepository), new(*repository.CounterRepository)),
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

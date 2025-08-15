@@ -29,7 +29,11 @@
   - mail smtp
 - phone-confirm
   - <span style="color:yellow">IN PROGRESS</span> telegram
-    - sender to store (chat lint, phone) to send msg 
+    - sender to store (chat lint, phone) to send msg
+      - <span style="color:green">DONE</span>to store
+      - to send
+        - <span style="color:yellow">IN PROGRESS</span> counter
+        - sequentially send one to another accross all senders by couner
   - whatsapp
   - vk
 - remember password
