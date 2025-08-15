@@ -1,5 +1,12 @@
 package servicemessengerdriver
 
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
+	"github.com/pkg/errors"
+)
+
 type MessengerType string
 
 const (
@@ -9,6 +16,20 @@ const (
 type ChatLink struct {
 	Telegram struct {
 		ChatID int64
+	}
+}
+
+func (d ChatLink) Value() (driver.Value, error) {
+	res, err := json.Marshal(d)
+	return res, errors.Wrap(err, "failed to marshal")
+}
+
+func (d *ChatLink) Scan(value interface{}) error {
+	switch v := value.(type) {
+	case []byte:
+		return errors.Wrap(json.Unmarshal(v, d), "can't unmarshal JSON")
+	default:
+		return fmt.Errorf("cannot sql.Scan() from: %#v", v)
 	}
 }
 

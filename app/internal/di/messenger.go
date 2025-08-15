@@ -10,10 +10,12 @@ func newStateRegistry(
 	logger *zap.Logger,
 	initialState *servicemessengerstatemachinestate.InitialState,
 	waitForPhone *servicemessengerstatemachinestate.WaitForPhone,
+	phoneStoredState *servicemessengerstatemachinestate.PhoneStoredState,
 ) servicemessengerstatemachine.IStateRegistry {
 	return servicemessengerstatemachine.NewStateRegistry(
 		logger,
 		initialState,
 		waitForPhone,
+		phoneStoredState,
 	)
 }

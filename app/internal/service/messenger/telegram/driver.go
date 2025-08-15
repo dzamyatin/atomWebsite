@@ -158,6 +158,40 @@ func (r *TelegramDriver) ReadMessages(ctx context.Context) iter.Seq2[servicemess
 		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
 
+		ch := make(chan servicemessengermessage.Message, 10)
+		chErr := make(chan error, 10)
+		defer close(ch)
+		defer close(chErr)
+
+		wh := sync.WaitGroup{}
+		wh.Add(1)
+		go func() {
+			defer wh.Done()
+			for {
+				select {
+				case err, ok := <-chErr:
+					if !ok {
+						return
+					}
+
+					yield(servicemessengermessage.Message{}, err)
+					return
+				case <-ctx.Done():
+					r.logger.Debug("context done")
+					return
+				case msg, ok := <-ch:
+					if !ok {
+						return
+					}
+
+					if !yield(msg, nil) {
+						cancel()
+						return
+					}
+				}
+			}
+		}()
+
 		err := r.ReceiveUpdates(
 			ctx,
 			0,
@@ -167,20 +201,17 @@ func (r *TelegramDriver) ReadMessages(ctx context.Context) iter.Seq2[servicemess
 					r.logger.Debug("context done")
 					return errors.Wrap(ctx.Err(), "ctx done")
 				default:
-					if !yield(bot.ConvertToMessage(update), nil) {
-						cancel()
-						return nil
-					}
-
+					ch <- bot.ConvertToMessage(update)
 					return nil
 				}
 			},
 		)
 
 		if err != nil {
-			yield(servicemessengermessage.Message{}, err)
-			return
+			chErr <- err
 		}
+
+		wh.Wait()
 	}
 }
 

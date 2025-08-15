@@ -10,7 +10,6 @@ import (
 	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/config"
 	servicemail "github.com/dzamyatin/atomWebsite/internal/service/mail"
-	servicemessenger "github.com/dzamyatin/atomWebsite/internal/service/messenger"
 	servicemessengerdriver "github.com/dzamyatin/atomWebsite/internal/service/messenger/driver"
 	messengerserver "github.com/dzamyatin/atomWebsite/internal/service/messenger/server"
 	messengertelegram "github.com/dzamyatin/atomWebsite/internal/service/messenger/telegram"
@@ -42,16 +41,17 @@ func newTelegramBotServer(
 	)
 }
 
-func newMessenger(
-	logger *zap.Logger,
-) servicemessenger.ISenderService {
-	return servicemessenger.NewAggrigatorSender(
-		logger,
-		[]servicemessenger.ISenderService{
-			//servicemessenger.NewTelegramSender(logger),
-		},
-	)
-}
+//
+//func newMessenger(
+//	logger *zap.Logger,
+//) servicemessengersender.ISenderService {
+//	return servicemessengersender.NewAggrigatorSender(
+//		logger,
+//		[]servicemessengersender.ISenderService{
+//			//servicemessenger.NewTelegramSender(logger),
+//		},
+//	)
+//}
 
 func newMailer(
 	logger *zap.Logger,

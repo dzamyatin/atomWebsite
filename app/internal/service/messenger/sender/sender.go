@@ -1,4 +1,4 @@
-package servicemessenger
+package servicemessengersender
 
 import (
 	"context"

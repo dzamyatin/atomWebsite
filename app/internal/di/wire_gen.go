@@ -108,8 +108,10 @@ func InitializeTelegramBotProcessCommand(ctx context.Context) (*executors.Telegr
 	database := db.NewDatabase(sqlxDB)
 	chatRepository := repository.NewChatRepository(logger, database)
 	initialState := servicemessengerstatemachinestate.NewInitialState(logger)
-	waitForPhone := servicemessengerstatemachinestate.NewWaitForPhone(logger)
-	iStateRegistry := newStateRegistry(logger, initialState, waitForPhone)
+	senderRepository := repository.NewSenderRepository(logger, database)
+	waitForPhone := servicemessengerstatemachinestate.NewWaitForPhone(logger, senderRepository)
+	phoneStoredState := servicemessengerstatemachinestate.NewPhoneStoredState(logger)
+	iStateRegistry := newStateRegistry(logger, initialState, waitForPhone, phoneStoredState)
 	stateMachineFactory := servicemessengerstatemachine.NewStateMachineFactory(logger, chatRepository, iStateRegistry)
 	receiveMessageUseCase := usecasemessenger.NewReceiveMessageUseCase(logger, stateMachineFactory)
 	telegramBotProcessCommand := executors.NewTelegramBotProcessCommand(logger, messengerServerRegistry, receiveMessageUseCase)
@@ -145,8 +147,7 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 	registerHandler := handler.NewRegisterHandler(registration)
 	handlerRegistry := newHandlerRegistry(registerHandler)
 	mainBus := newBus(postgresBus, memoryBus, handlerRegistry, logger)
-	iSenderService := newMessenger(logger)
-	rememberPasswordUseCase := usecase.NewRememberPasswordUseCase(userRepository, passwordEncoder, logger, iMailer, randomizerRepository, iSenderService)
+	rememberPasswordUseCase := usecase.NewRememberPasswordUseCase(userRepository, passwordEncoder, logger, iMailer, randomizerRepository)
 	validatorValidator := validator.NewValidator()
 	changePasswordUseCase := usecase.NewChangePasswordUseCase(logger, userRepository, randomizerRepository, passwordEncoder, passwordEncoder)
 	authServer := grpc.NewAuthServer(registration, login, confirmEmailUseCase, mainBus, sendEmailConfirmationUseCase, rememberPasswordUseCase, validatorValidator, changePasswordUseCase)
@@ -174,5 +175,5 @@ var set = wire.NewSet(
 	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistration, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
 	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, metric.NewRegistry, usecase.NewLogin, wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)), newSequentialProvider, wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)), newJWT, wire.Bind(new(bus.IBus), new(*bus.MainBus)), newBus,
 	newHandlerRegistry, bus.NewMemoryBus, handler.NewRegisterHandler, executors.NewMigrationCreateCommand, executors.NewMigrationDownCommand, executors.NewMigrationUpCommand, newPostgresBus, executors.NewBusProcessCommand, newHTTPServer,
-	newMailer, servicetime.NewTime, wire.Bind(new(servicetime.ITime), new(*servicetime.Time)), repository.NewRandomizerRepository, wire.Bind(new(repository.IRandomizerRepository), new(*repository.RandomizerRepository)), usecase.NewConfirmEmailUseCase, usecase.NewSendEmailConfirmationUseCase, newMessenger, usecase.NewRememberPasswordUseCase, validator.NewValidator, usecase.NewChangePasswordUseCase, newTelegramBotServer, executors.NewTelegramBotProcessCommand, wire.Bind(new(repository.IChatRepository), new(*repository.ChatRepository)), repository.NewChatRepository, servicemessengerstatemachinestate.NewInitialState, servicemessengerstatemachinestate.NewWaitForPhone, newStateRegistry, usecasemessenger.NewReceiveMessageUseCase, servicemessengerstatemachine.NewStateMachineFactory, newMessengerServerRegistry,
+	newMailer, servicetime.NewTime, wire.Bind(new(servicetime.ITime), new(*servicetime.Time)), repository.NewRandomizerRepository, wire.Bind(new(repository.IRandomizerRepository), new(*repository.RandomizerRepository)), usecase.NewConfirmEmailUseCase, usecase.NewSendEmailConfirmationUseCase, usecase.NewRememberPasswordUseCase, validator.NewValidator, usecase.NewChangePasswordUseCase, newTelegramBotServer, executors.NewTelegramBotProcessCommand, wire.Bind(new(repository.IChatRepository), new(*repository.ChatRepository)), repository.NewChatRepository, servicemessengerstatemachinestate.NewInitialState, servicemessengerstatemachinestate.NewWaitForPhone, newStateRegistry, usecasemessenger.NewReceiveMessageUseCase, servicemessengerstatemachine.NewStateMachineFactory, newMessengerServerRegistry, repository.NewSenderRepository, wire.Bind(new(repository.ISenderRepository), new(*repository.SenderRepository)), servicemessengerstatemachinestate.NewPhoneStoredState,
 )

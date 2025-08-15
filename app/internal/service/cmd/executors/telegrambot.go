@@ -46,12 +46,12 @@ func (r *TelegramBotProcessCommand) Execute(ctx context.Context, u ArgTelegramBo
 	return process.NewProcessManager(
 		r.logger,
 		process.Process{
-			Name: "telegrambot-process",
+			Name: "bot-process",
 			Object: process.NewProcessor(
 				func(ctx context.Context) error {
 					for update, err := range bot.ReadMessages(ctx) {
 						if err != nil {
-							r.logger.Warn("telegrambot-process", zap.Error(err))
+							r.logger.Warn("bot-process", zap.Error(err))
 							return errors.Wrap(err, "bot process read messages")
 						}
 

@@ -6,7 +6,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	servicemail "github.com/dzamyatin/atomWebsite/internal/service/mail"
-	servicemessenger "github.com/dzamyatin/atomWebsite/internal/service/messenger"
+	servicemessenger "github.com/dzamyatin/atomWebsite/internal/service/messenger/sender"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
@@ -34,7 +34,7 @@ func NewRememberPasswordUseCase(
 	logger *zap.Logger,
 	mailer servicemail.IMailer,
 	randomizerRepository repository.IRandomizerRepository,
-	messenger servicemessenger.ISenderService,
+	// messenger servicemessenger.ISenderService,
 ) *RememberPasswordUseCase {
 	return &RememberPasswordUseCase{
 		userRepository:       userRepository,
@@ -42,7 +42,7 @@ func NewRememberPasswordUseCase(
 		logger:               logger,
 		mailer:               mailer,
 		randomizerRepository: randomizerRepository,
-		messenger:            messenger,
+		//messenger:            messenger,
 	}
 }
 

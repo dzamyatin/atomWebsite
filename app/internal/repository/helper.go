@@ -21,3 +21,7 @@ func buildOnConflictFields(ib *sqlbuilder.InsertBuilder, onConflictFields []stri
 		ib.SQL(`"` + field + `" = excluded."` + field + `"`)
 	}
 }
+
+func buildAny[T any](sb *sqlbuilder.SelectBuilder, field string, op string, vals ...T) string {
+	return sb.Any(field, op, vals)
+}
