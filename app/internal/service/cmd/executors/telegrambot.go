@@ -3,7 +3,8 @@ package executors
 import (
 	"context"
 	mainarg "github.com/dzamyatin/atomWebsite/internal/service/arg"
-	messengertelegram "github.com/dzamyatin/atomWebsite/internal/service/messenger/telegram"
+	servicemessengerdriver "github.com/dzamyatin/atomWebsite/internal/service/messenger/driver"
+	messengerserver "github.com/dzamyatin/atomWebsite/internal/service/messenger/server"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	usecasemessenger "github.com/dzamyatin/atomWebsite/internal/usecase/messenger"
 	"github.com/pkg/errors"
@@ -12,23 +13,24 @@ import (
 
 type ArgTelegramBotProcess struct {
 	mainarg.Arg
+	Bot string `arg:"-b,required" help:"name of driver"`
 }
 
 type TelegramBotProcessCommand struct {
-	logger            *zap.Logger
-	telegramBotServer *messengertelegram.TelegramDriver
-	receive           *usecasemessenger.ReceiveMessageUseCase
+	logger      *zap.Logger
+	receive     *usecasemessenger.ReceiveMessageUseCase
+	botRegistry *messengerserver.MessengerServerRegistry
 }
 
 func NewTelegramBotProcessCommand(
 	logger *zap.Logger,
-	telegramBotServer *messengertelegram.TelegramDriver,
+	botRegistry *messengerserver.MessengerServerRegistry,
 	receive *usecasemessenger.ReceiveMessageUseCase,
 ) *TelegramBotProcessCommand {
 	return &TelegramBotProcessCommand{
-		logger:            logger,
-		telegramBotServer: telegramBotServer,
-		receive:           receive,
+		logger:      logger,
+		botRegistry: botRegistry,
+		receive:     receive,
 	}
 }
 
@@ -36,13 +38,18 @@ func (r *TelegramBotProcessCommand) Execute(ctx context.Context, u ArgTelegramBo
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
+	bot, err := r.botRegistry.Get(servicemessengerdriver.MessengerType(u.Bot))
+	if err != nil {
+		return errors.Wrap(err, "get bot")
+	}
+
 	return process.NewProcessManager(
 		r.logger,
 		process.Process{
 			Name: "telegrambot-process",
 			Object: process.NewProcessor(
 				func(ctx context.Context) error {
-					for update, err := range r.telegramBotServer.ReadMessages(ctx) {
+					for update, err := range bot.ReadMessages(ctx) {
 						if err != nil {
 							r.logger.Warn("telegrambot-process", zap.Error(err))
 							return errors.Wrap(err, "bot process read messages")
@@ -51,7 +58,7 @@ func (r *TelegramBotProcessCommand) Execute(ctx context.Context, u ArgTelegramBo
 						err = r.receive.Execute(
 							ctx,
 							usecasemessenger.NewReceiveMessageInput(
-								r.telegramBotServer,
+								bot,
 								update,
 							),
 						)
