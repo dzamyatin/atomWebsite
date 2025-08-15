@@ -26,6 +26,10 @@ type TelegramDriver struct {
 	lockMe *sync.RWMutex
 }
 
+func (r *TelegramDriver) GetMessengerType() servicemessengermessage.MessengerType {
+	return servicemessengermessage.MessengerTypeTelegram
+}
+
 func (r *TelegramDriver) GetUserPhone(message servicemessengermessage.Message) (string, error) {
 	return message.Meta.MessageOwnerContact.PhoneNumber, nil
 }
@@ -39,7 +43,7 @@ func (r *TelegramDriver) ConvertToMessage(update tgbotapi.Update) servicemesseng
 
 	message := servicemessengermessage.Message{
 		Username:      update.Message.From.UserName,
-		MessengerType: servicemessengermessage.MessengerTypeTelegram,
+		MessengerType: r.GetMessengerType(),
 		ChatLink: servicemessengermessage.ChatLink{
 			Telegram: struct{ ChatID int64 }{
 				ChatID: update.Message.Chat.ID,

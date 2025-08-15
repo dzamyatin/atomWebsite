@@ -29,6 +29,7 @@
   - mail smtp
 - phone-confirm
   - <span style="color:yellow">IN PROGRESS</span> telegram
+    - sender to store (chat lint, phone) to send msg 
   - whatsapp
   - vk
 - remember password
