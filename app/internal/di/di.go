@@ -13,6 +13,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/cmd/executors"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/handler"
+	servicemessengersender "github.com/dzamyatin/atomWebsite/internal/service/messenger/sender"
 	servicemessengerstatemachine "github.com/dzamyatin/atomWebsite/internal/service/messenger/statemachine"
 	servicemessengerstatemachinestate "github.com/dzamyatin/atomWebsite/internal/service/messenger/statemachine/state"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
@@ -93,6 +94,8 @@ var set = wire.NewSet(
 	servicemessengerstatemachinestate.NewPhoneStoredState,
 	repository.NewCounterRepository,
 	wire.Bind(new(repository.ICounterRepository), new(*repository.CounterRepository)),
+	servicemessengersender.NewSequentiallySender,
+	wire.Bind(new(servicemessengersender.ISenderService), new(*servicemessengersender.SequentiallySender)),
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

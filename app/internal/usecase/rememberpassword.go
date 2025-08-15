@@ -34,7 +34,7 @@ func NewRememberPasswordUseCase(
 	logger *zap.Logger,
 	mailer servicemail.IMailer,
 	randomizerRepository repository.IRandomizerRepository,
-	// messenger servicemessenger.ISenderService,
+	messenger servicemessenger.ISenderService,
 ) *RememberPasswordUseCase {
 	return &RememberPasswordUseCase{
 		userRepository:       userRepository,
@@ -42,7 +42,7 @@ func NewRememberPasswordUseCase(
 		logger:               logger,
 		mailer:               mailer,
 		randomizerRepository: randomizerRepository,
-		//messenger:            messenger,
+		messenger:            messenger,
 	}
 }
 
