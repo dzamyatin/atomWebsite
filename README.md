@@ -27,18 +27,20 @@
   - <span style="color:green">DONE</span> yandex smtp
   - google smtp
   - mail smtp
-- phone-confirm
-  - <span style="color:yellow">IN PROGRESS</span> telegram
-    - sender to store (chat lint, phone) to send msg
+- <span style="color:yellow">IN PROGRESS</span> phone-confirm
+  - usecasees: confirmphone, sendphoneconfirmation
+  - front pages to handle confirmations
+  - <span style="color:green">DONE</span> telegram
+    - <span style="color:green">DONE</span> sender to store (chat lint, phone) to send msg
       - <span style="color:green">DONE</span>to store
-      - to send
-        - <span style="color:yellow">IN PROGRESS</span> counter
-        - sequentially send one to another accross all senders by couner
+      - <span style="color:green">DONE</span> to send
+        - <span style="color:green">DONE</span> counter
+        - <span style="color:green">DONE</span> sequentially send one to another accross all senders by couner
   - whatsapp
   - vk
 - remember password
   - <span style="color:green">DONE</span> for email
-  - for phone
+  - <span style="color:orange">TEST REQ AFTER EMAIL CONFIRMATION</span> for phone
 - cart
 - place-order
 - key-list to obtain
