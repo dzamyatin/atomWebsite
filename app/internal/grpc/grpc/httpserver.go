@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
+	"github.com/dzamyatin/atomWebsite/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"net"
@@ -60,7 +61,52 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	//>>
+	err = mux.HandlePath(
+		http.MethodGet,
+		"/doc.html",
+		func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			b, err := proto.DocHtml.ReadFile("doc.html")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 
+			_, err = w.Write(b)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			w.WriteHeader(http.StatusOK)
+
+			return
+		},
+	)
+	if err != nil {
+		return errors.Wrap(err, "handling doc")
+	}
+	err = mux.HandlePath(
+		http.MethodGet,
+		"/auth.swagger.json",
+		func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			b, err := proto.SwaggerJson.ReadFile("auth.swagger.json")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			_, err = w.Write(b)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			w.WriteHeader(http.StatusOK)
+
+			return
+		},
+	)
+	if err != nil {
+		return errors.Wrap(err, "handling doc")
+	}
+	//<<
 	err = mux.HandlePath(
 		http.MethodOptions,
 		"/*",

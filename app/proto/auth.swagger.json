@@ -9,6 +9,11 @@
       "name": "Auth"
     }
   ],
+  "host": "localhost:8503",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
   "consumes": [
     "application/json"
   ],
@@ -353,5 +358,18 @@
         }
       }
     }
-  }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "oauth2",
+      "description": "OAuth2 authentication",
+      "flow": "application",
+      "tokenUrl": "http://localhost:8503/login"
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ]
 }

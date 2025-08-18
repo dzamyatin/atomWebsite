@@ -7,6 +7,7 @@
 package atomWebsite
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -603,7 +604,7 @@ var File_auth_proto protoreflect.FileDescriptor
 const file_auth_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"auth.proto\x12\x04auth\x1a\x1cgoogle/api/annotations.proto\"\xdf\x01\n" +
+	"auth.proto\x12\x04auth\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xdf\x01\n" +
 	"\x15ChangePasswordRequest\x12\x19\n" +
 	"\x05email\x18\x01 \x01(\tH\x00R\x05email\x88\x01\x01\x12\x19\n" +
 	"\x05phone\x18\x02 \x01(\tH\x01R\x05phone\x88\x01\x01\x12\x17\n" +
@@ -648,7 +649,12 @@ const file_auth_proto_rawDesc = "" +
 	"\x10RememberPassword\x12\x1d.auth.RememberPasswordRequest\x1a\x1e.auth.RememberPasswordResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/remember-password\x12h\n" +
 	"\x0eChangePassword\x12\x1b.auth.ChangePasswordRequest\x1a\x1c.auth.ChangePasswordResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/change-password\x12`\n" +
 	"\fConfirmEmail\x12\x19.auth.ConfirmEmailRequest\x1a\x1a.auth.ConfirmEmailResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/confirm-email\x12\x85\x01\n" +
-	"\x15SendEmailConfirmation\x12\".auth.SendEmailConfirmationRequest\x1a#.auth.SendEmailConfirmationResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/send-email-confirmationB\"Z github.com/dzamyatin/atomWebsiteb\x06proto3"
+	"\x15SendEmailConfirmation\x12\".auth.SendEmailConfirmationRequest\x1a#.auth.SendEmailConfirmationResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/send-email-confirmationB\x8f\x01\x92Aj\x1a\x0elocalhost:8503\"\x01/*\x01\x01ZD\n" +
+	"B\n" +
+	"\x06Bearer\x128\b\x03\x12\x15OAuth2 authentication(\x03:\x1bhttp://localhost:8503/loginb\f\n" +
+	"\n" +
+	"\n" +
+	"\x06Bearer\x12\x00Z github.com/dzamyatin/atomWebsiteb\x06proto3"
 
 var (
 	file_auth_proto_rawDescOnce sync.Once

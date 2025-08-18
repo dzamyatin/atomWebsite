@@ -100,3 +100,9 @@ POST localhost:8503/login
   "password": "asd@123a",
   "phone": ""
 }
+
+###
+GET localhost:8503/auth.swagger.json
+
+###
+GET localhost:8503/doc.html
