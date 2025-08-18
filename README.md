@@ -23,10 +23,8 @@
     - <span style="color:green">DONE</span> pg handler
 - <span style="color:green">DONE</span> registration
 - <span style="color:green">DONE</span> login
-- <span style="color:lightgreen">MVP</span> email-confirm
+- <span style="color:green">DONE</span> email-confirm
   - <span style="color:green">DONE</span> yandex smtp
-  - google smtp
-  - mail smtp
 - <span style="color:yellow">IN PROGRESS</span> phone-confirm
   - usecasees: confirmphone, sendphoneconfirmation
   - front pages to handle confirmations
@@ -36,8 +34,6 @@
       - <span style="color:green">DONE</span> to send
         - <span style="color:green">DONE</span> counter
         - <span style="color:green">DONE</span> sequentially send one to another accross all senders by couner
-  - whatsapp
-  - vk
 - remember password
   - <span style="color:green">DONE</span> for email
   - <span style="color:orange">TEST REQ AFTER EMAIL CONFIRMATION</span> for phone
@@ -78,6 +74,12 @@
   - volume
 
 ## backlog
+- messenger,sender (see telegram)
+  - whatsapp
+  - vk
+- email-confirm
+  - google smtp
+  - mail smtp
 - yandex metrics
 - test cover
 - kafka instead of postgress
