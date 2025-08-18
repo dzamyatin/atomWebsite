@@ -35,6 +35,11 @@
       - <span style="color:green">DONE</span> to send
         - <span style="color:green">DONE</span> counter
         - <span style="color:green">DONE</span> sequentially send one to another accross all senders by couner
+- <span style="color:yellow">IN PROGRESS</span> process manager shutdowner (see db process manager) implement to 
+  - telegram bot,
+  - bus
+  - grpc
+- <span style="color:yellow">IN PROGRESS</span> controllers for http and compatibilyty with swaggerc2 oauth endpoint
 - remember password
   - <span style="color:green">DONE</span> for email
   - <span style="color:orange">TEST REQ AFTER EMAIL CONFIRMATION</span> for phone
