@@ -3,6 +3,7 @@
 
 ## MVP
 
+- <span style="color:green">DONE</span> swagger ui https://github.com/swagger-api/swagger-ui/blob/HEAD/docs/usage/installation.md
 - <span style="color:green">DONE</span> grpc server
 - <span style="color:green">DONE</span> wire (DI) by Gooogl
 - <span style="color:green">DONE</span> process manager to gracefully shutdown app
@@ -74,7 +75,6 @@
   - volume
 
 ## backlog
-- swagger ui https://github.com/swagger-api/swagger-ui/blob/HEAD/docs/usage/installation.md
 - messenger,sender (see telegram)
   - whatsapp
   - vk

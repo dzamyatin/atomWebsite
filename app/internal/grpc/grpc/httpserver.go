@@ -66,6 +66,8 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 		http.MethodGet,
 		"/doc.html",
 		func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			w.WriteHeader(http.StatusOK)
+
 			b, err := proto.DocHtml.ReadFile("doc.html")
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -75,8 +77,8 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 			_, err = w.Write(b)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
 			}
-			w.WriteHeader(http.StatusOK)
 
 			return
 		},
@@ -88,6 +90,8 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 		http.MethodGet,
 		"/auth.swagger.json",
 		func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+			w.WriteHeader(http.StatusOK)
+
 			b, err := proto.SwaggerJson.ReadFile("auth.swagger.json")
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -97,8 +101,8 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 			_, err = w.Write(b)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
 			}
-			w.WriteHeader(http.StatusOK)
 
 			return
 		},

@@ -17,7 +17,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
       key: "Bearer"
       value: {
         type: TYPE_OAUTH2
-//        flow: FLOW_PASSWORD
         flow: FLOW_APPLICATION
         token_url: "http://localhost:8503/login"
         description: "OAuth2 authentication"
