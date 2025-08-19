@@ -80,6 +80,9 @@
   - volume
 
 ## backlog
+- oauth by external providers
+  - google
+  - vk
 - messenger,sender (see telegram)
   - whatsapp
   - vk
