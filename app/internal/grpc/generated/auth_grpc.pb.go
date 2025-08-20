@@ -25,6 +25,8 @@ const (
 	Auth_ChangePassword_FullMethodName        = "/auth.Auth/ChangePassword"
 	Auth_ConfirmEmail_FullMethodName          = "/auth.Auth/ConfirmEmail"
 	Auth_SendEmailConfirmation_FullMethodName = "/auth.Auth/SendEmailConfirmation"
+	Auth_ConfirmPhone_FullMethodName          = "/auth.Auth/ConfirmPhone"
+	Auth_SendPhoneConfirmation_FullMethodName = "/auth.Auth/SendPhoneConfirmation"
 )
 
 // AuthClient is the client API for Auth service.
@@ -37,6 +39,8 @@ type AuthClient interface {
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	ConfirmEmail(ctx context.Context, in *ConfirmEmailRequest, opts ...grpc.CallOption) (*ConfirmEmailResponse, error)
 	SendEmailConfirmation(ctx context.Context, in *SendEmailConfirmationRequest, opts ...grpc.CallOption) (*SendEmailConfirmationResponse, error)
+	ConfirmPhone(ctx context.Context, in *ConfirmPhoneRequest, opts ...grpc.CallOption) (*ConfirmPhoneResponse, error)
+	SendPhoneConfirmation(ctx context.Context, in *SendPhoneConfirmationRequest, opts ...grpc.CallOption) (*SendPhoneConfirmationResponse, error)
 }
 
 type authClient struct {
@@ -107,6 +111,26 @@ func (c *authClient) SendEmailConfirmation(ctx context.Context, in *SendEmailCon
 	return out, nil
 }
 
+func (c *authClient) ConfirmPhone(ctx context.Context, in *ConfirmPhoneRequest, opts ...grpc.CallOption) (*ConfirmPhoneResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ConfirmPhoneResponse)
+	err := c.cc.Invoke(ctx, Auth_ConfirmPhone_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) SendPhoneConfirmation(ctx context.Context, in *SendPhoneConfirmationRequest, opts ...grpc.CallOption) (*SendPhoneConfirmationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SendPhoneConfirmationResponse)
+	err := c.cc.Invoke(ctx, Auth_SendPhoneConfirmation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServer is the server API for Auth service.
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility.
@@ -117,6 +141,8 @@ type AuthServer interface {
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 	ConfirmEmail(context.Context, *ConfirmEmailRequest) (*ConfirmEmailResponse, error)
 	SendEmailConfirmation(context.Context, *SendEmailConfirmationRequest) (*SendEmailConfirmationResponse, error)
+	ConfirmPhone(context.Context, *ConfirmPhoneRequest) (*ConfirmPhoneResponse, error)
+	SendPhoneConfirmation(context.Context, *SendPhoneConfirmationRequest) (*SendPhoneConfirmationResponse, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -144,6 +170,12 @@ func (UnimplementedAuthServer) ConfirmEmail(context.Context, *ConfirmEmailReques
 }
 func (UnimplementedAuthServer) SendEmailConfirmation(context.Context, *SendEmailConfirmationRequest) (*SendEmailConfirmationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendEmailConfirmation not implemented")
+}
+func (UnimplementedAuthServer) ConfirmPhone(context.Context, *ConfirmPhoneRequest) (*ConfirmPhoneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmPhone not implemented")
+}
+func (UnimplementedAuthServer) SendPhoneConfirmation(context.Context, *SendPhoneConfirmationRequest) (*SendPhoneConfirmationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendPhoneConfirmation not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 func (UnimplementedAuthServer) testEmbeddedByValue()              {}
@@ -274,6 +306,42 @@ func _Auth_SendEmailConfirmation_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_ConfirmPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfirmPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ConfirmPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ConfirmPhone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ConfirmPhone(ctx, req.(*ConfirmPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_SendPhoneConfirmation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendPhoneConfirmationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).SendPhoneConfirmation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_SendPhoneConfirmation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).SendPhoneConfirmation(ctx, req.(*SendPhoneConfirmationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -304,6 +372,14 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendEmailConfirmation",
 			Handler:    _Auth_SendEmailConfirmation_Handler,
+		},
+		{
+			MethodName: "ConfirmPhone",
+			Handler:    _Auth_ConfirmPhone_Handler,
+		},
+		{
+			MethodName: "SendPhoneConfirmation",
+			Handler:    _Auth_SendPhoneConfirmation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

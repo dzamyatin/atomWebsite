@@ -69,7 +69,23 @@ service Auth {
       body: "*"
     };
   };
+  rpc ConfirmPhone (ConfirmPhoneRequest) returns (ConfirmPhoneResponse) {
+    option(google.api.http) = {
+      post: "/confirm-phone"
+      body: "*"
+    };
+  };
+  rpc SendPhoneConfirmation (SendPhoneConfirmationRequest) returns (SendPhoneConfirmationResponse) {
+    option(google.api.http) = {
+      post: "/send-phone-confirmation"
+      body: "*"
+    };
+  };
 }
+
+message ConfirmPhoneResponse {}
+
+message SendPhoneConfirmationResponse {}
 
 message ChangePasswordRequest {
   optional string email = 1;
@@ -92,10 +108,18 @@ message SendEmailConfirmationRequest {
   string email = 1;
 }
 
+message SendPhoneConfirmationRequest {
+  string phone = 1;
+}
+
 message SendEmailConfirmationResponse {}
 
 message ConfirmEmailRequest {
   string email = 1;
+  string code = 2;
+}
+message ConfirmPhoneRequest {
+  string phone = 1;
   string code = 2;
 }
 

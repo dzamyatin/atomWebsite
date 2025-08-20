@@ -85,6 +85,38 @@
         ]
       }
     },
+    "/confirm-phone": {
+      "post": {
+        "operationId": "Auth_ConfirmPhone",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authConfirmPhoneResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authConfirmPhoneRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/login": {
       "post": {
         "operationId": "Auth_Login",
@@ -212,6 +244,38 @@
           "Auth"
         ]
       }
+    },
+    "/send-phone-confirmation": {
+      "post": {
+        "operationId": "Auth_SendPhoneConfirmation",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authSendPhoneConfirmationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/authSendPhoneConfirmationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
     }
   },
   "definitions": {
@@ -250,6 +314,20 @@
       }
     },
     "authConfirmEmailResponse": {
+      "type": "object"
+    },
+    "authConfirmPhoneRequest": {
+      "type": "object",
+      "properties": {
+        "phone": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
+    },
+    "authConfirmPhoneResponse": {
       "type": "object"
     },
     "authLoginRequest": {
@@ -328,6 +406,17 @@
       }
     },
     "authSendEmailConfirmationResponse": {
+      "type": "object"
+    },
+    "authSendPhoneConfirmationRequest": {
+      "type": "object",
+      "properties": {
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "authSendPhoneConfirmationResponse": {
       "type": "object"
     },
     "protobufAny": {

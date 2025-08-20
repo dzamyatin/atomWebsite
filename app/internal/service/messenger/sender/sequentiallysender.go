@@ -9,6 +9,10 @@ import (
 	"go.uber.org/zap"
 )
 
+var (
+	ErrNoSenders = errors.New("senders not found")
+)
+
 type SequentiallySender struct {
 	logger                  *zap.Logger
 	counterRepository       repository.ICounterRepository
@@ -44,7 +48,7 @@ func (r *SequentiallySender) Send(
 	count := len(senders)
 
 	if count == 0 {
-		return errors.New("senders not found")
+		return ErrNoSenders
 	}
 
 	counterValue, err := r.counterRepository.Increase(ctx, phone)

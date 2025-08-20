@@ -23,6 +23,8 @@ type AuthServer struct {
 	rememberPasswordUseCase      *usecase.RememberPasswordUseCase
 	validator                    *validator.Validator
 	changePasswordUseCase        *usecase.ChangePasswordUseCase
+	sendPhoneConfirmationUseCase *usecase.SendPhoneConfirmationUseCase
+	confirmPhoneUseCase          *usecase.ConfirmPhoneUseCase
 }
 
 func NewAuthServer(
@@ -34,6 +36,8 @@ func NewAuthServer(
 	rememberPasswordUseCase *usecase.RememberPasswordUseCase,
 	validator *validator.Validator,
 	changePasswordUseCase *usecase.ChangePasswordUseCase,
+	sendPhoneConfirmationUseCase *usecase.SendPhoneConfirmationUseCase,
+	confirmPhoneUseCase *usecase.ConfirmPhoneUseCase,
 ) AuthServer {
 	return AuthServer{
 		validator:                    validator,
@@ -44,7 +48,23 @@ func NewAuthServer(
 		confirmEmailUseCase:          confirmEmailUseCase,
 		sendEmailConfirmationUseCase: sendEmailConfirmationUseCase,
 		rememberPasswordUseCase:      rememberPasswordUseCase,
+		sendPhoneConfirmationUseCase: sendPhoneConfirmationUseCase,
+		confirmPhoneUseCase:          confirmPhoneUseCase,
 	}
+}
+
+func (r AuthServer) ConfirmPhone(
+	context.Context,
+	*atomWebsite.ConfirmPhoneRequest,
+) (*atomWebsite.ConfirmPhoneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmPhone not implemented")
+}
+
+func (r AuthServer) SendPhoneConfirmation(
+	context.Context,
+	*atomWebsite.SendPhoneConfirmationRequest,
+) (*atomWebsite.SendPhoneConfirmationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendPhoneConfirmation not implemented")
 }
 
 func (r AuthServer) ChangePassword(
