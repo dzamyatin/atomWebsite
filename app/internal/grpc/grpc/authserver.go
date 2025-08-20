@@ -8,8 +8,10 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/transformer"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
 	"github.com/dzamyatin/atomWebsite/internal/validator"
+	"github.com/google/uuid"
 	"github.com/guregu/null/v6"
 	"github.com/pkg/errors"
+	"google.golang.org/grpc/metadata"
 )
 
 type AuthServer struct {
@@ -54,6 +56,12 @@ func NewAuthServer(
 		sendPhoneConfirmationUseCase: sendPhoneConfirmationUseCase,
 		confirmPhoneUseCase:          confirmPhoneUseCase,
 	}
+}
+
+func (r AuthServer) getUserUUID(ctx context.Context) (uuid.UUID, error) {
+	//TODO!!!
+	metadata.FromIncomingContext(ctx)
+	return uuid.UUID{}, nil
 }
 
 func (r AuthServer) ConfirmPhone(

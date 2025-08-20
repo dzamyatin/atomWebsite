@@ -81,7 +81,7 @@ func InitializeBusProcessCommand(ctx context.Context) (*executors.BusProcessComm
 	database := db.NewDatabase(sqlxDB)
 	postgresBus := newPostgresBus(database, logger)
 	memoryBus := bus.NewMemoryBus()
-	userRepository := repository.NewUserRepository(database)
+	userRepository := repository.NewUserRepository(logger, database)
 	passwordEncoder := userservice.NewPasswordEncoder()
 	iMailer := newMailer(logger)
 	time := servicetime.NewTime()
@@ -133,7 +133,7 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 		return nil, err
 	}
 	database := db.NewDatabase(sqlxDB)
-	userRepository := repository.NewUserRepository(database)
+	userRepository := repository.NewUserRepository(logger, database)
 	passwordEncoder := userservice.NewPasswordEncoder()
 	iMailer := newMailer(logger)
 	time := servicetime.NewTime()

@@ -78,9 +78,9 @@ func (r *ChangePasswordUseCase) changePasswordByEmail(ctx context.Context, req C
 		return errors.Wrap(err, "get user by email error")
 	}
 
-	if user == nil {
-		return ErrUserOrPasswordNotMatch
-	}
+	//if user == nil {
+	//	return ErrUserOrPasswordNotMatch
+	//}
 
 	if req.OldPassword != "" {
 		ok, err := user.CheckPassword(req.OldPassword, r.passwordComparator)
@@ -93,7 +93,7 @@ func (r *ChangePasswordUseCase) changePasswordByEmail(ctx context.Context, req C
 			return ErrUserOrPasswordNotMatch
 		}
 
-		err = r.changePassword(ctx, user, req.NewPassword)
+		err = r.changePassword(ctx, &user, req.NewPassword)
 		if err != nil {
 			r.logger.Error("change password error", zap.Error(err))
 			return errors.Wrap(err, "change password error")
@@ -112,7 +112,7 @@ func (r *ChangePasswordUseCase) changePasswordByEmail(ctx context.Context, req C
 		return ErrWrongConfirmationCode
 	}
 
-	err = r.changePassword(ctx, user, req.NewPassword)
+	err = r.changePassword(ctx, &user, req.NewPassword)
 	if err != nil {
 		r.logger.Error("change password error", zap.Error(err))
 		return errors.Wrap(err, "change password error")
@@ -151,9 +151,9 @@ func (r *ChangePasswordUseCase) changePasswordByPhone(ctx context.Context, req C
 		return errors.Wrap(err, "get user by phone error")
 	}
 
-	if user == nil {
-		return ErrUserOrPasswordNotMatch
-	}
+	//if user == nil {
+	//	return ErrUserOrPasswordNotMatch
+	//}
 
 	if req.OldPassword != "" {
 		ok, err := user.CheckPassword(req.OldPassword, r.passwordComparator)
@@ -166,7 +166,7 @@ func (r *ChangePasswordUseCase) changePasswordByPhone(ctx context.Context, req C
 			return ErrUserOrPasswordNotMatch
 		}
 
-		err = r.changePassword(ctx, user, req.NewPassword)
+		err = r.changePassword(ctx, &user, req.NewPassword)
 		if err != nil {
 			r.logger.Error("change password error", zap.Error(err))
 			return errors.Wrap(err, "change password error")
@@ -185,7 +185,7 @@ func (r *ChangePasswordUseCase) changePasswordByPhone(ctx context.Context, req C
 		return ErrWrongConfirmationCode
 	}
 
-	err = r.changePassword(ctx, user, req.NewPassword)
+	err = r.changePassword(ctx, &user, req.NewPassword)
 	if err != nil {
 		r.logger.Error("change password error", zap.Error(err))
 		return errors.Wrap(err, "change password error")

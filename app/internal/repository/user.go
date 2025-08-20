@@ -5,8 +5,10 @@ import (
 	"database/sql"
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
+	"github.com/google/uuid"
 	"github.com/huandu/go-sqlbuilder"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 var (
@@ -14,21 +16,51 @@ var (
 )
 
 type IUserRepository interface {
-	GetUserByEmail(ctx context.Context, email string) (*entity.User, error)
-	GetUserByPhone(ctx context.Context, phone string) (*entity.User, error)
+	GetUserByEmail(ctx context.Context, email string) (entity.User, error)
+	GetUserByPhone(ctx context.Context, phone string) (entity.User, error)
 	AddUser(ctx context.Context, user entity.User) error
 	UpdateUser(ctx context.Context, user entity.User) error
+	GetByUUID(ctx context.Context, uuid uuid.UUID) (entity.User, error)
 }
 
 type UserRepository struct {
-	db db.IDatabase
+	logger *zap.Logger
+	db     db.IDatabase
 }
 
-func NewUserRepository(db db.IDatabase) *UserRepository {
-	return &UserRepository{db: db}
+func NewUserRepository(
+	logger *zap.Logger,
+	db db.IDatabase,
+) *UserRepository {
+	return &UserRepository{
+		logger: logger,
+		db:     db,
+	}
 }
 
-func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (*entity.User, error) {
+func (r *UserRepository) GetByUUID(ctx context.Context, uuid uuid.UUID) (entity.User, error) {
+	sb := sqlbuilder.PostgreSQL.NewSelectBuilder()
+	sb.From("users")
+	sb.Where(sb.Equal("uuid", uuid))
+	sb.Limit(1)
+
+	q, args := sb.Build()
+
+	var user entity.User
+	err := r.db.Get(ctx, &user, q, args...)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return entity.User{}, ErrUserNotFound
+		}
+
+		r.logger.Error("GetUserByUUID get user by uuid error", zap.Error(err))
+		return entity.User{}, err
+	}
+
+	return user, nil
+}
+
+func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (entity.User, error) {
 	sb := sqlbuilder.Select(r.getInsertCols()...)
 
 	sb.From("users")
@@ -43,15 +75,15 @@ func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (*ent
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrUserNotFound
+			return entity.User{}, ErrUserNotFound
 		}
-		return nil, errors.Wrap(err, "get user by email")
+		return entity.User{}, errors.Wrap(err, "get user by email")
 	}
 
-	return &user, nil
+	return user, nil
 }
 
-func (r *UserRepository) GetUserByPhone(ctx context.Context, phone string) (*entity.User, error) {
+func (r *UserRepository) GetUserByPhone(ctx context.Context, phone string) (entity.User, error) {
 	sb := sqlbuilder.Select(r.getInsertCols()...)
 
 	sb.From("users")
@@ -66,12 +98,12 @@ func (r *UserRepository) GetUserByPhone(ctx context.Context, phone string) (*ent
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrUserNotFound
+			return entity.User{}, ErrUserNotFound
 		}
-		return nil, errors.Wrap(err, "get user by phone")
+		return entity.User{}, errors.Wrap(err, "get user by phone")
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (r *UserRepository) AddUser(ctx context.Context, user entity.User) error {

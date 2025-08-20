@@ -29,6 +29,9 @@
 - <span style="color:yellow">IN PROGRESS</span> phone-confirm
   - usecasees: confirmphone, sendphoneconfirmation
   - front pages to handle confirmations
+  - /confirm-phone /confirm-email
+    (!) should assign email|phone to current user
+    <span style="color:RED">>></span>/home/dzamyatin/GolandProjects/atomProject/website/app/internal/grpc/grpc/authserver.go
   - <span style="color:green">DONE</span> telegram
     - <span style="color:green">DONE</span> sender to store (chat lint, phone) to send msg
       - <span style="color:green">DONE</span>to store

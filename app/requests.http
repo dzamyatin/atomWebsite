@@ -51,21 +51,6 @@ POST localhost:8503/register
 OPTIONS localhost:8503/register
 
 ###
-POST localhost:8503/confirm-email
-
-{
-  "email": "zamyatin.daniil@gmail.com",
-  "code": "QPWTY"
-}
-
-###
-POST localhost:8503/send-email-confirmation
-
-{
-  "email": "zamyatin.daniil@gmail.com"
-}
-
-###
 POST localhost:8503/remember-password
 
 {
@@ -109,6 +94,7 @@ GET localhost:8503/doc.html
 
 ###
 POST localhost:8503/confirm-phone
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVVVJRCI6IjdjNTc1OWM4LWJkYWMtNGQzZi1hOGIzLWQ4NzBjNTA4ZjkxMyJ9.JYNKS9wGYmEI294u7OogdlItMMXumWxEvGocXLzhmrs
 
 {
   "phone": "+79297145267",
@@ -122,4 +108,19 @@ POST localhost:8503/send-phone-confirmation
     "phone": "+79297145267"
 }
 
+###
+POST localhost:8503/confirm-email
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVVVJRCI6IjdjNTc1OWM4LWJkYWMtNGQzZi1hOGIzLWQ4NzBjNTA4ZjkxMyJ9.JYNKS9wGYmEI294u7OogdlItMMXumWxEvGocXLzhmrs
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "code": "QPWTY"
+}
+
+###
+POST localhost:8503/send-email-confirmation
+
+{
+  "email": "zamyatin.daniil@gmail.com"
+}
 
