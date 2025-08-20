@@ -90,3 +90,31 @@ func (r Validator) ValidateRememberPassword(req *atomWebsite.RememberPasswordReq
 
 	return nil
 }
+
+func (r Validator) ValidateConfirmPhoneRequest(req *atomWebsite.ConfirmPhoneRequest) error {
+	if req.GetPhone() == "" {
+		return errors.New("phone is required")
+	}
+
+	if !r.phoneRegex.MatchString(req.GetPhone()) {
+		return errors.New("invalid phone")
+	}
+
+	if req.GetCode() == "" {
+		return errors.New("code is required")
+	}
+
+	return nil
+}
+
+func (r Validator) ValidateSendPhoneConfirmationRequest(req *atomWebsite.SendPhoneConfirmationRequest) error {
+	if req.GetPhone() == "" {
+		return errors.New("phone is required")
+	}
+
+	if !r.phoneRegex.MatchString(req.GetPhone()) {
+		return errors.New("invalid phone")
+	}
+
+	return nil
+}

@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	ErrWrongCode = errors.New("wrong code or email")
+	ErrWrongCode = errors.New("wrong code")
 )
 
 type ConfirmEmailRequest struct {

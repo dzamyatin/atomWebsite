@@ -16,6 +16,10 @@ type SendPhoneConfirmationUseCase struct {
 	randomizerRepository repository.IRandomizerRepository
 }
 
+func NewSendPhoneConfirmationUseCase(logger *zap.Logger, sender servicemessengersender.ISenderService, randomizerRepository repository.IRandomizerRepository) *SendPhoneConfirmationUseCase {
+	return &SendPhoneConfirmationUseCase{logger: logger, sender: sender, randomizerRepository: randomizerRepository}
+}
+
 func (r *SendPhoneConfirmationUseCase) Execute(
 	ctx context.Context,
 	phone string,

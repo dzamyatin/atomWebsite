@@ -5,23 +5,24 @@ import (
 	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
 	"github.com/dzamyatin/atomWebsite/internal/request"
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
+	"github.com/dzamyatin/atomWebsite/internal/transformer"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
 	"github.com/dzamyatin/atomWebsite/internal/validator"
 	"github.com/guregu/null/v6"
 	"github.com/pkg/errors"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type AuthServer struct {
 	atomWebsite.UnimplementedAuthServer
-	bus                          bus.IBus
+	bus         bus.IBus
+	validator   *validator.Validator
+	transformer *transformer.Transformer
+
 	registerUseCase              *usecase.Registration
 	loginUseCase                 *usecase.Login
 	confirmEmailUseCase          *usecase.ConfirmEmailUseCase
 	sendEmailConfirmationUseCase *usecase.SendEmailConfirmationUseCase
 	rememberPasswordUseCase      *usecase.RememberPasswordUseCase
-	validator                    *validator.Validator
 	changePasswordUseCase        *usecase.ChangePasswordUseCase
 	sendPhoneConfirmationUseCase *usecase.SendPhoneConfirmationUseCase
 	confirmPhoneUseCase          *usecase.ConfirmPhoneUseCase
@@ -38,9 +39,11 @@ func NewAuthServer(
 	changePasswordUseCase *usecase.ChangePasswordUseCase,
 	sendPhoneConfirmationUseCase *usecase.SendPhoneConfirmationUseCase,
 	confirmPhoneUseCase *usecase.ConfirmPhoneUseCase,
+	transformer *transformer.Transformer,
 ) AuthServer {
 	return AuthServer{
 		validator:                    validator,
+		transformer:                  transformer,
 		changePasswordUseCase:        changePasswordUseCase,
 		registerUseCase:              registerUseCase,
 		loginUseCase:                 loginUseCase,
@@ -54,17 +57,35 @@ func NewAuthServer(
 }
 
 func (r AuthServer) ConfirmPhone(
-	context.Context,
-	*atomWebsite.ConfirmPhoneRequest,
+	ctx context.Context,
+	req *atomWebsite.ConfirmPhoneRequest,
 ) (*atomWebsite.ConfirmPhoneResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ConfirmPhone not implemented")
+	if err := r.validator.ValidateConfirmPhoneRequest(req); err != nil {
+		return nil, r.ErrInvalidArgument(err)
+	}
+
+	err := r.confirmPhoneUseCase.Execute(ctx, r.transformer.TransformConfirmPhoneRequest(req))
+	if err != nil {
+		return nil, r.ErrInternal(err)
+	}
+
+	return &atomWebsite.ConfirmPhoneResponse{}, nil
 }
 
 func (r AuthServer) SendPhoneConfirmation(
-	context.Context,
-	*atomWebsite.SendPhoneConfirmationRequest,
+	ctx context.Context,
+	req *atomWebsite.SendPhoneConfirmationRequest,
 ) (*atomWebsite.SendPhoneConfirmationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendPhoneConfirmation not implemented")
+	if err := r.validator.ValidateSendPhoneConfirmationRequest(req); err != nil {
+		return nil, r.ErrInvalidArgument(err)
+	}
+
+	err := r.sendPhoneConfirmationUseCase.Execute(ctx, r.transformer.TransformSendPhoneConfirmationRequest(req))
+	if err != nil {
+		return nil, r.ErrInternal(err)
+	}
+
+	return &atomWebsite.SendPhoneConfirmationResponse{}, nil
 }
 
 func (r AuthServer) ChangePassword(
@@ -72,7 +93,7 @@ func (r AuthServer) ChangePassword(
 	req *atomWebsite.ChangePasswordRequest,
 ) (*atomWebsite.ChangePasswordResponse, error) {
 	if err := r.validator.ValidateChangePasswordRequest(req); err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "validation error %s", err.Error())
+		return nil, r.ErrInvalidArgument(err)
 	}
 
 	err := r.changePasswordUseCase.Execute(
@@ -87,7 +108,7 @@ func (r AuthServer) ChangePassword(
 	)
 
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, r.ErrInternal(err)
 	}
 
 	return &atomWebsite.ChangePasswordResponse{}, nil
@@ -98,7 +119,7 @@ func (r AuthServer) RememberPassword(
 	req *atomWebsite.RememberPasswordRequest,
 ) (*atomWebsite.RememberPasswordResponse, error) {
 	if err := r.validator.ValidateRememberPassword(req); err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return nil, r.ErrInvalidArgument(err)
 	}
 
 	err := r.rememberPasswordUseCase.Execute(
@@ -110,7 +131,7 @@ func (r AuthServer) RememberPassword(
 	)
 
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, r.ErrInternal(err)
 	}
 
 	return &atomWebsite.RememberPasswordResponse{}, nil
@@ -122,7 +143,7 @@ func (r AuthServer) SendEmailConfirmation(
 ) (*atomWebsite.SendEmailConfirmationResponse, error) {
 	err := r.sendEmailConfirmationUseCase.Execute(ctx, req.GetEmail())
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "send failed: %s", err.Error())
+		return nil, r.ErrInternal(err)
 	}
 
 	return &atomWebsite.SendEmailConfirmationResponse{}, nil
@@ -143,10 +164,10 @@ func (r AuthServer) ConfirmEmail(
 
 	if err != nil {
 		if errors.Is(err, usecase.ErrWrongCode) {
-			return nil, status.Error(codes.InvalidArgument, err.Error())
+			return nil, r.ErrInvalidArgument(err)
 		}
 
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, r.ErrInternal(err)
 	}
 
 	return &atomWebsite.ConfirmEmailResponse{}, nil
@@ -172,7 +193,7 @@ func (r AuthServer) Register(ctx context.Context, req *atomWebsite.RegisterReque
 	//)
 
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "Registration fail: %s", err.Error())
+		return nil, r.ErrInvalidArgument(err)
 	}
 
 	return &atomWebsite.RegisterResponse{}, nil
@@ -186,7 +207,7 @@ func (r AuthServer) Login(ctx context.Context, req *atomWebsite.LoginRequest) (*
 	})
 
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "Login fail: %s", err.Error())
+		return nil, r.ErrInvalidArgument(err)
 	}
 
 	return &atomWebsite.LoginResponse{

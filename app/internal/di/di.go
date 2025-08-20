@@ -20,6 +20,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	"github.com/dzamyatin/atomWebsite/internal/service/time"
 	userservice "github.com/dzamyatin/atomWebsite/internal/service/user"
+	"github.com/dzamyatin/atomWebsite/internal/transformer"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
 	usecasemessenger "github.com/dzamyatin/atomWebsite/internal/usecase/messenger"
 	usecasemigration "github.com/dzamyatin/atomWebsite/internal/usecase/migration"
@@ -96,6 +97,9 @@ var set = wire.NewSet(
 	wire.Bind(new(repository.ICounterRepository), new(*repository.CounterRepository)),
 	servicemessengersender.NewSequentiallySender,
 	wire.Bind(new(servicemessengersender.ISenderService), new(*servicemessengersender.SequentiallySender)),
+	transformer.NewTransformer,
+	usecase.NewSendPhoneConfirmationUseCase,
+	usecase.NewConfirmPhoneUseCase,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

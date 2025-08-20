@@ -106,3 +106,20 @@ GET localhost:8503/auth.swagger.json
 
 ###
 GET localhost:8503/doc.html
+
+###
+POST localhost:8503/confirm-phone
+
+{
+  "phone": "+79297145267",
+  "code": "TPNCH"
+}
+
+###
+POST localhost:8503/send-phone-confirmation
+
+{
+    "phone": "+79297145267"
+}
+
+
