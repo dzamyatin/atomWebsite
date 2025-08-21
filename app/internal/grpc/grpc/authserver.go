@@ -4,14 +4,13 @@ import (
 	"context"
 	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
 	"github.com/dzamyatin/atomWebsite/internal/request"
+	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
 	"github.com/dzamyatin/atomWebsite/internal/transformer"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
 	"github.com/dzamyatin/atomWebsite/internal/validator"
-	"github.com/google/uuid"
 	"github.com/guregu/null/v6"
 	"github.com/pkg/errors"
-	"google.golang.org/grpc/metadata"
 )
 
 type AuthServer struct {
@@ -28,6 +27,7 @@ type AuthServer struct {
 	changePasswordUseCase        *usecase.ChangePasswordUseCase
 	sendPhoneConfirmationUseCase *usecase.SendPhoneConfirmationUseCase
 	confirmPhoneUseCase          *usecase.ConfirmPhoneUseCase
+	auth                         serviceauth.IAuth
 }
 
 func NewAuthServer(
@@ -42,6 +42,7 @@ func NewAuthServer(
 	sendPhoneConfirmationUseCase *usecase.SendPhoneConfirmationUseCase,
 	confirmPhoneUseCase *usecase.ConfirmPhoneUseCase,
 	transformer *transformer.Transformer,
+	auth serviceauth.IAuth,
 ) AuthServer {
 	return AuthServer{
 		validator:                    validator,
@@ -55,24 +56,24 @@ func NewAuthServer(
 		rememberPasswordUseCase:      rememberPasswordUseCase,
 		sendPhoneConfirmationUseCase: sendPhoneConfirmationUseCase,
 		confirmPhoneUseCase:          confirmPhoneUseCase,
+		auth:                         auth,
 	}
-}
-
-func (r AuthServer) getUserUUID(ctx context.Context) (uuid.UUID, error) {
-	//TODO!!!
-	metadata.FromIncomingContext(ctx)
-	return uuid.UUID{}, nil
 }
 
 func (r AuthServer) ConfirmPhone(
 	ctx context.Context,
 	req *atomWebsite.ConfirmPhoneRequest,
 ) (*atomWebsite.ConfirmPhoneResponse, error) {
-	if err := r.validator.ValidateConfirmPhoneRequest(req); err != nil {
+	user, err := r.auth.GetUserFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = r.validator.ValidateConfirmPhoneRequest(req); err != nil {
 		return nil, r.ErrInvalidArgument(err)
 	}
 
-	err := r.confirmPhoneUseCase.Execute(ctx, r.transformer.TransformConfirmPhoneRequest(req))
+	err = r.confirmPhoneUseCase.Execute(ctx, r.transformer.TransformConfirmPhoneRequest(req, user))
 	if err != nil {
 		return nil, r.ErrInternal(err)
 	}
@@ -161,12 +162,17 @@ func (r AuthServer) ConfirmEmail(
 	ctx context.Context,
 	req *atomWebsite.ConfirmEmailRequest,
 ) (*atomWebsite.ConfirmEmailResponse, error) {
+	user, err := r.auth.GetUserFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
 
-	err := r.confirmEmailUseCase.Execute(
+	err = r.confirmEmailUseCase.Execute(
 		ctx,
 		usecase.ConfirmEmailRequest{
 			UserEmail:        req.GetEmail(),
 			ConfirmationCode: req.GetCode(),
+			CurrentUserUUID:  user.UUID,
 		},
 	)
 

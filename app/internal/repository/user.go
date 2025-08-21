@@ -40,6 +40,7 @@ func NewUserRepository(
 
 func (r *UserRepository) GetByUUID(ctx context.Context, uuid uuid.UUID) (entity.User, error) {
 	sb := sqlbuilder.PostgreSQL.NewSelectBuilder()
+	sb.Select(r.getInsertCols()...)
 	sb.From("users")
 	sb.Where(sb.Equal("uuid", uuid))
 	sb.Limit(1)
@@ -129,6 +130,8 @@ func (r *UserRepository) getInsertVal(user entity.User) []any {
 		user.Email,
 		user.PasswordHash,
 		user.Phone,
+		user.ConfirmedEmail,
+		user.ConfirmedPhone,
 	}
 }
 
@@ -138,6 +141,8 @@ func (r *UserRepository) getInsertCols() []string {
 		"email",
 		"password",
 		"phone",
+		"confirmed_email",
+		"confirmed_phone",
 	}
 }
 

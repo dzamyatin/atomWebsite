@@ -100,6 +100,8 @@ var set = wire.NewSet(
 	transformer.NewTransformer,
 	usecase.NewSendPhoneConfirmationUseCase,
 	usecase.NewConfirmPhoneUseCase,
+	serviceauth.NewAuth,
+	wire.Bind(new(serviceauth.IAuth), new(*serviceauth.Auth)),
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

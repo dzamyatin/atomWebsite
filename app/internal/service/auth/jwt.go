@@ -3,6 +3,7 @@ package serviceauth
 import (
 	dtoauth "github.com/dzamyatin/atomWebsite/internal/dto/auth"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"time"
@@ -72,20 +73,26 @@ func (r *JWT) DecodeToken(token string) (*dtoauth.Token, error) {
 		return nil, ErrUnexpectedSigningMethod
 	}
 
-	uuid, ok := claims[claimUserUUID]
+	uuidClaim, ok := claims[claimUserUUID]
 
 	if !ok {
 		return nil, ErrUnexpectedSigningMethod
 	}
 
-	u, isString := uuid.([16]byte)
+	uuidString, isString := uuidClaim.(string)
 
 	if !isString {
 		return nil, ErrUnexpectedSigningMethod
 	}
 
+	res, err := uuid.Parse(uuidString)
+	if err != nil {
+		r.logger.Error("failed to decode uuid", zap.Error(err))
+		return nil, errors.Wrap(err, "decode uuid")
+	}
+
 	return dtoauth.NewToken(
 		token,
-		dtoauth.NewUser(u),
+		dtoauth.NewUser(res),
 	), nil
 }
