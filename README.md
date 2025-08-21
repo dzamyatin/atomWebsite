@@ -27,11 +27,10 @@
 - <span style="color:green">DONE</span> email-confirm
   - <span style="color:green">DONE</span> yandex smtp
 - <span style="color:yellow">IN PROGRESS</span> phone-confirm
-  - usecasees: confirmphone, sendphoneconfirmation
-  - front pages to handle confirmations
-  - /confirm-phone /confirm-email
+  - <span style="color:green">DONE</span> usecasees: confirmphone, sendphoneconfirmation
+  - <span style="color:yellow">IN PROGRESS</span> front pages to handle confirmations
+  - <span style="color:green">DONE</span> /confirm-phone /confirm-email
     (!) should assign email|phone to current user
-    <span style="color:RED">>></span>/home/dzamyatin/GolandProjects/atomProject/website/app/internal/grpc/grpc/authserver.go
   - <span style="color:green">DONE</span> telegram
     - <span style="color:green">DONE</span> sender to store (chat lint, phone) to send msg
       - <span style="color:green">DONE</span>to store
@@ -42,7 +41,6 @@
   - telegram bot,
   - bus
   - grpc
-- <span style="color:yellow">IN PROGRESS</span> controllers for http and compatibilyty with swaggerc2 oauth endpoint
 - remember password
   - <span style="color:green">DONE</span> for email
   - <span style="color:orange">TEST REQ AFTER EMAIL CONFIRMATION</span> for phone
@@ -83,6 +81,7 @@
   - volume
 
 ## backlog
+- controllers for http and compatibilyty with swaggerc2 oauth endpoint
 - oauth by external providers
   - google
   - vk
