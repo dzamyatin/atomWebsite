@@ -77,6 +77,17 @@ POST localhost:8503/change-password
   "oldPassword": ""
 }
 
+### by phone
+POST localhost:8503/change-password
+
+{
+  "email": "",
+  "phone": "+79297145267",
+  "code": "LLARK",
+  "newPassword": "asd@123a",
+  "oldPassword": ""
+}
+
 ###
 POST localhost:8503/login
 
