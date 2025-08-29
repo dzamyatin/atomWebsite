@@ -192,6 +192,7 @@ func newLogger() *zap.Logger {
 }
 
 func newServer(
+	logger *zap.Logger,
 	grpcServer *grpc.Server,
 ) *grpcservice2.GRPCServer {
 	lis, err := net.Listen("tcp", getConfig().AddrGrpc)
@@ -200,6 +201,7 @@ func newServer(
 	}
 
 	return grpcservice2.NewGRPCServer(
+		logger,
 		lis,
 		grpcServer,
 	)
@@ -281,9 +283,11 @@ func newJWT(logger *zap.Logger) *serviceauth.JWT {
 }
 
 func newHTTPServer(
+	logger *zap.Logger,
 	server grpcservice2.AuthServer,
 ) *grpcservice2.HTTPServer {
 	return grpcservice2.NewHTTPServer(
+		logger,
 		server,
 		getConfig().AddHttp,
 	)

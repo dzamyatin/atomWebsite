@@ -15,12 +15,14 @@
 import ApiClient from './ApiClient';
 import AuthChangePasswordRequest from './model/AuthChangePasswordRequest';
 import AuthConfirmEmailRequest from './model/AuthConfirmEmailRequest';
+import AuthConfirmPhoneRequest from './model/AuthConfirmPhoneRequest';
 import AuthLoginRequest from './model/AuthLoginRequest';
 import AuthLoginResponse from './model/AuthLoginResponse';
 import AuthRegisterRequest from './model/AuthRegisterRequest';
 import AuthRegisterResponse from './model/AuthRegisterResponse';
 import AuthRememberPasswordRequest from './model/AuthRememberPasswordRequest';
 import AuthSendEmailConfirmationRequest from './model/AuthSendEmailConfirmationRequest';
+import AuthSendPhoneConfirmationRequest from './model/AuthSendPhoneConfirmationRequest';
 import ProtobufAny from './model/ProtobufAny';
 import RpcStatus from './model/RpcStatus';
 import AuthApi from './api/AuthApi';
@@ -77,6 +79,12 @@ export {
     AuthConfirmEmailRequest,
 
     /**
+     * The AuthConfirmPhoneRequest model constructor.
+     * @property {module:model/AuthConfirmPhoneRequest}
+     */
+    AuthConfirmPhoneRequest,
+
+    /**
      * The AuthLoginRequest model constructor.
      * @property {module:model/AuthLoginRequest}
      */
@@ -111,6 +119,12 @@ export {
      * @property {module:model/AuthSendEmailConfirmationRequest}
      */
     AuthSendEmailConfirmationRequest,
+
+    /**
+     * The AuthSendPhoneConfirmationRequest model constructor.
+     * @property {module:model/AuthSendPhoneConfirmationRequest}
+     */
+    AuthSendPhoneConfirmationRequest,
 
     /**
      * The ProtobufAny model constructor.

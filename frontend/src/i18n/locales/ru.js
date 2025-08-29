@@ -52,6 +52,7 @@ export default {
         registration: `Регистрация`,
         signin: "Войти",
         logout: "Выйти",
+        license: "Лицензии"
     },
     home: {
         subtitle: "Ваша свобода в сети — наша миссия!",

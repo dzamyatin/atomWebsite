@@ -165,9 +165,9 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 	registry := metric.NewRegistry(logger)
 	metricMetric := metric.NewMetric(logger, registry)
 	server := newGrpcServer(authServer, metricMetric)
-	grpcServer := newServer(server)
+	grpcServer := newServer(logger, server)
 	signalListener := process.NewSignalListener(logger)
-	httpServer := newHTTPServer(authServer)
+	httpServer := newHTTPServer(logger, authServer)
 	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, sqlDB, registry, httpServer)
 	return processManager, nil
 }

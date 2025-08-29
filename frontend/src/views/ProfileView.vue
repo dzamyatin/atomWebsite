@@ -17,7 +17,7 @@
     <template>
   <section class="hero is-link">
     <div class="hero-body">
-      <p class="title">{{ t("pageheaders.registration") }}</p>
+      <p class="title">{{ t("pageheaders.profile") }}</p>
     </div>
   </section>
 
@@ -25,33 +25,7 @@
         <div class="columns is-mobile">
           <div class="column is-half is-offset-one-quarter">
             <div class="bd-notification is-primary">
-              <table class="table">
-                <thead>
-                <tr>
-                  <th>Идентификатор</th>
-                  <th>Название</th>
-                  <th>Валиден до</th>
-                  <th>Дата создания</th>
-                  <th>Ключ</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <th>1</th>
-                  <td>
-                    10 Mbit/sec. Месяц. Германия.
-                  </td>
-                  <td>2025.01.01</td>
-                  <td>2026.01.01</td>
-                  <td>
-                    <textarea>asdasfmioqwmdoXASmdfo,asdasfg</textarea>
-                  </td>
-                  <td>
-                    <b-button>Копировать</b-button>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+              tst
             </div>
           </div>
         </div>

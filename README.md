@@ -41,9 +41,9 @@
   - telegram bot,
   - bus
   - grpc
-- remember password
+- <span style="color:green">DONE</span> remember password
   - <span style="color:green">DONE</span> for email
-  - <span style="color:orange">TEST REQ AFTER EMAIL CONFIRMATION</span> for phone
+  - <span style="color:green">DONE</span> for phone
 - cart
 - place-order
 - key-list to obtain
@@ -81,6 +81,7 @@
   - volume
 
 ## backlog
+- http metric (request see grpc WithChainUnaryInterceptor app/internal/di/initializers.go (IncomingRequestHistogram))
 - controllers for http and compatibilyty with swaggerc2 oauth endpoint
 - oauth by external providers
   - google

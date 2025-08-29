@@ -6,21 +6,25 @@ import (
 	"github.com/dzamyatin/atomWebsite/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 	"net"
 	"net/http"
 )
 
 type HTTPServer struct {
+	logger   *zap.Logger
 	service  AuthServer
 	server   *http.Server
 	httpAddr string
 }
 
 func NewHTTPServer(
+	logger *zap.Logger,
 	server AuthServer,
 	httpAddr string,
 ) *HTTPServer {
 	return &HTTPServer{
+		logger:   logger,
 		service:  server,
 		httpAddr: httpAddr,
 	}
@@ -53,6 +57,8 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (r *HTTPServer) Start(ctx context.Context) error {
+	r.logger.Info("Starting HTTP server", zap.String("http_addr", r.httpAddr))
+
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 

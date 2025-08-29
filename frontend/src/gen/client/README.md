@@ -101,6 +101,10 @@ Please follow the [installation](#installation) instruction and execute the foll
 ```javascript
 var AuthProto = require('auth_proto');
 
+var defaultClient = AuthProto.ApiClient.instance;
+// Configure OAuth2 access token for authorization: Bearer
+var Bearer = defaultClient.authentications['Bearer'];
+Bearer.accessToken = "YOUR ACCESS TOKEN"
 
 var api = new AuthProto.AuthApi()
 var body = new AuthProto.AuthChangePasswordRequest(); // {AuthChangePasswordRequest} 
@@ -117,33 +121,45 @@ api.authChangePassword(body, callback);
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *http://localhost:8503*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AuthProto.AuthApi* | [**authChangePassword**](docs/AuthApi.md#authChangePassword) | **POST** /change-password | 
 *AuthProto.AuthApi* | [**authConfirmEmail**](docs/AuthApi.md#authConfirmEmail) | **POST** /confirm-email | 
+*AuthProto.AuthApi* | [**authConfirmPhone**](docs/AuthApi.md#authConfirmPhone) | **POST** /confirm-phone | 
 *AuthProto.AuthApi* | [**authLogin**](docs/AuthApi.md#authLogin) | **POST** /login | 
 *AuthProto.AuthApi* | [**authRegister**](docs/AuthApi.md#authRegister) | **POST** /register | 
 *AuthProto.AuthApi* | [**authRememberPassword**](docs/AuthApi.md#authRememberPassword) | **POST** /remember-password | 
 *AuthProto.AuthApi* | [**authSendEmailConfirmation**](docs/AuthApi.md#authSendEmailConfirmation) | **POST** /send-email-confirmation | 
+*AuthProto.AuthApi* | [**authSendPhoneConfirmation**](docs/AuthApi.md#authSendPhoneConfirmation) | **POST** /send-phone-confirmation | 
 
 
 ## Documentation for Models
 
  - [AuthProto.AuthChangePasswordRequest](docs/AuthChangePasswordRequest.md)
  - [AuthProto.AuthConfirmEmailRequest](docs/AuthConfirmEmailRequest.md)
+ - [AuthProto.AuthConfirmPhoneRequest](docs/AuthConfirmPhoneRequest.md)
  - [AuthProto.AuthLoginRequest](docs/AuthLoginRequest.md)
  - [AuthProto.AuthLoginResponse](docs/AuthLoginResponse.md)
  - [AuthProto.AuthRegisterRequest](docs/AuthRegisterRequest.md)
  - [AuthProto.AuthRegisterResponse](docs/AuthRegisterResponse.md)
  - [AuthProto.AuthRememberPasswordRequest](docs/AuthRememberPasswordRequest.md)
  - [AuthProto.AuthSendEmailConfirmationRequest](docs/AuthSendEmailConfirmationRequest.md)
+ - [AuthProto.AuthSendPhoneConfirmationRequest](docs/AuthSendPhoneConfirmationRequest.md)
  - [AuthProto.ProtobufAny](docs/ProtobufAny.md)
  - [AuthProto.RpcStatus](docs/RpcStatus.md)
 
 
 ## Documentation for Authorization
 
-Endpoints do not require authorization.
+
+Authentication schemes defined for the API:
+### Bearer
+
+
+- **Type**: OAuth
+- **Flow**: application
+- **Authorization URL**: 
+- **Scopes**: N/A
 

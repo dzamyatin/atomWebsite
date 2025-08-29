@@ -32,11 +32,11 @@ class ApiClient {
      * Overrides the default value set in spec file if present
      * @param {String} basePath
      */
-    constructor(basePath = 'http://localhost') {
+    constructor(basePath = 'http://localhost:8503') {
         /**
          * The base URL against which to resolve every API call's (relative) path.
          * @type {String}
-         * @default http://localhost
+         * @default http://localhost:8503
          */
         this.basePath = basePath.replace(/\/+$/, '');
 
@@ -45,6 +45,7 @@ class ApiClient {
          * @type {Array.<String>}
          */
         this.authentications = {
+            'Bearer': {type: 'oauth2'}
         }
 
 	/**
@@ -594,7 +595,7 @@ class ApiClient {
     hostSettings() {
         return [
             {
-              'url': "",
+              'url': "http://localhost:8503",
               'description': "No description provided",
             }
       ];

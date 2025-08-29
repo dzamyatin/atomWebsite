@@ -10,6 +10,7 @@ import RememberPasswordView from "@/views/RememberPasswordView.vue";
 import ChangePasswordView from "@/views/ChangePasswordView.vue";
 import CartView from "@/views/CartView.vue";
 import PlaceOrderView from "@/views/PlaceOrderView.vue";
+import LicensesView from "@/views/LicensesView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,6 +64,11 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView,
+    },
+    {
+      path: '/licenses',
+      name: 'licenses',
+      component: LicensesView,
     },
     {
       path: '/pay',
