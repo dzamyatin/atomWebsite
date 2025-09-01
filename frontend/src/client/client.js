@@ -1,29 +1,41 @@
 import * as Auth from "../gen/client/src/index"
+import {useLoginStore} from "@/stores/login";
 
 const host = "http://localhost:8503"
 
-let client = new Auth.ApiClient(host)
-client.timeout = 60000;
+function getAuthClient() {
+    const store = useLoginStore();
+    let client = new Auth.ApiClient(host)
+    client.timeout = 60000;
+    client.defaultHeaders = {
+        'Authorization': 'Bearer ' + store.jwt,
+        'User-Agent': 'OpenAPI-Generator/version not set/Javascript',
+    }
+    let auth = new Auth.AuthApi(client)
+    return auth
+}
 
-let auth = new Auth.AuthApi(client)
+function resolveFn(resolve) {
+    return function (error, data, response) {
+        resolve(new Result(
+            error,
+            data,
+            response,
+        ))
+    }
+}
 
 export async function confirmEmail(
     email,
     code,
 ) {
     let promise = new Promise((resolve, reject) => {
-        auth.authConfirmEmail(
+        getAuthClient().authConfirmEmail(
             {
                 'email': email,
                 'code': code,
             },
-            function callback(error, data, response) {
-                resolve(new Result(
-                    error,
-                    data,
-                    response,
-                ))
-            }
+            resolveFn(resolve)
         )
     });
 
@@ -36,19 +48,13 @@ export async function register(
     phone
 ) {
     let promise = new Promise((resolve, reject) => {
-        auth.authRegister(
+        getAuthClient().authRegister(
             {
                 'email': email,
                 'password': password,
                 'phone': phone,
             },
-            function callback(error, data, response) {
-                resolve(new Result(
-                    error,
-                    data,
-                    response,
-                ))
-            }
+            resolveFn(resolve)
         )
     });
 
@@ -61,19 +67,13 @@ export async function login(
     phone
 ) {
     let promise = new Promise((resolve, reject) => {
-        auth.authLogin(
+        getAuthClient().authLogin(
             {
                 'email': email,
                 'password': password,
                 'phone': phone,
             },
-            function callback(error, data, response) {
-                resolve(new Result(
-                    error,
-                    data,
-                    response,
-                ))
-            }
+            resolveFn(resolve)
         )
     });
 
@@ -85,18 +85,12 @@ export async function rememberPassword(
     phone
 ) {
     let promise = new Promise((resolve, reject) => {
-        auth.authRememberPassword(
+        getAuthClient().authRememberPassword(
             {
                 'email': email,
                 'phone': phone,
             },
-            function callback(error, data, response) {
-                resolve(new Result(
-                    error,
-                    data,
-                    response,
-                ))
-            }
+            resolveFn(resolve)
         )
     });
 
@@ -111,7 +105,7 @@ export async function changePassword(
     code
 ) {
     let promise = new Promise((resolve, reject) => {
-        auth.authChangePassword(
+        getAuthClient().authChangePassword(
             {
                 'newPassword': newPassword,
                 'oldPassword': oldPassword,
@@ -119,13 +113,17 @@ export async function changePassword(
                 'phone': phone,
                 'code': code,
             },
-            function callback(error, data, response) {
-                resolve(new Result(
-                    error,
-                    data,
-                    response,
-                ))
-            }
+            resolveFn(resolve)
+        )
+    });
+
+    return promise
+}
+
+export async function getCurrentUser() {
+    let promise = new Promise((resolve, reject) => {
+        getAuthClient().authCurrent(
+            resolveFn(resolve)
         )
     });
 

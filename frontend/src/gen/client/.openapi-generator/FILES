@@ -6,6 +6,7 @@ docs/AuthApi.md
 docs/AuthChangePasswordRequest.md
 docs/AuthConfirmEmailRequest.md
 docs/AuthConfirmPhoneRequest.md
+docs/AuthCurrentResponse.md
 docs/AuthLoginRequest.md
 docs/AuthLoginResponse.md
 docs/AuthRegisterRequest.md
@@ -24,6 +25,7 @@ src/index.js
 src/model/AuthChangePasswordRequest.js
 src/model/AuthConfirmEmailRequest.js
 src/model/AuthConfirmPhoneRequest.js
+src/model/AuthCurrentResponse.js
 src/model/AuthLoginRequest.js
 src/model/AuthLoginResponse.js
 src/model/AuthRegisterRequest.js

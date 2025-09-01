@@ -16,6 +16,7 @@ import ApiClient from './ApiClient';
 import AuthChangePasswordRequest from './model/AuthChangePasswordRequest';
 import AuthConfirmEmailRequest from './model/AuthConfirmEmailRequest';
 import AuthConfirmPhoneRequest from './model/AuthConfirmPhoneRequest';
+import AuthCurrentResponse from './model/AuthCurrentResponse';
 import AuthLoginRequest from './model/AuthLoginRequest';
 import AuthLoginResponse from './model/AuthLoginResponse';
 import AuthRegisterRequest from './model/AuthRegisterRequest';
@@ -83,6 +84,12 @@ export {
      * @property {module:model/AuthConfirmPhoneRequest}
      */
     AuthConfirmPhoneRequest,
+
+    /**
+     * The AuthCurrentResponse model constructor.
+     * @property {module:model/AuthCurrentResponse}
+     */
+    AuthCurrentResponse,
 
     /**
      * The AuthLoginRequest model constructor.

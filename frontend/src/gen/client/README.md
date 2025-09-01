@@ -128,6 +128,7 @@ Class | Method | HTTP request | Description
 *AuthProto.AuthApi* | [**authChangePassword**](docs/AuthApi.md#authChangePassword) | **POST** /change-password | 
 *AuthProto.AuthApi* | [**authConfirmEmail**](docs/AuthApi.md#authConfirmEmail) | **POST** /confirm-email | 
 *AuthProto.AuthApi* | [**authConfirmPhone**](docs/AuthApi.md#authConfirmPhone) | **POST** /confirm-phone | 
+*AuthProto.AuthApi* | [**authCurrent**](docs/AuthApi.md#authCurrent) | **GET** /current | 
 *AuthProto.AuthApi* | [**authLogin**](docs/AuthApi.md#authLogin) | **POST** /login | 
 *AuthProto.AuthApi* | [**authRegister**](docs/AuthApi.md#authRegister) | **POST** /register | 
 *AuthProto.AuthApi* | [**authRememberPassword**](docs/AuthApi.md#authRememberPassword) | **POST** /remember-password | 
@@ -140,6 +141,7 @@ Class | Method | HTTP request | Description
  - [AuthProto.AuthChangePasswordRequest](docs/AuthChangePasswordRequest.md)
  - [AuthProto.AuthConfirmEmailRequest](docs/AuthConfirmEmailRequest.md)
  - [AuthProto.AuthConfirmPhoneRequest](docs/AuthConfirmPhoneRequest.md)
+ - [AuthProto.AuthCurrentResponse](docs/AuthCurrentResponse.md)
  - [AuthProto.AuthLoginRequest](docs/AuthLoginRequest.md)
  - [AuthProto.AuthLoginResponse](docs/AuthLoginResponse.md)
  - [AuthProto.AuthRegisterRequest](docs/AuthRegisterRequest.md)

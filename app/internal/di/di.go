@@ -102,6 +102,7 @@ var set = wire.NewSet(
 	usecase.NewConfirmPhoneUseCase,
 	serviceauth.NewAuth,
 	wire.Bind(new(serviceauth.IAuth), new(*serviceauth.Auth)),
+	usecase.NewGetUser,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

@@ -83,6 +83,10 @@ export default {
             wrongpassword: "Пароль должен содержать символы верхнего и нижнего регистра, специальные символы и цифры",
             wrongemail: "Email должен быть валидным",
         },
+        profile: {
+            confirm: "Подтвердить",
+            confirmed: "Подтверждено",
+        },
         licenses: {
             confirm: "Подтвердить",
         },

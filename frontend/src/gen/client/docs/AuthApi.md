@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**authChangePassword**](AuthApi.md#authChangePassword) | **POST** /change-password | 
 [**authConfirmEmail**](AuthApi.md#authConfirmEmail) | **POST** /confirm-email | 
 [**authConfirmPhone**](AuthApi.md#authConfirmPhone) | **POST** /confirm-phone | 
+[**authCurrent**](AuthApi.md#authCurrent) | **GET** /current | 
 [**authLogin**](AuthApi.md#authLogin) | **POST** /login | 
 [**authRegister**](AuthApi.md#authRegister) | **POST** /register | 
 [**authRememberPassword**](AuthApi.md#authRememberPassword) | **POST** /remember-password | 
@@ -153,6 +154,49 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: application/json
+- **Accept**: application/json
+
+
+## authCurrent
+
+> AuthCurrentResponse authCurrent()
+
+
+
+### Example
+
+```javascript
+import AuthProto from 'auth_proto';
+let defaultClient = AuthProto.ApiClient.instance;
+// Configure OAuth2 access token for authorization: Bearer
+let Bearer = defaultClient.authentications['Bearer'];
+Bearer.accessToken = 'YOUR ACCESS TOKEN';
+
+let apiInstance = new AuthProto.AuthApi();
+apiInstance.authCurrent((error, data, response) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+});
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**AuthCurrentResponse**](AuthCurrentResponse.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
 - **Accept**: application/json
 
 

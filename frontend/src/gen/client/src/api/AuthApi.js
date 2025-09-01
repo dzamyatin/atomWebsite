@@ -16,6 +16,7 @@ import ApiClient from "../ApiClient";
 import AuthChangePasswordRequest from '../model/AuthChangePasswordRequest';
 import AuthConfirmEmailRequest from '../model/AuthConfirmEmailRequest';
 import AuthConfirmPhoneRequest from '../model/AuthConfirmPhoneRequest';
+import AuthCurrentResponse from '../model/AuthCurrentResponse';
 import AuthLoginRequest from '../model/AuthLoginRequest';
 import AuthLoginResponse from '../model/AuthLoginResponse';
 import AuthRegisterRequest from '../model/AuthRegisterRequest';
@@ -159,6 +160,41 @@ export default class AuthApi {
       let returnType = Object;
       return this.apiClient.callApi(
         '/confirm-phone', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null, callback
+      );
+    }
+
+    /**
+     * Callback function to receive the result of the authCurrent operation.
+     * @callback module:api/AuthApi~authCurrentCallback
+     * @param {String} error Error message, if any.
+     * @param {module:model/AuthCurrentResponse} data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {module:api/AuthApi~authCurrentCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link module:model/AuthCurrentResponse}
+     */
+    authCurrent(callback) {
+      let postBody = null;
+
+      let pathParams = {
+      };
+      let queryParams = {
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = ['Bearer'];
+      let contentTypes = [];
+      let accepts = ['application/json'];
+      let returnType = AuthCurrentResponse;
+      return this.apiClient.callApi(
+        '/current', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, null, callback
       );
