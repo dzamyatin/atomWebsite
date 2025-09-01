@@ -26,9 +26,9 @@
 - <span style="color:green">DONE</span> login
 - <span style="color:green">DONE</span> email-confirm
   - <span style="color:green">DONE</span> yandex smtp
-- <span style="color:yellow">IN PROGRESS</span> phone-confirm
+- <span style="color:green">DONE</span> phone-confirm
   - <span style="color:green">DONE</span> usecasees: confirmphone, sendphoneconfirmation
-  - <span style="color:yellow">IN PROGRESS</span> front pages to handle confirmations
+  - <span style="color:green">DONE</span> front pages to handle confirmations
   - <span style="color:green">DONE</span> /confirm-phone /confirm-email
     (!) should assign email|phone to current user
   - <span style="color:green">DONE</span> telegram
