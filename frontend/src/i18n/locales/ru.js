@@ -86,6 +86,10 @@ export default {
         profile: {
             confirm: "Подтвердить",
             confirmed: "Подтверждено",
+            confirmEmail: "Подтверждение email",
+            confirmPhone: "Подтверждение телефона",
+            confirmationCode: "Код подтверждения",
+            cancel: "Отмена",
         },
         licenses: {
             confirm: "Подтвердить",

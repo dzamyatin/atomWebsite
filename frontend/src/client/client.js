@@ -42,6 +42,53 @@ export async function confirmEmail(
     return promise
 }
 
+export async function sendEmailConfirmation(
+    email,
+) {
+    let promise = new Promise((resolve, reject) => {
+        getAuthClient().authSendEmailConfirmation(
+            {
+                'email': email,
+            },
+            resolveFn(resolve)
+        )
+    });
+
+    return promise
+}
+
+export async function confirmPhone(
+    phone,
+    code,
+) {
+    let promise = new Promise((resolve, reject) => {
+        getAuthClient().authConfirmPhone(
+            {
+                'phone': phone,
+                'code': code,
+            },
+            resolveFn(resolve)
+        )
+    });
+
+    return promise
+}
+
+export async function sendPhoneConfirmation(
+    phone,
+) {
+    let promise = new Promise((resolve, reject) => {
+        getAuthClient().authSendPhoneConfirmation(
+            {
+                'phone': phone,
+            },
+            resolveFn(resolve)
+        )
+    });
+
+    return promise
+}
+
 export async function register(
     email,
     password,

@@ -3,8 +3,8 @@
   import {useLoginStore} from './../stores/login.js'
   import {ref, onMounted} from "vue";
   import router from "@/router/index.js";
-  import {getCurrentUser} from "./../client/client"
-  import {BButton} from "buefy";
+  import {getCurrentUser, sendEmailConfirmation, sendPhoneConfirmation, confirmEmail as confirmEmailApi, confirmPhone as confirmPhoneApi} from "./../client/client"
+  import {BButton, BModal, BInput, BField} from "buefy";
 
   const {t} = useI18n()
   const store = useLoginStore()
@@ -24,6 +24,13 @@
   const disableSendPhoneButton = ref(false)
   const isEmailConfirmed = ref(false)
   const isPhoneConfirmed = ref(false)
+
+  // Modal properties
+  const isModalActive = ref(false)
+  const confirmationCode = ref("")
+  const confirmationType = ref("") // "email" or "phone"
+  const confirmationError = ref("")
+  const isConfirmationLoading = ref(false)
 
   // Fetch current user data when component is mounted
   onMounted(async () => {
@@ -105,12 +112,71 @@
     return false
   }
 
-  function confirmEmail() {
-    console.log("Confirming with email:", email.value)
+  async function confirmEmail() {
+    try {
+      const result = await sendEmailConfirmation(email.value)
+      if (!result.error) {
+        confirmationType.value = "email"
+        confirmationCode.value = ""
+        confirmationError.value = ""
+        isModalActive.value = true
+      } else {
+        console.error("Error sending email confirmation:", result.error)
+      }
+    } catch (error) {
+      console.error("Error sending email confirmation:", error)
+    }
   }
 
-  function confirmPhone() {
-    console.log("Confirming with and phone:", phone.value)
+  async function confirmPhone() {
+    try {
+      const result = await sendPhoneConfirmation(phone.value)
+      if (!result.error) {
+        confirmationType.value = "phone"
+        confirmationCode.value = ""
+        confirmationError.value = ""
+        isModalActive.value = true
+      } else {
+        console.error("Error sending phone confirmation:", result.error)
+      }
+    } catch (error) {
+      console.error("Error sending phone confirmation:", error)
+    }
+  }
+
+  async function submitConfirmationCode() {
+    isConfirmationLoading.value = true
+    confirmationError.value = ""
+
+    try {
+      let result
+
+      if (confirmationType.value === "email") {
+        result = await confirmEmailApi(email.value, confirmationCode.value)
+        if (!result.error) {
+          isEmailConfirmed.value = true
+          disableSendButton.value = true
+        }
+      } else if (confirmationType.value === "phone") {
+        result = await confirmPhoneApi(phone.value, confirmationCode.value)
+        if (!result.error) {
+          isPhoneConfirmed.value = true
+          disableSendPhoneButton.value = true
+        }
+      }
+
+      if (!result.error) {
+        isModalActive.value = false
+      } else {
+        confirmationError.value = "Invalid confirmation code"
+        console.error("Error confirming:", result.error)
+      }
+    } catch (error) {
+      confirmationError.value = "An error occurred"
+      console.error("Error confirming:", error)
+    } finally {
+      isConfirmationLoading.value = false
+    }
   }
 
 </script>
@@ -158,7 +224,28 @@
           </div>
         </div>
       </div>
-</template>
+
+      <!-- Confirmation Code Modal -->
+      <b-modal v-model="isModalActive" :title="confirmationType === 'email' ? t('page.profile.confirmEmail') : t('page.profile.confirmPhone')" has-modal-card>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">{{ confirmationType === 'email' ? t('page.profile.confirmEmail') : t('page.profile.confirmPhone') }}</p>
+          </header>
+          <section class="modal-card-body">
+            <b-field :label="t('page.profile.confirmationCode')" :type="confirmationError ? 'is-danger' : ''" :message="confirmationError">
+              <b-input v-model="confirmationCode" type="text" placeholder="123456"></b-input>
+            </b-field>
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-primary" @click="submitConfirmationCode" :disabled="isConfirmationLoading || !confirmationCode">
+              <b-loading :is-full-page="false" :active="isConfirmationLoading"></b-loading>
+              {{ t('page.profile.confirm') }}
+            </button>
+            <button class="button" @click="isModalActive = false">{{ t('page.profile.cancel') }}</button>
+          </footer>
+        </div>
+      </b-modal>
+    </template>
 
 <style>
 
