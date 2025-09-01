@@ -25,7 +25,32 @@
         <div class="columns is-mobile">
           <div class="column is-half is-offset-one-quarter">
             <div class="bd-notification is-primary">
-              tst
+              <b-field label="Email"
+                       v-on:keyup="checkForm"
+                       :type="wrongEmailType"
+                       :message="wrongEmailMessage">
+                <b-input v-model="email"></b-input>
+                <b-button
+                    v-on:click="confirm"
+                    :disabled="disableSendButton"
+                    type="is-primary"
+                    
+                >{{ t("page.licenses.confirm") }}
+                </b-button>
+              </b-field>
+              <b-field label="Phone"
+                       v-on:keyup="checkForm"
+                       :type="wrongEmailType"
+                       :message="wrongEmailMessage">
+                <b-input v-model="phone"></b-input>
+                <b-button
+                    v-on:click="confirm"
+                    :disabled="disableSendButton"
+                    type="is-primary"
+
+                >{{ t("page.licenses.confirm") }}
+                </b-button>
+              </b-field>
             </div>
           </div>
         </div>

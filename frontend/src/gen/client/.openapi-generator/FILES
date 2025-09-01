@@ -33,5 +33,3 @@ src/model/AuthSendEmailConfirmationRequest.js
 src/model/AuthSendPhoneConfirmationRequest.js
 src/model/ProtobufAny.js
 src/model/RpcStatus.js
-test/model/AuthConfirmPhoneRequest.spec.js
-test/model/AuthSendPhoneConfirmationRequest.spec.js

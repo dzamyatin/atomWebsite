@@ -72,6 +72,10 @@ async function loginUser() {
   if (response.error != null) {
     disableLoginButton.value = false
     errorMessage.value = response.response?.body?.message
+
+    if (!errorMessage.value) {
+      errorMessage.value = response.error.message
+    }
     return
   }
 
