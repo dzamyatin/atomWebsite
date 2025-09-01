@@ -6,3 +6,7 @@ type LoginRequest struct {
 	Password string
 	Code     string
 }
+
+type LoginResponse struct {
+	Token string
+}

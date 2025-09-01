@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"github.com/dzamyatin/atomWebsite/internal/request"
-	"github.com/dzamyatin/atomWebsite/internal/response"
 	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -23,20 +22,20 @@ func NewLogin(
 	return &Login{logger: logger, provider: provider, jwt: jwt}
 }
 
-func (r *Login) Execute(ctx context.Context, req request.LoginRequest) (response.LoginResponse, error) {
+func (r *Login) Execute(ctx context.Context, req request.LoginRequest) (request.LoginResponse, error) {
 	user, err := r.provider.GetUser(ctx, req)
 
 	if err != nil {
-		return response.LoginResponse{}, errors.Wrap(err, "provider get user")
+		return request.LoginResponse{}, errors.Wrap(err, "provider get user")
 	}
 
 	jwt, err := r.jwt.CreateToken(*user)
 
 	if err != nil {
-		return response.LoginResponse{}, errors.Wrap(err, "create token")
+		return request.LoginResponse{}, errors.Wrap(err, "create token")
 	}
 
-	return response.LoginResponse{
+	return request.LoginResponse{
 		Token: jwt.Value,
 	}, nil
 }

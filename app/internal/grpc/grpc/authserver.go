@@ -27,6 +27,7 @@ type AuthServer struct {
 	changePasswordUseCase        *usecase.ChangePasswordUseCase
 	sendPhoneConfirmationUseCase *usecase.SendPhoneConfirmationUseCase
 	confirmPhoneUseCase          *usecase.ConfirmPhoneUseCase
+	getUserUseCase               *usecase.GetUser
 	auth                         serviceauth.IAuth
 }
 
@@ -41,12 +42,14 @@ func NewAuthServer(
 	changePasswordUseCase *usecase.ChangePasswordUseCase,
 	sendPhoneConfirmationUseCase *usecase.SendPhoneConfirmationUseCase,
 	confirmPhoneUseCase *usecase.ConfirmPhoneUseCase,
+	getUserUseCase *usecase.GetUser,
 	transformer *transformer.Transformer,
 	auth serviceauth.IAuth,
 ) AuthServer {
 	return AuthServer{
 		validator:                    validator,
 		transformer:                  transformer,
+		getUserUseCase:               getUserUseCase,
 		changePasswordUseCase:        changePasswordUseCase,
 		registerUseCase:              registerUseCase,
 		loginUseCase:                 loginUseCase,
@@ -58,6 +61,23 @@ func NewAuthServer(
 		confirmPhoneUseCase:          confirmPhoneUseCase,
 		auth:                         auth,
 	}
+}
+
+func (r AuthServer) Current(
+	ctx context.Context,
+	_ *atomWebsite.CurrentRequest,
+) (*atomWebsite.CurrentResponse, error) {
+	user, err := r.auth.GetUserFromCtx(ctx)
+	if err != nil {
+		return nil, r.ErrInternal(err)
+	}
+
+	res, err := r.getUserUseCase.Execute(ctx, r.transformer.TransformCurrentRequestFromUser(user))
+	if err != nil {
+		return nil, r.ErrInvalidArgument(err)
+	}
+
+	return r.transformer.TransformGetUserResponse(res), nil
 }
 
 func (r AuthServer) ConfirmPhone(

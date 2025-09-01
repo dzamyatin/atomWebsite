@@ -33,6 +33,11 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 
 
 service Auth {
+  rpc Current (CurrentRequest) returns (CurrentResponse) {
+    option(google.api.http) = {
+      get: "/current"
+    };
+  };
   rpc Register (RegisterRequest) returns (RegisterResponse) {
     option(google.api.http) = {
       post: "/register"
@@ -81,6 +86,17 @@ service Auth {
       body: "*"
     };
   };
+}
+
+message CurrentRequest {}
+
+message CurrentResponse {
+  string uuid = 1;
+  string email = 2;
+  string password = 3;
+  string phone = 4;
+  bool confirmed_email = 5;
+  bool confirmed_phone = 6;
 }
 
 message ConfirmPhoneResponse {}

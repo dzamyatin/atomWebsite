@@ -117,6 +117,28 @@
         ]
       }
     },
+    "/current": {
+      "get": {
+        "operationId": "Auth_Current",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/authCurrentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/login": {
       "post": {
         "operationId": "Auth_Login",
@@ -329,6 +351,29 @@
     },
     "authConfirmPhoneResponse": {
       "type": "object"
+    },
+    "authCurrentResponse": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "confirmedEmail": {
+          "type": "boolean"
+        },
+        "confirmedPhone": {
+          "type": "boolean"
+        }
+      }
     },
     "authLoginRequest": {
       "type": "object",
