@@ -12,6 +12,7 @@ import CartView from "@/views/CartView.vue";
 import PlaceOrderView from "@/views/PlaceOrderView.vue";
 import LicensesView from "@/views/LicensesView.vue";
 import ShopView from "@/views/ShopView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,6 +89,11 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: NotFoundView,
     },
   ],
 })

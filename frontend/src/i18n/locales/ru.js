@@ -11,7 +11,8 @@ export default {
       registration: "Регистрация",
       emailconfirmation: "Подтвердите email",
       changepassword: "Изменить пароль",
-      shop: "Магазин"
+      shop: "Магазин",
+      notfound: "Страница не найдена"
     },
     fields: {
       email: "Email",
@@ -105,6 +106,10 @@ export default {
             total: "Итого",
             paymentMethods: "Способы оплаты",
             confirmOrder: "Подтвердить заказ"
+        },
+        notfound: {
+            message: "Страница, которую вы ищете, не существует",
+            backhome: "Вернуться на главную"
         },
     },
 };
