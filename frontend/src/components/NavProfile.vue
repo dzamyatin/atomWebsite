@@ -28,6 +28,11 @@ function logout() {
           <strong>{{ t("nav.license") || "Licenses" }}</strong>
         </a>
       </b-navbar-item>
+      <b-navbar-item tag="router-link" :to="{ path: '/shop' }">
+        <a class="button is-primary">
+          <strong>{{ t("nav.shop") || "Shop" }}</strong>
+        </a>
+      </b-navbar-item>
       <b-navbar-item>
         <a class="button is-light" @click="logout">
           {{ t("nav.logout") || "Logout" }}

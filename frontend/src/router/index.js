@@ -11,6 +11,7 @@ import ChangePasswordView from "@/views/ChangePasswordView.vue";
 import CartView from "@/views/CartView.vue";
 import PlaceOrderView from "@/views/PlaceOrderView.vue";
 import LicensesView from "@/views/LicensesView.vue";
+import ShopView from "@/views/ShopView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/shop',
+      name: 'shop',
+      component: ShopView,
     },
     {
       path: '/download',

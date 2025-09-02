@@ -10,7 +10,8 @@ export default {
       profile: "Личный кабинет",
       registration: "Регистрация",
       emailconfirmation: "Подтвердите email",
-      changepassword: "Изменить пароль"
+      changepassword: "Изменить пароль",
+      shop: "Магазин"
     },
     fields: {
       email: "Email",
@@ -53,7 +54,8 @@ export default {
         registration: `Регистрация`,
         signin: "Войти",
         logout: "Выйти",
-        license: "Лицензии"
+        license: "Лицензии",
+        shop: "Магазин"
     },
     home: {
         subtitle: "Ваша свобода в сети — наша миссия!",
