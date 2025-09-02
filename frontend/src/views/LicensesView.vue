@@ -24,6 +24,16 @@
       <div class="box">
         <div class="columns is-mobile">
           <div class="column is-half is-offset-one-quarter">
+            <div class="field is-grouped is-grouped-centered">
+              <b-icon icon="file-key"></b-icon>
+            </div>
+            <div class="field is-grouped is-grouped-centered">
+              <p class="control">
+                <button class="button is-primary" @click="router.push('/place-order')">
+                  {{ t("page.licenses.buttonToBuy") }}
+                </button>
+              </p>
+            </div>
             <div class="bd-notification is-primary">
               <table class="table">
                 <thead>

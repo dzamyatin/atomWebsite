@@ -1,5 +1,6 @@
 export default {
     pageheaders: {
+      licenses: "Лицензии",
       placeorder: "Заказ",
       cart: "Корзина",
       "remember-password": "Вспомнить пароль",
@@ -93,6 +94,15 @@ export default {
         },
         licenses: {
             confirm: "Подтвердить",
+            buttonToBuy: "Купить лицензию"
+        },
+        placeorder: {
+            productName: "Название продукта",
+            quantity: "Количество",
+            price: "Цена",
+            total: "Итого",
+            paymentMethods: "Способы оплаты",
+            confirmOrder: "Подтвердить заказ"
         },
     },
 };
