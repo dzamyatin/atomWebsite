@@ -10,18 +10,17 @@ import (
 )
 
 func newHttpRouter(
-	ctx context.Context,
 	serviceAuth grpc.AuthServer,
 	serviceShop grpc.ShopServer,
 ) *grpc.HttpRouter {
 	return grpc.NewHttpRouter(
-		func(mux *runtime.ServeMux) error {
+		func(ctx context.Context, mux *runtime.ServeMux) error {
 			return atomWebsite.RegisterShopHandlerServer(ctx, mux, serviceShop)
 		},
-		func(mux *runtime.ServeMux) error {
+		func(ctx context.Context, mux *runtime.ServeMux) error {
 			return atomWebsite.RegisterAuthHandlerServer(ctx, mux, serviceAuth)
 		},
-		func(mux *runtime.ServeMux) error {
+		func(ctx context.Context, mux *runtime.ServeMux) error {
 			return mux.HandlePath(
 				http.MethodGet,
 				"/doc.html",
@@ -44,7 +43,7 @@ func newHttpRouter(
 				},
 			)
 		},
-		func(mux *runtime.ServeMux) error {
+		func(ctx context.Context, mux *runtime.ServeMux) error {
 			return mux.HandlePath(
 				http.MethodGet,
 				"/auth.swagger.json",
@@ -67,7 +66,7 @@ func newHttpRouter(
 				},
 			)
 		},
-		func(mux *runtime.ServeMux) error {
+		func(ctx context.Context, mux *runtime.ServeMux) error {
 			return mux.HandlePath(
 				http.MethodOptions,
 				"/*",

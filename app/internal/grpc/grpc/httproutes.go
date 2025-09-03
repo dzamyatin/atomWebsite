@@ -1,11 +1,12 @@
 package grpc
 
 import (
+	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 )
 
-type MuxCustomization func(mux *runtime.ServeMux) error
+type MuxCustomization func(ctx context.Context, mux *runtime.ServeMux) error
 
 type HttpRouter struct {
 	muxCustomizations []MuxCustomization
@@ -19,9 +20,9 @@ func (r *HttpRouter) Add(customization MuxCustomization) {
 	r.muxCustomizations = append(r.muxCustomizations, customization)
 }
 
-func (r *HttpRouter) Apply(mux *runtime.ServeMux) error {
+func (r *HttpRouter) Apply(ctx context.Context, mux *runtime.ServeMux) error {
 	for _, customization := range r.muxCustomizations {
-		if err := customization(mux); err != nil {
+		if err := customization(ctx, mux); err != nil {
 			return errors.Wrap(err, "failed to apply customization")
 		}
 	}

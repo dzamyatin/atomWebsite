@@ -169,7 +169,7 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 	grpcServer := newServer(logger, server)
 	signalListener := process.NewSignalListener(logger)
 	shopServer := grpc.NewShopServer()
-	httpRouter := newHttpRouter(ctx, authServer, shopServer)
+	httpRouter := newHttpRouter(authServer, shopServer)
 	httpServer := newHTTPServer(logger, httpRouter)
 	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, sqlDB, registry, httpServer)
 	return processManager, nil

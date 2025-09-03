@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"net"
 	"net/http"
@@ -60,6 +61,11 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 	defer cancel()
 
 	mux := runtime.NewServeMux()
+
+	err := r.router.Apply(ctx, mux)
+	if err != nil {
+		return errors.Wrap(err, "failed to start HTTP server")
+	}
 
 	r.server = &http.Server{
 		//ReadTimeout:  5 * time.Second,
