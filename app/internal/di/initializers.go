@@ -284,12 +284,12 @@ func newJWT(logger *zap.Logger) *serviceauth.JWT {
 
 func newHTTPServer(
 	logger *zap.Logger,
-	server grpcservice2.AuthServer,
+	router *grpcservice2.HttpRouter,
 ) *grpcservice2.HTTPServer {
 	return grpcservice2.NewHTTPServer(
 		logger,
-		server,
 		getConfig().AddHttp,
+		router,
 	)
 }
 

@@ -2,10 +2,7 @@ package grpc
 
 import (
 	"context"
-	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
-	"github.com/dzamyatin/atomWebsite/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"net"
 	"net/http"
@@ -13,20 +10,20 @@ import (
 
 type HTTPServer struct {
 	logger   *zap.Logger
-	service  AuthServer
 	server   *http.Server
 	httpAddr string
+	router   *HttpRouter
 }
 
 func NewHTTPServer(
 	logger *zap.Logger,
-	server AuthServer,
 	httpAddr string,
+	router *HttpRouter,
 ) *HTTPServer {
 	return &HTTPServer{
 		logger:   logger,
-		service:  server,
 		httpAddr: httpAddr,
+		router:   router,
 	}
 }
 
@@ -63,73 +60,6 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 	defer cancel()
 
 	mux := runtime.NewServeMux()
-	err := atomWebsite.RegisterAuthHandlerServer(ctx, mux, r.service)
-	if err != nil {
-		return err
-	}
-	//>>
-	err = mux.HandlePath(
-		http.MethodGet,
-		"/doc.html",
-		func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-			w.WriteHeader(http.StatusOK)
-
-			b, err := proto.DocHtml.ReadFile("doc.html")
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			_, err = w.Write(b)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			return
-		},
-	)
-	if err != nil {
-		return errors.Wrap(err, "handling doc")
-	}
-	err = mux.HandlePath(
-		http.MethodGet,
-		"/auth.swagger.json",
-		func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-			w.WriteHeader(http.StatusOK)
-
-			b, err := proto.SwaggerJson.ReadFile("auth.swagger.json")
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			_, err = w.Write(b)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			return
-		},
-	)
-	if err != nil {
-		return errors.Wrap(err, "handling doc")
-	}
-	//<<
-	err = mux.HandlePath(
-		http.MethodOptions,
-		"/*",
-		func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-
-			w.WriteHeader(http.StatusNoContent)
-
-			return
-		},
-	)
-	if err != nil {
-		return errors.Wrap(err, "handling http cors")
-	}
 
 	r.server = &http.Server{
 		//ReadTimeout:  5 * time.Second,

@@ -103,6 +103,8 @@ var set = wire.NewSet(
 	serviceauth.NewAuth,
 	wire.Bind(new(serviceauth.IAuth), new(*serviceauth.Auth)),
 	usecase.NewGetUser,
+	newHttpRouter,
+	grpc.NewShopServer,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

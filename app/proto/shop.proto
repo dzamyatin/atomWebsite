@@ -5,6 +5,32 @@ package shop;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
+option go_package = "github.com/dzamyatin/atomWebsite";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8503"
+  base_path: "/"
+  schemes: HTTP
+  security_definitions: {
+    security: {
+      key: "Bearer"
+      value: {
+        type: TYPE_OAUTH2
+        flow: FLOW_APPLICATION
+        token_url: "http://localhost:8503/login"
+        description: "OAuth2 authentication"
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "Bearer"
+      value: {}
+    }
+  }
+};
+
+
 service Shop {
   // Check assigned to user cart of create a new one
   rpc CreateOrGetCart (CreateCartRequest) returns (CreateCartResponse) {
