@@ -1,11 +1,13 @@
 package dtoauth
 
-import "github.com/google/uuid"
+import (
+	"github.com/dzamyatin/atomWebsite/internal/entity"
+)
 
 type User struct {
-	UUID uuid.UUID
+	UUID entity.UserUuid
 }
 
-func NewUser(UUID uuid.UUID) *User {
+func NewUser(UUID entity.UserUuid) *User {
 	return &User{UUID: UUID}
 }

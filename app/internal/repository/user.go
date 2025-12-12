@@ -3,9 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
+
 	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/service/db"
-	"github.com/google/uuid"
 	"github.com/huandu/go-sqlbuilder"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -20,7 +20,7 @@ type IUserRepository interface {
 	GetUserByPhone(ctx context.Context, phone string) (entity.User, error)
 	AddUser(ctx context.Context, user entity.User) error
 	UpdateUser(ctx context.Context, user entity.User) error
-	GetByUUID(ctx context.Context, uuid uuid.UUID) (entity.User, error)
+	GetByUUID(ctx context.Context, uuid entity.UserUuid) (entity.User, error)
 }
 
 type UserRepository struct {
@@ -38,7 +38,7 @@ func NewUserRepository(
 	}
 }
 
-func (r *UserRepository) GetByUUID(ctx context.Context, uuid uuid.UUID) (entity.User, error) {
+func (r *UserRepository) GetByUUID(ctx context.Context, uuid entity.UserUuid) (entity.User, error) {
 	sb := sqlbuilder.PostgreSQL.NewSelectBuilder()
 	sb.Select(r.getInsertCols()...)
 	sb.From("users")

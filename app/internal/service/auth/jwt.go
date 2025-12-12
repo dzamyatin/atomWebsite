@@ -1,12 +1,14 @@
 package serviceauth
 
 import (
+	"time"
+
 	dtoauth "github.com/dzamyatin/atomWebsite/internal/dto/auth"
+	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"time"
 )
 
 var (
@@ -93,6 +95,6 @@ func (r *JWT) DecodeToken(token string) (*dtoauth.Token, error) {
 
 	return dtoauth.NewToken(
 		token,
-		dtoauth.NewUser(res),
+		dtoauth.NewUser(entity.UserUuid(res)),
 	), nil
 }

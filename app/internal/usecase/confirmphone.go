@@ -2,8 +2,9 @@ package usecase
 
 import (
 	"context"
+
+	"github.com/dzamyatin/atomWebsite/internal/entity"
 	"github.com/dzamyatin/atomWebsite/internal/repository"
-	"github.com/google/uuid"
 	"github.com/guregu/null/v6"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -16,7 +17,7 @@ var (
 type ConfirmPhoneRequest struct {
 	UserPhone        string
 	ConfirmationCode string
-	CurrentUserUUID  uuid.UUID
+	CurrentUserUUID  entity.UserUuid
 }
 
 type ConfirmPhoneUseCase struct {

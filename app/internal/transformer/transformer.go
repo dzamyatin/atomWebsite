@@ -5,6 +5,7 @@ import (
 	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
 	"github.com/dzamyatin/atomWebsite/internal/request"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
+	"github.com/google/uuid"
 )
 
 type Transformer struct{}
@@ -15,7 +16,7 @@ func NewTransformer() *Transformer {
 
 func (t *Transformer) TransformCurrentRequestFromUser(user dtoauth.User) request.GetUserRequest {
 	return request.GetUserRequest{
-		UserUUID: user.UUID.String(),
+		UserUUID: uuid.UUID(user.UUID).String(),
 	}
 }
 
