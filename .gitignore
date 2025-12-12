@@ -1,1 +1,3 @@
 /.idea
+/app/exec/*
+/app/config-local.yaml

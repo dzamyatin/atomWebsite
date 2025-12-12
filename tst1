@@ -1,0 +1,25 @@
+protoc -I. -I./google --openapiv2_out . \
+    --go_out=../internal/grpc/generated/ \
+    --go_opt=paths=source_relative \
+    --go-grpc_out=../internal/grpc/generated/ \
+    --go-grpc_opt=paths=source_relative \
+    auth.proto
+
+protoc -I . --grpc-gateway_out ./gen/go \
+    --grpc-gateway_opt paths=source_relative \
+    --grpc-gateway_opt generate_unbound_methods=true \
+    your/service/v1/your_service.proto
+
+
+protoc -I. -I./google --openapiv2_out . \
+    --go_out=../internal/grpc/generated/ \
+    --go_opt=paths=source_relative \
+    --go-grpc_out=../internal/grpc/generated/ \
+    --go-grpc_opt=paths=source_relative \
+    --grpc-gateway_out ../internal/grpc/generated/ \
+    --grpc-gateway_opt paths=source_relative \
+    --grpc-gateway_opt generate_unbound_methods=true \
+    auth.proto
+
+
+protoc -I. -I./google --openapiv2_out . --go_out=../internal/grpc/generated/ --go_opt=paths=source_relative --go-grpc_out=../internal/grpc/generated/ --go-grpc_opt=paths=source_relative --grpc-gateway_out ../internal/grpc/generated/ --grpc-gateway_opt paths=source_relative --grpc-gateway_opt generate_unbound_methods=true auth.proto

@@ -2,10 +2,144 @@ syntax = "proto3";
 
 package auth;
 
+import "google/api/annotations.proto";
+//import "google/api/http.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/dzamyatin/atomWebsite";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  host: "localhost:8503"
+  base_path: "/"
+  schemes: HTTP
+  security_definitions: {
+    security: {
+      key: "Bearer"
+      value: {
+        type: TYPE_OAUTH2
+        flow: FLOW_APPLICATION
+        token_url: "http://localhost:8503/login"
+        description: "OAuth2 authentication"
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "Bearer"
+      value: {}
+    }
+  }
+};
+
+
 service Auth {
-  rpc Register (RegisterRequest) returns (RegisterResponse);
-  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Current (CurrentRequest) returns (CurrentResponse) {
+    option(google.api.http) = {
+      get: "/current"
+    };
+  };
+  rpc Register (RegisterRequest) returns (RegisterResponse) {
+    option(google.api.http) = {
+      post: "/register"
+      body: "*"
+    };
+  };
+  rpc Login (LoginRequest) returns (LoginResponse) {
+    option(google.api.http) = {
+      post: "/login"
+      body: "*"
+    };
+  };
+  rpc RememberPassword (RememberPasswordRequest) returns (RememberPasswordResponse) {
+    option(google.api.http) = {
+      post: "/remember-password"
+      body: "*"
+    };
+  };
+  rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse) {
+    option(google.api.http) = {
+      post: "/change-password"
+      body: "*"
+    };
+  };
+  rpc ConfirmEmail (ConfirmEmailRequest) returns (ConfirmEmailResponse) {
+    option(google.api.http) = {
+      post: "/confirm-email"
+      body: "*"
+    };
+  };
+  rpc SendEmailConfirmation (SendEmailConfirmationRequest) returns (SendEmailConfirmationResponse) {
+    option(google.api.http) = {
+      post: "/send-email-confirmation"
+      body: "*"
+    };
+  };
+  rpc ConfirmPhone (ConfirmPhoneRequest) returns (ConfirmPhoneResponse) {
+    option(google.api.http) = {
+      post: "/confirm-phone"
+      body: "*"
+    };
+  };
+  rpc SendPhoneConfirmation (SendPhoneConfirmationRequest) returns (SendPhoneConfirmationResponse) {
+    option(google.api.http) = {
+      post: "/send-phone-confirmation"
+      body: "*"
+    };
+  };
 }
+
+message CurrentRequest {}
+
+message CurrentResponse {
+  string uuid = 1;
+  string email = 2;
+  string password = 3;
+  string phone = 4;
+  bool confirmed_email = 5;
+  bool confirmed_phone = 6;
+}
+
+message ConfirmPhoneResponse {}
+
+message SendPhoneConfirmationResponse {}
+
+message ChangePasswordRequest {
+  optional string email = 1;
+  optional string phone = 2;
+  optional string code = 3;
+  string new_password = 4;
+  optional string old_password = 5;
+}
+
+message ChangePasswordResponse {}
+
+message RememberPasswordRequest {
+  optional string email = 1;
+  optional string phone = 2;
+}
+
+message RememberPasswordResponse {}
+
+message SendEmailConfirmationRequest {
+  string email = 1;
+}
+
+message SendPhoneConfirmationRequest {
+  string phone = 1;
+}
+
+message SendEmailConfirmationResponse {}
+
+message ConfirmEmailRequest {
+  string email = 1;
+  string code = 2;
+}
+message ConfirmPhoneRequest {
+  string phone = 1;
+  string code = 2;
+}
+
+message ConfirmEmailResponse {}
 
 message RegisterRequest {
   string email = 1; // Email of the user to register.
@@ -14,13 +148,13 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  int64 user_id = 1; // User ID of the registered user.
+  int64 user_id = 1; // User ID of the registered user.[ITR] Импорт очередей Я.Трекер
 }
 
 message LoginRequest {
-  string email = 1; // Email of the user to login.
+  optional string email = 1; // Email of the user to login.
   string password = 2; // Password of the user to login.
-  string phone = 3; // Either email or phone should be presented. (use messenger to send code: "telegram", ...)
+  optional string phone = 3; // Either email or phone should be presented. (use messenger to send code: "telegram", ...)
 }
 
 message LoginResponse {

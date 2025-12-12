@@ -1,0 +1,137 @@
+###
+GRPC localhost:8502/auth.Auth/Login
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "password": "asd@123a",
+  "phone": ""
+}
+
+###
+GRPC localhost:8502/auth.Auth/Register
+
+{
+  "email": "test@test.ru",
+  "password": "pwd",
+  "phone": "+79991112233"
+}
+
+###
+GET http://localhost:9090/metrics
+
+###
+POST localhost:8503/login
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "password": "asd@123a",
+  "phone": ""
+}
+
+
+###
+POST localhost:8503/register
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "password": "pwd123",
+  "phone": "+79991112233"
+}
+
+###
+POST localhost:8503/register
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "password": "123@asdX",
+  "phone": ""
+}
+
+###
+OPTIONS localhost:8503/register
+
+###
+POST localhost:8503/remember-password
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "phone": ""
+}
+
+###
+POST localhost:8503/remember-password
+
+{
+  "email": "",
+  "phone": "+79297145267"
+}
+
+###
+POST localhost:8503/change-password
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "phone": "",
+  "code": "YMDKL",
+  "newPassword": "asd@123a",
+  "oldPassword": ""
+}
+
+### by phone
+POST localhost:8503/change-password
+
+{
+  "email": "",
+  "phone": "+79297145267",
+  "code": "LLARK",
+  "newPassword": "asd@123a",
+  "oldPassword": ""
+}
+
+###
+POST localhost:8503/login
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "password": "asd@123a",
+  "phone": ""
+}
+
+###
+GET localhost:8503/auth.swagger.json
+
+###
+GET localhost:8503/doc.html
+
+###
+POST localhost:8503/confirm-phone
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVVVJRCI6IjdjNTc1OWM4LWJkYWMtNGQzZi1hOGIzLWQ4NzBjNTA4ZjkxMyJ9.JYNKS9wGYmEI294u7OogdlItMMXumWxEvGocXLzhmrs
+
+{
+  "phone": "+79297145267",
+  "code": "TXCLD"
+}
+
+###
+POST localhost:8503/send-phone-confirmation
+
+{
+    "phone": "+79297145267"
+}
+
+###
+POST localhost:8503/confirm-email
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyVVVJRCI6IjdjNTc1OWM4LWJkYWMtNGQzZi1hOGIzLWQ4NzBjNTA4ZjkxMyJ9.JYNKS9wGYmEI294u7OogdlItMMXumWxEvGocXLzhmrs
+
+{
+  "email": "zamyatin.daniil@gmail.com",
+  "code": "OTNML"
+}
+
+###
+POST localhost:8503/send-email-confirmation
+
+{
+  "email": "zamyatin.daniil@gmail.com"
+}
+

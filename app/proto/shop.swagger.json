@@ -1,0 +1,416 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "shop.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Shop"
+    }
+  ],
+  "host": "localhost:8503",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/shop/cart": {
+      "post": {
+        "summary": "Check assigned to user cart of create a new one",
+        "operationId": "Shop_CreateOrGetCart",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/shopCreateCartResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/shopCreateCartRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Shop"
+        ]
+      }
+    },
+    "/shop/cart/{cartUuid}": {
+      "get": {
+        "operationId": "Shop_GetCart",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/shopGetCartResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cartUuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Shop"
+        ]
+      }
+    },
+    "/shop/cart/{cartUuid}/item": {
+      "post": {
+        "operationId": "Shop_CreateCartItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/shopCreateCartItemResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cartUuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ShopCreateCartItemBody"
+            }
+          }
+        ],
+        "tags": [
+          "Shop"
+        ]
+      }
+    },
+    "/shop/cart/{cartUuid}/item/{cartItemUuid}": {
+      "delete": {
+        "operationId": "Shop_DeleteCartItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/shopDeleteCartItemResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cartUuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cartItemUuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Shop"
+        ]
+      }
+    },
+    "/shop/order": {
+      "get": {
+        "operationId": "Shop_GetOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/shopGetOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Shop"
+        ]
+      },
+      "post": {
+        "operationId": "Shop_CreateOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/shopCreateOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/shopCreateOrderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Shop"
+        ]
+      }
+    },
+    "/shop/order/{orderUuid}": {
+      "get": {
+        "operationId": "Shop_GetOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/shopGetOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orderUuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Shop"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "OrderOrderItem": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "cert": {
+          "type": "string"
+        }
+      }
+    },
+    "ShopCreateCartItemBody": {
+      "type": "object",
+      "properties": {
+        "productUuid": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "shopCartItem": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "shopCreateCartItemResponse": {
+      "type": "object"
+    },
+    "shopCreateCartRequest": {
+      "type": "object"
+    },
+    "shopCreateCartResponse": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "shopCreateOrderRequest": {
+      "type": "object",
+      "properties": {
+        "cartUuid": {
+          "type": "string"
+        }
+      }
+    },
+    "shopCreateOrderResponse": {
+      "type": "object",
+      "properties": {
+        "orderUuid": {
+          "type": "string"
+        }
+      }
+    },
+    "shopDeleteCartItemResponse": {
+      "type": "object"
+    },
+    "shopGetCartResponse": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/shopCartItem"
+          }
+        }
+      }
+    },
+    "shopGetOrderResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/shopOrder"
+        }
+      }
+    },
+    "shopGetOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/shopOrder"
+          }
+        }
+      }
+    },
+    "shopOrder": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/shopOrderStatusEnum"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/OrderOrderItem"
+          }
+        }
+      }
+    },
+    "shopOrderStatusEnum": {
+      "type": "string",
+      "enum": [
+        "STATUS_UNSPECIFIED",
+        "NEW",
+        "WAITING_PAYMENT",
+        "DONE"
+      ],
+      "default": "STATUS_UNSPECIFIED"
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "oauth2",
+      "description": "OAuth2 authentication",
+      "flow": "application",
+      "tokenUrl": "http://localhost:8503/login"
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ]
+}
