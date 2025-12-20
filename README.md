@@ -48,6 +48,20 @@
 - <span style="color:yellow">IN PROGRESS</span> cart
 - place-order
 - key-list to obtain
+- <span style="color:yellow">IN PROGRESS</span> metrics:
+    - db metrics should be done through context and some decarator to handle it
+    - ?begin transaction should return "metric" tx (for metric decorator)
+    - <span style="color:yellow">IN PROGRESS</span>http metric (request see grpc WithChainUnaryInterceptor app/internal/di/initializers.go (IncomingRequestHistogram))
+    - <span style="color:yellow">IN PROGRESS</span>metric prometheus (see: https://habr.com/ru/companies/otus/articles/769806/)
+        - prometeus
+        - grafana
+            - dashboard
+                0) GC metric (mem, cpu, GC time, heap size)
+                1) all request timing
+                2) average request time
+                3) all db query timing (should looks like bukets .01, .1, ... 10) To IDatabase
+                4) average query time
+  
 - payment
   - check telegram payment https://core.telegram.org/bots/api#payments 
   - reserch which payment method are better (yandexpay)
@@ -83,7 +97,6 @@
 
 ## backlog
 - http server timeouts
-- http metric (request see grpc WithChainUnaryInterceptor app/internal/di/initializers.go (IncomingRequestHistogram))
 - controllers for http and compatibilyty with swaggerc2 oauth endpoint
 - oauth by external providers
   - google
@@ -100,18 +113,7 @@
 - websockets (notify for some events) discovery a way how to handle communication
 - code generation of decorators (find a package) to add metrics
 - helm
-- metrics:
-  - db metrics should be done through context and some decarator to handle it
-  - ?begin transaction should return "metric" tx (for metric decorator)
-  - metric prometheus (see: https://habr.com/ru/companies/otus/articles/769806/)
-    - prometeus
-    - grafana
-      - dashboard
-        0) GC metric (mem, cpu, GC time, heap size)
-        1) all request timing
-        2) average request time
-        3) all db query timing (should looks like bukets .01, .1, ... 10) To IDatabase
-        4) average query time
+
 
 ## interesting
 - check http to grpc proxy (see: https://habr.com/ru/articles/658769/)

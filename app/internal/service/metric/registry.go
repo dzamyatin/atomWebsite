@@ -1,13 +1,15 @@
 package metric
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/prometheus/client_golang/prometheus"
 	_ "github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	_ "github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
-	"net/http"
-	"time"
 )
 
 const promTimeout = 10 * time.Second
@@ -26,6 +28,10 @@ func NewRegistry(logger *zap.Logger) *Registry {
 	}
 }
 
+func (r *Registry) RunGCMetrics() error {
+	return r.registry.Register(collectors.NewGoCollector())
+}
+
 func (r *Registry) HTTPHandler() http.Handler {
 	return promhttp.InstrumentMetricHandler(
 		r.registry, promhttp.HandlerFor(
@@ -38,12 +44,12 @@ func (r *Registry) HTTPHandler() http.Handler {
 }
 
 type MeasuredFunc func()
+type MetricFunc func(measured MeasuredFunc)
 
 func (r *Registry) Histogram(
-	f MeasuredFunc,
 	name string,
 	labels prometheus.Labels,
-) {
+) MetricFunc {
 	hist := prometheus.NewHistogram(
 		prometheus.HistogramOpts{
 			Name:        name,
@@ -57,9 +63,9 @@ func (r *Registry) Histogram(
 		r.logger.Error("failed to register histogram", zap.Error(err))
 	}
 
-	f()
-
-	b := time.Now()
-
-	hist.Observe(float64(time.Since(b).Nanoseconds()))
+	return func(f MeasuredFunc) {
+		b := time.Now()
+		f()
+		hist.Observe(float64(time.Since(b).Nanoseconds() / 1000000000))
+	}
 }

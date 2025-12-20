@@ -53,7 +53,7 @@ var set = wire.NewSet(
 	usecasemigration.NewUp,
 	usecasemigration.NewDown,
 	metric.NewMetric,
-	metric.NewRegistry,
+	newRegistry,
 	usecase.NewLogin,
 	wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)),
 	newSequentialProvider,

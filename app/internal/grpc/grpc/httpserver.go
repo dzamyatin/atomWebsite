@@ -2,11 +2,13 @@ package grpc
 
 import (
 	"context"
+	"net"
+	"net/http"
+
+	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"net"
-	"net/http"
 )
 
 type HTTPServer struct {
@@ -14,17 +16,20 @@ type HTTPServer struct {
 	server   *http.Server
 	httpAddr string
 	router   *HttpRouter
+	metric   *metric.Metric
 }
 
 func NewHTTPServer(
 	logger *zap.Logger,
 	httpAddr string,
 	router *HttpRouter,
+	metric *metric.Metric,
 ) *HTTPServer {
 	return &HTTPServer{
 		logger:   logger,
 		httpAddr: httpAddr,
 		router:   router,
+		metric:   metric,
 	}
 }
 
@@ -37,11 +42,12 @@ func (r *HTTPServer) Shutdown() error {
 }
 
 type Handler struct {
-	h http.Handler
+	h      http.Handler
+	metric *metric.Metric
 }
 
-func NewHandler(h http.Handler) *Handler {
-	return &Handler{h: h}
+func NewHandler(h http.Handler, metric *metric.Metric) *Handler {
+	return &Handler{h: h, metric: metric}
 }
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +57,9 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("access-control-allow-origin", "http://localhost:5173")
 	w.Header().Set("access-control-max-age", "1728000")
 
-	h.h.ServeHTTP(w, r)
+	h.metric.IncomingRequestHistogram(func() {
+		h.h.ServeHTTP(w, r)
+	})
 }
 
 func (r *HTTPServer) Start(ctx context.Context) error {
@@ -72,7 +80,7 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 		//WriteTimeout: 5 * time.Second,
 		//IdleTimeout:  5 * time.Second,
 		Addr:    r.httpAddr,
-		Handler: NewHandler(mux),
+		Handler: NewHandler(mux, r.metric),
 		BaseContext: func(l net.Listener) context.Context {
 			return ctx
 		},

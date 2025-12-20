@@ -9,24 +9,27 @@ const (
 )
 
 type Metric struct {
-	logger   *zap.Logger
-	registry *Registry
+	logger *zap.Logger
+
+	incomingGRPCRequestHistogram MetricFunc
 }
 
 func NewMetric(
 	logger *zap.Logger,
 	registry *Registry,
 ) *Metric {
-	return &Metric{
-		logger:   logger,
-		registry: registry,
+	m := &Metric{
+		logger: logger,
 	}
-}
 
-func (m *Metric) IncomingRequestHistogram(f MeasuredFunc) {
-	m.registry.Histogram(
-		f,
+	m.incomingGRPCRequestHistogram = registry.Histogram(
 		nameIncomingGRPCRequestHistogram,
 		nil,
 	)
+
+	return m
+}
+
+func (r *Metric) IncomingRequestHistogram(f MeasuredFunc) {
+	r.incomingGRPCRequestHistogram(f)
 }

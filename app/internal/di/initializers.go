@@ -102,6 +102,20 @@ func newMailer(
 	)
 }
 
+func newRegistry(
+	logger *zap.Logger,
+) *metric.Registry {
+	registry := metric.NewRegistry(
+		logger,
+	)
+	err := registry.RunGCMetrics()
+	if err != nil {
+		panic("failed to run gc metrics")
+	}
+
+	return registry
+}
+
 func newGRPCProcessManager(
 	logger *zap.Logger,
 	serv *grpcservice2.GRPCServer,
@@ -293,11 +307,13 @@ func newJWT(logger *zap.Logger) *serviceauth.JWT {
 func newHTTPServer(
 	logger *zap.Logger,
 	router *grpcservice2.HttpRouter,
+	metric *metric.Metric,
 ) *grpcservice2.HTTPServer {
 	return grpcservice2.NewHTTPServer(
 		logger,
 		getConfig().AddHttp,
 		router,
+		metric,
 	)
 }
 

@@ -63,7 +63,7 @@ func (r *GrpcProcessCommand) Execute(ctx context.Context, u ArgGrpcProcess) erro
 			Object: r.listener,
 		},
 		process.Process{
-			Name:   "http listener",
+			Name:   "metric server",
 			Object: r.newHttpMetricProcessor(r.metric),
 		},
 	)
