@@ -40,10 +40,10 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 CREATE TABLE IF NOT EXISTS order_item (
     uuid TEXT primary key,
-    total BIGINT NOT NULL,
-    name TEXT NOT NULL,
+    price BIGINT NOT NULL,
 
-    product_uuid TEXT
+    product_name TEXT NOT NULL,
+    product_uuid TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS documents (

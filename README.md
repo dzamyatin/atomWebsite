@@ -44,6 +44,7 @@
 - <span style="color:green">DONE</span> remember password
   - <span style="color:green">DONE</span> for email
   - <span style="color:green">DONE</span> for phone
+- <span style="color:yellow">IN PROGRESS</span> catalog
 - <span style="color:yellow">IN PROGRESS</span> cart
 - place-order
 - key-list to obtain
