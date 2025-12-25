@@ -35,6 +35,7 @@ type AppConfig struct {
 	Mailer            MailerConfig      `mapstructure:"mailer"`
 	TelegramBotConfig TelegramBotConfig `mapstructure:"telegram_bot"`
 	HttpServerTimeout time.Duration     `mapstructure:"http_server_timeout"`
+	CorsHost          string            `mapstructure:"cors_host"`
 }
 
 type TelegramBotConfig struct {

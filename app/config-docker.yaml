@@ -1,9 +1,33 @@
 db:
-  host: "postgres"
-  port: 5432
+  host: "localhost"
+  port: 9432
   username: "user"
   password: "password"
   database: "database"
 addr_metric: ":9090"
 addr_grpc: ":8502"
 addr_http: ":8503"
+http_server_timeout: 1s
+cors_host: "http://localhost:5173"
+telegram_bot:
+  token: "?????"
+mailer:
+  smtp:
+    yandex1:
+      weight: 100
+      host: "smtp.yandex.com"
+      port: 465
+      username: "?????"
+      password: "?????"
+      sender: "?????"
+      ssl: true
+      timeout: "1s"
+    yandex2:
+      weight: 10
+      host: "smtp.yandex.com"
+      port: 465
+      username: "?????"
+      password: "?????"
+      sender: "?????"
+      ssl: true
+      timeout: "1s"

@@ -312,6 +312,9 @@ func newHTTPServer(
 			getConfig().HttpServerTimeout,
 			getConfig().HttpServerTimeout,
 		),
+		grpcservice2.WithCors(
+			getConfig().CorsHost,
+		),
 	)
 
 	return server

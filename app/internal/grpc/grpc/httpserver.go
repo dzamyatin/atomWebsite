@@ -28,6 +28,14 @@ func WithTimeout(
 	}
 }
 
+func WithCors(
+	host string,
+) Option {
+	return func(s *HTTPServer) {
+		s.corsHost = host
+	}
+}
+
 type HTTPServer struct {
 	logger       *zap.Logger
 	server       *http.Server
@@ -38,6 +46,7 @@ type HTTPServer struct {
 	writeTimeout time.Duration
 	idleTimeout  time.Duration
 	trace        *servicetrace.Trace
+	corsHost     string
 }
 
 func NewHTTPServer(
@@ -90,7 +99,13 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 		IdleTimeout:  r.idleTimeout,
 		Addr:         r.httpAddr,
 		Handler: httpserver.NewTraceHandlerMiddleware(
-			httpserver.NewMetricHandlerMiddleware(mux, r.metric),
+			httpserver.NewMetricHandlerMiddleware(
+				httpserver.NewCorsHandlerMiddleware(
+					mux,
+					r.corsHost,
+				),
+				r.metric,
+			),
 			r.trace,
 		),
 		BaseContext: func(l net.Listener) context.Context {
