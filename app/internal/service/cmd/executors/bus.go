@@ -36,9 +36,9 @@ func NewBusProcessCommand(
 func (r *BusProcessCommand) Execute(ctx context.Context, u ArgBusProcess) error {
 	return r.processManager.Run(
 		ctx,
-		process.Process{
-			Name: "bus-process",
-			Object: process.NewProcessor(
+		process.NewProcess(
+			"bus-process",
+			process.NewProcessor(
 				func(ctx context.Context) error {
 					return r.bus.ProcessCycle(ctx, u.QueueName)
 				},
@@ -46,6 +46,6 @@ func (r *BusProcessCommand) Execute(ctx context.Context, u ArgBusProcess) error 
 					return nil
 				},
 			),
-		},
+		),
 	)
 }

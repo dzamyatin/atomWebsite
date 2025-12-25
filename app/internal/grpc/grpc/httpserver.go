@@ -4,19 +4,40 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"time"
 
+	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc/httpserver"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
+	servicetrace "github.com/dzamyatin/atomWebsite/internal/service/trace"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
+type Option func(*HTTPServer)
+
+func WithTimeout(
+	readTimeout,
+	writeTimeout,
+	idleTimeout time.Duration,
+) Option {
+	return func(s *HTTPServer) {
+		s.readTimeout = readTimeout
+		s.writeTimeout = writeTimeout
+		s.idleTimeout = idleTimeout
+	}
+}
+
 type HTTPServer struct {
-	logger   *zap.Logger
-	server   *http.Server
-	httpAddr string
-	router   *HttpRouter
-	metric   *metric.Metric
+	logger       *zap.Logger
+	server       *http.Server
+	httpAddr     string
+	router       *HttpRouter
+	metric       *metric.Metric
+	readTimeout  time.Duration
+	writeTimeout time.Duration
+	idleTimeout  time.Duration
+	trace        *servicetrace.Trace
 }
 
 func NewHTTPServer(
@@ -24,13 +45,22 @@ func NewHTTPServer(
 	httpAddr string,
 	router *HttpRouter,
 	metric *metric.Metric,
+	trace *servicetrace.Trace,
+	options ...Option,
 ) *HTTPServer {
-	return &HTTPServer{
+	s := &HTTPServer{
 		logger:   logger,
 		httpAddr: httpAddr,
 		router:   router,
 		metric:   metric,
+		trace:    trace,
 	}
+
+	for _, option := range options {
+		option(s)
+	}
+
+	return s
 }
 
 func (r *HTTPServer) Shutdown() error {
@@ -39,27 +69,6 @@ func (r *HTTPServer) Shutdown() error {
 	}
 
 	return r.server.Shutdown(context.Background())
-}
-
-type Handler struct {
-	h      http.Handler
-	metric *metric.Metric
-}
-
-func NewHandler(h http.Handler, metric *metric.Metric) *Handler {
-	return &Handler{h: h, metric: metric}
-}
-
-func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("access-control-allow-credentials", "true")
-	w.Header().Set("access-control-allow-headers", "Content-Type, Authorization")
-	w.Header().Set("access-control-allow-methods", "PUT, GET, POST, PATCH, DELETE, OPTIONS")
-	w.Header().Set("access-control-allow-origin", "http://localhost:5173")
-	w.Header().Set("access-control-max-age", "1728000")
-
-	h.metric.IncomingRequestHistogram(func() {
-		h.h.ServeHTTP(w, r)
-	})
 }
 
 func (r *HTTPServer) Start(ctx context.Context) error {
@@ -76,11 +85,14 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 	}
 
 	r.server = &http.Server{
-		//ReadTimeout:  5 * time.Second,
-		//WriteTimeout: 5 * time.Second,
-		//IdleTimeout:  5 * time.Second,
-		Addr:    r.httpAddr,
-		Handler: NewHandler(mux, r.metric),
+		ReadTimeout:  r.readTimeout,
+		WriteTimeout: r.writeTimeout,
+		IdleTimeout:  r.idleTimeout,
+		Addr:         r.httpAddr,
+		Handler: httpserver.NewTraceHandlerMiddleware(
+			httpserver.NewMetricHandlerMiddleware(mux, r.metric),
+			r.trace,
+		),
 		BaseContext: func(l net.Listener) context.Context {
 			return ctx
 		},

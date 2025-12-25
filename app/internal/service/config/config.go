@@ -2,8 +2,9 @@ package config
 
 import (
 	"errors"
-	"github.com/spf13/viper"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 var (
@@ -33,6 +34,7 @@ type AppConfig struct {
 	AddHttp           string            `mapstructure:"addr_http"`
 	Mailer            MailerConfig      `mapstructure:"mailer"`
 	TelegramBotConfig TelegramBotConfig `mapstructure:"telegram_bot"`
+	HttpServerTimeout time.Duration     `mapstructure:"http_server_timeout"`
 }
 
 type TelegramBotConfig struct {

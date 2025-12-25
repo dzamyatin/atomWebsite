@@ -3,6 +3,7 @@ package process
 import (
 	"context"
 	"errors"
+	"fmt"
 	"sync"
 
 	"go.uber.org/zap"
@@ -16,9 +17,61 @@ type ProcessManager struct {
 	globalShutdownerFunc ShutdownFunc
 }
 
+type InitProcessObjectFn func(ctx context.Context) (ProcessStarter, error)
+
 type Process struct {
 	Name   string
-	Object ProcessStarter
+	object ProcessStarter
+	initer InitProcessObjectFn
+}
+
+func NewProcess(
+	name string,
+	object ProcessStarter,
+) Process {
+	if object == nil {
+		panic(errors.New("process object is nil"))
+	}
+	return Process{
+		object: object,
+		Name:   name,
+	}
+}
+
+func NewProcessIniter(
+	name string,
+	initer InitProcessObjectFn,
+) Process {
+	if initer == nil {
+		panic(errors.New("process initer is nil"))
+	}
+	return Process{
+		initer: initer,
+		Name:   name,
+	}
+}
+
+func (p *Process) getObject(ctx context.Context) (ProcessStarter, error) {
+	if p.object != nil {
+		return p.object, nil
+	}
+
+	if p.initer != nil {
+		o, err := p.initer(ctx)
+		p.object = o
+
+		if err != nil {
+			return nil, fmt.Errorf("init failed: %w", err)
+		}
+
+		if o == nil {
+			return nil, fmt.Errorf("initied object is nil")
+		}
+
+		return o, nil
+	}
+
+	return nil, errors.New("process object is nil")
 }
 
 func NewProcessManager(
@@ -46,7 +99,7 @@ func (p *ProcessManager) Shutdown() error {
 
 	var resErr error
 	for _, process := range p.running {
-		if pr, ok := process.Object.(ProcessShutdowner); ok {
+		if pr, ok := process.object.(ProcessShutdowner); ok {
 			p.logger.Info("Shutting down process start", zap.String("name", process.Name))
 
 			if err := pr.Shutdown(); err != nil {
@@ -80,10 +133,19 @@ func (p *ProcessManager) Start(ctx context.Context) error {
 	for _, process := range p.processes {
 		p.logger.Info("Starting process", zap.String("name", process.Name))
 
-		p.running = append(p.running, process)
+		o, err := process.getObject(ctx)
+		if err != nil {
+			p.logger.Error(
+				"failed to init process",
+				zap.String("name", process.Name),
+				zap.Error(err),
+			)
+			return fmt.Errorf("faied to init: %w", err)
+		}
 
+		p.running = append(p.running, process)
 		go func() {
-			if err := process.Object.Start(ctx); err != nil {
+			if err = o.Start(ctx); err != nil {
 				p.logger.Error("Process error", zap.Error(err))
 			}
 			p.logger.Info("Process done", zap.String("name", process.Name))

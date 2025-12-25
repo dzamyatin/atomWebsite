@@ -26,10 +26,10 @@ func (r *ProcessShutdownerManager) Run(
 	ctx context.Context,
 	processes ...Process,
 ) error {
-	processes = append(processes, Process{
-		Name:   "signal",
-		Object: NewSignalListener(r.logger),
-	})
+	processes = append(
+		processes,
+		NewProcess("signal", NewSignalListener(r.logger)),
+	)
 
 	return NewProcessManager(
 		r.logger,

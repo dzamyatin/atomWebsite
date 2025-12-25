@@ -32,6 +32,17 @@ services:
 #    ports:
 #      - "5173:5173"
 
+  jaeger:
+    container_name: ${PROJECTNAME}-jaeger
+    image: jaegertracing/all-in-one:1.45
+    ports:
+      - "${JAEGER_UI_PORT}:16686"  # Jaeger UI
+      - "${JAEGER_HTTP_COLLECTOR_PORT}:14268"  # HTTP collector
+      - "${JAEGER_UDP_COLLECTOR_PORT}:6831/udp" # Agent UDP
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+      - COLLECTOR_OTLP_ENABLED=true
+
   tool:
     container_name: ${PROJECTNAME}-tool
     volumes:

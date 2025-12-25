@@ -20,6 +20,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
 	"github.com/dzamyatin/atomWebsite/internal/service/time"
+	servicetrace "github.com/dzamyatin/atomWebsite/internal/service/trace"
 	userservice "github.com/dzamyatin/atomWebsite/internal/service/user"
 	"github.com/dzamyatin/atomWebsite/internal/transformer"
 	"github.com/dzamyatin/atomWebsite/internal/usecase"
@@ -109,6 +110,8 @@ var set = wire.NewSet(
 	process.NewProcessShutdownerManager,
 	process.NewShutdownerRegistry,
 	executors.NewGrpcProcessCommand,
+	servicetrace.NewTraceServer,
+	newTracer,
 )
 
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {

@@ -22,6 +22,7 @@ import (
 	messengertelegram "github.com/dzamyatin/atomWebsite/internal/service/messenger/telegram"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
+	servicetrace "github.com/dzamyatin/atomWebsite/internal/service/trace"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -126,32 +127,22 @@ func newGRPCProcessManager(
 ) *process.ProcessManager {
 	return process.NewProcessManager(
 		logger,
-		process.Process{
-			Name:   "grpc server",
-			Object: serv,
-		},
-		process.Process{
-			Name:   "http server",
-			Object: server,
-		},
-		process.Process{
-			Name:   "signal listener",
-			Object: listener,
-		},
-		process.Process{
-			Name: "database shutdowner",
-			Object: process.NewShutdowner(
-				logger,
-				func() error {
-					return db.Close()
-				},
-			),
-		},
-		process.Process{
-			Name:   "http listener",
-			Object: newHttpMetricProcessor(metric),
-		},
+		process.NewProcess("grpc server", serv),
+		process.NewProcess("http server", server),
+		process.NewProcess("signal listener", listener),
+		process.NewProcess("database shutdowner", process.NewShutdowner(
+			logger,
+			func() error {
+				return db.Close()
+			},
+		),
+		),
+		process.NewProcess("http listener", newHttpMetricProcessor(metric)),
 	)
+}
+
+func newTracer(server *servicetrace.TraceServer) *servicetrace.Trace {
+	return servicetrace.NewTrace(server.GetTrace())
 }
 
 func newDb(
@@ -308,13 +299,22 @@ func newHTTPServer(
 	logger *zap.Logger,
 	router *grpcservice2.HttpRouter,
 	metric *metric.Metric,
+	trace *servicetrace.Trace,
 ) *grpcservice2.HTTPServer {
-	return grpcservice2.NewHTTPServer(
+	server := grpcservice2.NewHTTPServer(
 		logger,
 		getConfig().AddHttp,
 		router,
 		metric,
+		trace,
+		grpcservice2.WithTimeout(
+			getConfig().HttpServerTimeout,
+			getConfig().HttpServerTimeout,
+			getConfig().HttpServerTimeout,
+		),
 	)
+
+	return server
 }
 
 func newMessengerServerRegistry(

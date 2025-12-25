@@ -10,6 +10,8 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/config"
 	"github.com/dzamyatin/atomWebsite/internal/service/metric"
 	"github.com/dzamyatin/atomWebsite/internal/service/process"
+	servicetrace "github.com/dzamyatin/atomWebsite/internal/service/trace"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -25,6 +27,7 @@ type GrpcProcessCommand struct {
 	metric         *metric.Registry
 	server         *grpcservice2.HTTPServer
 	config         config.AppConfig
+	trace          *servicetrace.TraceServer
 }
 
 func NewGrpcProcessCommand(
@@ -35,6 +38,7 @@ func NewGrpcProcessCommand(
 	metric *metric.Registry,
 	server *grpcservice2.HTTPServer,
 	cfg config.AppConfig,
+	trace *servicetrace.TraceServer,
 ) *GrpcProcessCommand {
 	return &GrpcProcessCommand{
 		logger:         logger,
@@ -44,28 +48,27 @@ func NewGrpcProcessCommand(
 		metric:         metric,
 		server:         server,
 		config:         cfg,
+		trace:          trace,
 	}
 }
 
 func (r *GrpcProcessCommand) Execute(ctx context.Context, u ArgGrpcProcess) error {
 	return r.processManager.Run(
 		ctx,
-		process.Process{
-			Name:   "grpc server",
-			Object: r.serv,
-		},
-		process.Process{
-			Name:   "http server",
-			Object: r.server,
-		},
-		process.Process{
-			Name:   "signal listener",
-			Object: r.listener,
-		},
-		process.Process{
-			Name:   "metric server",
-			Object: r.newHttpMetricProcessor(r.metric),
-		},
+		process.NewProcessIniter(
+			"tracer",
+			func(ctx context.Context) (process.ProcessStarter, error) {
+				if err := r.trace.Run(); err != nil {
+					return nil, errors.Wrap(err, "tracer error")
+				}
+
+				return r.trace, nil
+			},
+		),
+		process.NewProcess("grpc server", r.serv),
+		process.NewProcess("http server", r.server),
+		process.NewProcess("signal listener", r.listener),
+		process.NewProcess("metric server", r.newHttpMetricProcessor(r.metric)),
 	)
 }
 
