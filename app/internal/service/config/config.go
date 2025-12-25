@@ -36,6 +36,11 @@ type AppConfig struct {
 	TelegramBotConfig TelegramBotConfig `mapstructure:"telegram_bot"`
 	HttpServerTimeout time.Duration     `mapstructure:"http_server_timeout"`
 	CorsHost          string            `mapstructure:"cors_host"`
+	Trace             TraceConfig       `mapstructure:"trace"`
+}
+
+type TraceConfig struct {
+	AgentHost string `mapstructure:"agent_host"`
 }
 
 type TelegramBotConfig struct {

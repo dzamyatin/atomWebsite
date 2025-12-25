@@ -23,7 +23,10 @@ type TraceServer struct {
 	ch     chan struct{}
 }
 
-func NewTraceServer(logger *zap.Logger) *TraceServer {
+func NewTraceServer(
+	logger *zap.Logger,
+	agentHost string,
+) *TraceServer {
 	traceServer := &TraceServer{
 		ch:     make(chan struct{}, 1),
 		tracer: opentracing.NoopTracer{},
@@ -35,7 +38,9 @@ func NewTraceServer(logger *zap.Logger) *TraceServer {
 				Param: 1,
 			},
 			Reporter: &config.ReporterConfig{
-				LogSpans: true,
+				LogSpans:           true,
+				LocalAgentHostPort: agentHost,
+				//CollectorEndpoint:  "",
 			},
 		},
 	}

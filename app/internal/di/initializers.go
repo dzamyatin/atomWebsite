@@ -320,6 +320,15 @@ func newHTTPServer(
 	return server
 }
 
+func newTraceServer(
+	logger *zap.Logger,
+) *servicetrace.TraceServer {
+	return servicetrace.NewTraceServer(
+		logger,
+		getConfig().Trace.AgentHost,
+	)
+}
+
 func newMessengerServerRegistry(
 	telegramDriver *messengertelegram.TelegramDriver,
 ) *messengerserver.MessengerServerRegistry {
