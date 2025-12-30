@@ -12,7 +12,6 @@ import (
 	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
 	"github.com/dzamyatin/atomWebsite/internal/service/cmd/executors"
-	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/handler"
 	servicemessengersender "github.com/dzamyatin/atomWebsite/internal/service/messenger/sender"
 	servicemessengerstatemachine "github.com/dzamyatin/atomWebsite/internal/service/messenger/statemachine"
@@ -45,8 +44,9 @@ var set = wire.NewSet(
 	wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)),
 	newDb,
 	newDbx,
-	db.NewDatabase,
-	wire.Bind(new(db.IDatabase), new(*db.Database)),
+	//db.NewDatabase,
+	newDatabase,
+	//wire.Bind(new(db.IDatabase), new(*db.Database)),
 	wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)),
 	wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)),
 	userservice.NewPasswordEncoder,

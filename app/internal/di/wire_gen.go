@@ -15,7 +15,6 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/service/bus"
 	"github.com/dzamyatin/atomWebsite/internal/service/cmd/executors"
 	"github.com/dzamyatin/atomWebsite/internal/service/config"
-	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	"github.com/dzamyatin/atomWebsite/internal/service/handler"
 	"github.com/dzamyatin/atomWebsite/internal/service/messenger/sender"
 	"github.com/dzamyatin/atomWebsite/internal/service/messenger/statemachine"
@@ -74,22 +73,24 @@ func InitializeMigrationDownCommand(ctx context.Context) (*executors.MigrationDo
 func InitializeBusProcessCommand(ctx context.Context) (*executors.BusProcessCommand, error) {
 	logger := newLogger()
 	shutdownerRegistry := process.NewShutdownerRegistry()
-	sqlDB, err := newDb(ctx, shutdownerRegistry)
+	db, err := newDb(ctx, shutdownerRegistry)
 	if err != nil {
 		return nil, err
 	}
-	sqlxDB, err := newDbx(sqlDB)
+	sqlxDB, err := newDbx(db)
 	if err != nil {
 		return nil, err
 	}
-	database := db.NewDatabase(sqlxDB)
-	postgresBus := newPostgresBus(database, logger)
+	traceServer := newTraceServer(logger)
+	trace := newTracer(traceServer)
+	iDatabase := newDatabase(sqlxDB, trace)
+	postgresBus := newPostgresBus(iDatabase, logger)
 	memoryBus := bus.NewMemoryBus()
-	userRepository := repository.NewUserRepository(logger, database)
+	userRepository := repository.NewUserRepository(logger, iDatabase)
 	passwordEncoder := userservice.NewPasswordEncoder()
 	iMailer := newMailer(logger)
 	time := servicetime.NewTime()
-	randomizerRepository := repository.NewRandomizerRepository(logger, database, time)
+	randomizerRepository := repository.NewRandomizerRepository(logger, iDatabase, time)
 	sendEmailConfirmationUseCase := usecase.NewSendEmailConfirmationUseCase(logger, iMailer, randomizerRepository)
 	registration := usecase.NewRegistration(userRepository, passwordEncoder, logger, iMailer, randomizerRepository, sendEmailConfirmationUseCase)
 	registerHandler := handler.NewRegisterHandler(registration)
@@ -105,18 +106,20 @@ func InitializeTelegramBotProcessCommand(ctx context.Context) (*executors.Telegr
 	telegramDriver := newTelegramBotServer(logger)
 	messengerServerRegistry := newMessengerServerRegistry(telegramDriver)
 	shutdownerRegistry := process.NewShutdownerRegistry()
-	sqlDB, err := newDb(ctx, shutdownerRegistry)
+	db, err := newDb(ctx, shutdownerRegistry)
 	if err != nil {
 		return nil, err
 	}
-	sqlxDB, err := newDbx(sqlDB)
+	sqlxDB, err := newDbx(db)
 	if err != nil {
 		return nil, err
 	}
-	database := db.NewDatabase(sqlxDB)
-	chatRepository := repository.NewChatRepository(logger, database)
+	traceServer := newTraceServer(logger)
+	trace := newTracer(traceServer)
+	iDatabase := newDatabase(sqlxDB, trace)
+	chatRepository := repository.NewChatRepository(logger, iDatabase)
 	initialState := servicemessengerstatemachinestate.NewInitialState(logger)
-	senderRepository := repository.NewSenderRepository(logger, database)
+	senderRepository := repository.NewSenderRepository(logger, iDatabase)
 	waitForPhone := servicemessengerstatemachinestate.NewWaitForPhone(logger, senderRepository)
 	phoneStoredState := servicemessengerstatemachinestate.NewPhoneStoredState(logger)
 	iStateRegistry := newStateRegistry(logger, initialState, waitForPhone, phoneStoredState)
@@ -131,33 +134,35 @@ func InitializeGrpcProcessCommand(ctx context.Context, cfg config.AppConfig) (*e
 	logger := newLogger()
 	shutdownerRegistry := process.NewShutdownerRegistry()
 	processShutdownerManager := process.NewProcessShutdownerManager(logger, shutdownerRegistry)
-	sqlDB, err := newDb(ctx, shutdownerRegistry)
+	db, err := newDb(ctx, shutdownerRegistry)
 	if err != nil {
 		return nil, err
 	}
-	sqlxDB, err := newDbx(sqlDB)
+	sqlxDB, err := newDbx(db)
 	if err != nil {
 		return nil, err
 	}
-	database := db.NewDatabase(sqlxDB)
-	userRepository := repository.NewUserRepository(logger, database)
+	traceServer := newTraceServer(logger)
+	trace := newTracer(traceServer)
+	iDatabase := newDatabase(sqlxDB, trace)
+	userRepository := repository.NewUserRepository(logger, iDatabase)
 	passwordEncoder := userservice.NewPasswordEncoder()
 	iMailer := newMailer(logger)
 	time := servicetime.NewTime()
-	randomizerRepository := repository.NewRandomizerRepository(logger, database, time)
+	randomizerRepository := repository.NewRandomizerRepository(logger, iDatabase, time)
 	sendEmailConfirmationUseCase := usecase.NewSendEmailConfirmationUseCase(logger, iMailer, randomizerRepository)
 	registration := usecase.NewRegistration(userRepository, passwordEncoder, logger, iMailer, randomizerRepository, sendEmailConfirmationUseCase)
 	sequentialProvider := newSequentialProvider(userRepository, logger, passwordEncoder)
 	jwt := newJWT(logger)
 	login := usecase.NewLogin(logger, sequentialProvider, jwt)
 	confirmEmailUseCase := usecase.NewConfirmEmailUseCase(userRepository, logger, randomizerRepository)
-	postgresBus := newPostgresBus(database, logger)
+	postgresBus := newPostgresBus(iDatabase, logger)
 	memoryBus := bus.NewMemoryBus()
 	registerHandler := handler.NewRegisterHandler(registration)
 	handlerRegistry := newHandlerRegistry(registerHandler)
 	mainBus := newBus(postgresBus, memoryBus, handlerRegistry, logger)
-	counterRepository := repository.NewCounterRepository(logger, database)
-	senderRepository := repository.NewSenderRepository(logger, database)
+	counterRepository := repository.NewCounterRepository(logger, iDatabase)
+	senderRepository := repository.NewSenderRepository(logger, iDatabase)
 	telegramDriver := newTelegramBotServer(logger)
 	messengerServerRegistry := newMessengerServerRegistry(telegramDriver)
 	sequentiallySender := servicemessengersender.NewSequentiallySender(logger, counterRepository, senderRepository, messengerServerRegistry)
@@ -177,8 +182,6 @@ func InitializeGrpcProcessCommand(ctx context.Context, cfg config.AppConfig) (*e
 	signalListener := process.NewSignalListener(logger)
 	shopServer := grpc.NewShopServer()
 	httpRouter := newHttpRouter(authServer, shopServer)
-	traceServer := newTraceServer(logger)
-	trace := newTracer(traceServer)
 	httpServer := newHTTPServer(logger, httpRouter, metricMetric, trace)
 	grpcProcessCommand := executors.NewGrpcProcessCommand(logger, processShutdownerManager, grpcServer, signalListener, registry, httpServer, cfg, traceServer)
 	return grpcProcessCommand, nil
@@ -189,33 +192,35 @@ func InitializeGrpcProcessCommand(ctx context.Context, cfg config.AppConfig) (*e
 func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager, error) {
 	logger := newLogger()
 	shutdownerRegistry := process.NewShutdownerRegistry()
-	sqlDB, err := newDb(ctx, shutdownerRegistry)
+	db, err := newDb(ctx, shutdownerRegistry)
 	if err != nil {
 		return nil, err
 	}
-	sqlxDB, err := newDbx(sqlDB)
+	sqlxDB, err := newDbx(db)
 	if err != nil {
 		return nil, err
 	}
-	database := db.NewDatabase(sqlxDB)
-	userRepository := repository.NewUserRepository(logger, database)
+	traceServer := newTraceServer(logger)
+	trace := newTracer(traceServer)
+	iDatabase := newDatabase(sqlxDB, trace)
+	userRepository := repository.NewUserRepository(logger, iDatabase)
 	passwordEncoder := userservice.NewPasswordEncoder()
 	iMailer := newMailer(logger)
 	time := servicetime.NewTime()
-	randomizerRepository := repository.NewRandomizerRepository(logger, database, time)
+	randomizerRepository := repository.NewRandomizerRepository(logger, iDatabase, time)
 	sendEmailConfirmationUseCase := usecase.NewSendEmailConfirmationUseCase(logger, iMailer, randomizerRepository)
 	registration := usecase.NewRegistration(userRepository, passwordEncoder, logger, iMailer, randomizerRepository, sendEmailConfirmationUseCase)
 	sequentialProvider := newSequentialProvider(userRepository, logger, passwordEncoder)
 	jwt := newJWT(logger)
 	login := usecase.NewLogin(logger, sequentialProvider, jwt)
 	confirmEmailUseCase := usecase.NewConfirmEmailUseCase(userRepository, logger, randomizerRepository)
-	postgresBus := newPostgresBus(database, logger)
+	postgresBus := newPostgresBus(iDatabase, logger)
 	memoryBus := bus.NewMemoryBus()
 	registerHandler := handler.NewRegisterHandler(registration)
 	handlerRegistry := newHandlerRegistry(registerHandler)
 	mainBus := newBus(postgresBus, memoryBus, handlerRegistry, logger)
-	counterRepository := repository.NewCounterRepository(logger, database)
-	senderRepository := repository.NewSenderRepository(logger, database)
+	counterRepository := repository.NewCounterRepository(logger, iDatabase)
+	senderRepository := repository.NewSenderRepository(logger, iDatabase)
 	telegramDriver := newTelegramBotServer(logger)
 	messengerServerRegistry := newMessengerServerRegistry(telegramDriver)
 	sequentiallySender := servicemessengersender.NewSequentiallySender(logger, counterRepository, senderRepository, messengerServerRegistry)
@@ -235,10 +240,8 @@ func InitializeGRPCProcessManager(ctx context.Context) (*process.ProcessManager,
 	signalListener := process.NewSignalListener(logger)
 	shopServer := grpc.NewShopServer()
 	httpRouter := newHttpRouter(authServer, shopServer)
-	traceServer := newTraceServer(logger)
-	trace := newTracer(traceServer)
 	httpServer := newHTTPServer(logger, httpRouter, metricMetric, trace)
-	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, sqlDB, registry, httpServer)
+	processManager := newGRPCProcessManager(logger, grpcServer, signalListener, db, registry, httpServer)
 	return processManager, nil
 }
 
@@ -254,7 +257,9 @@ var set = wire.NewSet(
 	newLogger,
 	newServer,
 	newGrpcServer, grpc.NewAuthServer, process.NewSignalListener, usecase.NewRegistration, repository.NewUserRepository, wire.Bind(new(repository.IUserRepository), new(*repository.UserRepository)), newDb,
-	newDbx, db.NewDatabase, wire.Bind(new(db.IDatabase), new(*db.Database)), wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, newRegistry, usecase.NewLogin, wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)), newSequentialProvider, wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)), newJWT, wire.Bind(new(bus.IBus), new(*bus.MainBus)), newBus,
+	newDbx,
+
+	newDatabase, wire.Bind(new(entity.PasswordEncoder), new(*userservice.PasswordEncoder)), wire.Bind(new(entity.PasswordComparator), new(*userservice.PasswordEncoder)), userservice.NewPasswordEncoder, usecasemigration.NewUp, usecasemigration.NewDown, metric.NewMetric, newRegistry, usecase.NewLogin, wire.Bind(new(serviceauth.IProvider), new(*serviceauth.SequentialProvider)), newSequentialProvider, wire.Bind(new(serviceauth.IJWT), new(*serviceauth.JWT)), newJWT, wire.Bind(new(bus.IBus), new(*bus.MainBus)), newBus,
 	newHandlerRegistry, bus.NewMemoryBus, handler.NewRegisterHandler, executors.NewMigrationCreateCommand, executors.NewMigrationDownCommand, executors.NewMigrationUpCommand, newPostgresBus, executors.NewBusProcessCommand, newHTTPServer,
 	newMailer, servicetime.NewTime, wire.Bind(new(servicetime.ITime), new(*servicetime.Time)), repository.NewRandomizerRepository, wire.Bind(new(repository.IRandomizerRepository), new(*repository.RandomizerRepository)), usecase.NewConfirmEmailUseCase, usecase.NewSendEmailConfirmationUseCase, usecase.NewRememberPasswordUseCase, validator.NewValidator, usecase.NewChangePasswordUseCase, newTelegramBotServer, executors.NewTelegramBotProcessCommand, wire.Bind(new(repository.IChatRepository), new(*repository.ChatRepository)), repository.NewChatRepository, servicemessengerstatemachinestate.NewInitialState, servicemessengerstatemachinestate.NewWaitForPhone, newStateRegistry, usecasemessenger.NewReceiveMessageUseCase, servicemessengerstatemachine.NewStateMachineFactory, newMessengerServerRegistry, repository.NewSenderRepository, wire.Bind(new(repository.ISenderRepository), new(*repository.SenderRepository)), servicemessengerstatemachinestate.NewPhoneStoredState, repository.NewCounterRepository, wire.Bind(new(repository.ICounterRepository), new(*repository.CounterRepository)), servicemessengersender.NewSequentiallySender, wire.Bind(new(servicemessengersender.ISenderService), new(*servicemessengersender.SequentiallySender)), transformer.NewTransformer, usecase.NewSendPhoneConfirmationUseCase, usecase.NewConfirmPhoneUseCase, serviceauth.NewAuth, wire.Bind(new(serviceauth.IAuth), new(*serviceauth.Auth)), usecase.NewGetUser, newHttpRouter, grpc.NewShopServer, process.NewProcessShutdownerManager, process.NewShutdownerRegistry, executors.NewGrpcProcessCommand, newTracer,
 	newTraceServer,

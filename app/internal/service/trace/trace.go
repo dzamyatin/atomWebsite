@@ -18,6 +18,13 @@ func NewTrace(
 	}
 }
 
+func NewTag(name string, value string) Tag {
+	return Tag{
+		Key:   name,
+		Value: value,
+	}
+}
+
 type Tag struct {
 	Key   string
 	Value string
@@ -31,10 +38,17 @@ func (r *Trace) Trace(
 	f TraceFunc,
 	tags ...Tag,
 ) {
+	var options []opentracing.StartSpanOption
+	parentSpan := opentracing.SpanFromContext(ctx)
+	if parentSpan != nil {
+		options = append(options, opentracing.ChildOf(parentSpan.Context()))
+	}
+
 	span, ctx := opentracing.StartSpanFromContextWithTracer(
 		ctx,
 		*r.tracer,
 		operation,
+		options...,
 	)
 
 	for _, tag := range tags {

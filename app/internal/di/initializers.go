@@ -16,6 +16,7 @@ import (
 	"github.com/dzamyatin/atomWebsite/internal/repository"
 	serviceauth "github.com/dzamyatin/atomWebsite/internal/service/auth"
 	"github.com/dzamyatin/atomWebsite/internal/service/config"
+	"github.com/dzamyatin/atomWebsite/internal/service/db"
 	servicemail "github.com/dzamyatin/atomWebsite/internal/service/mail"
 	servicemessengerdriver "github.com/dzamyatin/atomWebsite/internal/service/messenger/driver"
 	messengerserver "github.com/dzamyatin/atomWebsite/internal/service/messenger/server"
@@ -336,5 +337,12 @@ func newMessengerServerRegistry(
 		[]servicemessengerdriver.IMessengerDriver{
 			telegramDriver,
 		},
+	)
+}
+
+func newDatabase(dbx *sqlx.DB, trace *servicetrace.Trace) db.IDatabase {
+	return db.NewTraceDatabaseDecorator(
+		db.NewDatabase(dbx),
+		trace,
 	)
 }
