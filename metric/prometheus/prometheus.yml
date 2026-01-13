@@ -1,0 +1,18 @@
+#https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+#https://github.com/prometheus/prometheus/blob/release-2.54/config/testdata/conf.good.yml
+global:
+  scrape_interval:     15s
+  external_labels:
+    monitor: 'codelab-monitor'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: 'website_local'
+    scrape_interval: 5s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['host.docker.internal:8505']

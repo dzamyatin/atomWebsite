@@ -1,3 +1,21 @@
+# Endpoints
+
+### Prometheus
+
+http://localhost:9090/graph
+
+### App Metric
+
+http://localhost:8505/metrics
+
+### Grafana
+
+admin:admin
+
+http://localhost:3000/
+
+
+
 
 # TODO
 
@@ -48,13 +66,13 @@
 - <span style="color:yellow">IN PROGRESS</span> cart
 - place-order
 - key-list to obtain
-- <span style="color:yellow">IN PROGRESS</span> metrics:
-    - db metrics should be done through context and some decarator to handle it
-    - ?begin transaction should return "metric" tx (for metric decorator)
-    - <span style="color:yellow">IN PROGRESS</span>http metric (request see grpc WithChainUnaryInterceptor app/internal/di/initializers.go (IncomingRequestHistogram))
-    - <span style="color:yellow">IN PROGRESS</span>metric prometheus (see: https://habr.com/ru/companies/otus/articles/769806/)
-        - prometeus
-        - grafana
+- <span style="color:green">DONE</span> metrics:
+    - <span style="color:green">DONE</span> db metrics should be done through context and some decarator to handle it
+    - <span style="color:lightblue">TODO</span> ?begin transaction should return "metric" tx (for metric decorator)
+    - <span style="color:green">DONE</span> http metric (request see grpc WithChainUnaryInterceptor app/internal/di/initializers.go (IncomingRequestHistogram))
+    - <span style="color:green">DONE</span> metric prometheus (see: https://habr.com/ru/companies/otus/articles/769806/)
+        - <span style="color:green">DONE</span> prometeus
+        - <span style="color:green">DONE</span> grafana
             - dashboard
                 0) GC metric (mem, cpu, GC time, heap size)
                 1) all request timing

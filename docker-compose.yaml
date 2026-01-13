@@ -1,7 +1,17 @@
 volumes:
+  prometheus-data:
+    name: ${PROJECTNAME}-prometheus-data
+    driver: local
+  grafana-data:
+    name: ${PROJECTNAME}-grafana-data
+    driver: local
   postgres-data:
     name: ${PROJECTNAME}-postgres-data
     driver: local
+
+networks:
+  default:
+    name: ${PROJECTNAME}-network
 
 services:
 #  app:
@@ -18,7 +28,8 @@ services:
 #        HTTPS: ${HTTPS}
 #    working_dir: /app
 #    command: "./app"
-
+#    networks:
+#      - default
 #  frontend:
 #    container_name: ${PROJECTNAME}-frontend
 #    build:
@@ -31,6 +42,42 @@ services:
 #    command: "sh -c 'while true; do sleep 1; done'"
 #    ports:
 #      - "5173:5173"
+#    networks:
+#      - default
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: ${PROJECTNAME}-prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./metric/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - "prometheus-data:/prometheus/"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    networks:
+      - default
+
+  #admin:admin
+  grafana:
+    image: grafana/grafana-oss
+    container_name: ${PROJECTNAME}-grafana
+    environment:
+      GF_FEATURE_TOGGLES_ENABLE: publicDashboards
+    volumes:
+      - "grafana-data:/var/lib/grafana/"
+      - ./metric/grafana/provisioning/:/etc/grafana/provisioning/
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    networks:
+      - default
 
   jaeger:
     container_name: ${PROJECTNAME}-jaeger
@@ -42,6 +89,8 @@ services:
     environment:
       - COLLECTOR_ZIPKIN_HOST_PORT=:9411
       - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - default
 
   tool:
     container_name: ${PROJECTNAME}-tool
@@ -61,6 +110,8 @@ services:
         GROUPID: ${GROUPID}
         USERNAME: ${USERNAME}
     command: "sh -c 'while true; do sleep 1; done'"
+    networks:
+      - default
 
   postgres:
     ports:
@@ -74,3 +125,5 @@ services:
       - "POSTGRES_USER=user"
     volumes:
       - "postgres-data:/data"
+    networks:
+      - default
