@@ -16,8 +16,11 @@ GRPC localhost:8502/auth.Auth/Register
   "phone": "+79991112233"
 }
 
+### own prometheus metrics
+#GET http://localhost:9090/metrics
+
 ###
-GET http://localhost:9090/metrics
+GET localhost:8505/metrics
 
 ###
 POST localhost:8503/login
