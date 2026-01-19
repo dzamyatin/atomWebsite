@@ -86,7 +86,11 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(
+		runtime.WithMiddlewares(
+			httpserver.NewMetricMuxHandlerMiddleware(r.metric).Middleware(),
+		),
+	)
 
 	err := r.router.Apply(ctx, mux)
 	if err != nil {
@@ -99,12 +103,9 @@ func (r *HTTPServer) Start(ctx context.Context) error {
 		IdleTimeout:  r.idleTimeout,
 		Addr:         r.httpAddr,
 		Handler: httpserver.NewTraceHandlerMiddleware(
-			httpserver.NewMetricHandlerMiddleware(
-				httpserver.NewCorsHandlerMiddleware(
-					mux,
-					r.corsHost,
-				),
-				r.metric,
+			httpserver.NewCorsHandlerMiddleware(
+				mux,
+				r.corsHost,
 			),
 			r.trace,
 		),

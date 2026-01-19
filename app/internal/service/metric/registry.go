@@ -69,3 +69,30 @@ func (r *Registry) Histogram(
 		hist.Observe(float64(time.Since(b).Nanoseconds() / 1000000000))
 	}
 }
+
+//
+//type histogramRegistry map[string]prometheus.Histogram
+//
+//func (r *Registry) HistogramRegistry(
+//	name string,
+//	labels prometheus.Labels,
+//) MetricFunc {
+//	hist := prometheus.NewHistogram(
+//		prometheus.HistogramOpts{
+//			Name: name,
+//			//ConstLabels: labels,
+//			Buckets: defaultBuckets,
+//		},
+//	)
+//	err := r.registry.Register(hist)
+//
+//	if err != nil {
+//		r.logger.Error("failed to register histogram", zap.Error(err))
+//	}
+//
+//	return func(f MeasuredFunc) {
+//		b := time.Now()
+//		f()
+//		hist.Observe(float64(time.Since(b).Nanoseconds() / 1000000000))
+//	}
+//}

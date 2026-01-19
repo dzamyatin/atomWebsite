@@ -2,11 +2,12 @@ package di
 
 import (
 	"context"
+	"net/http"
+
 	atomWebsite "github.com/dzamyatin/atomWebsite/internal/grpc/generated"
 	"github.com/dzamyatin/atomWebsite/internal/grpc/grpc"
 	"github.com/dzamyatin/atomWebsite/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"net/http"
 )
 
 func newHttpRouter(

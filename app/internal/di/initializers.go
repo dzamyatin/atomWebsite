@@ -33,6 +33,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"golang.org/x/exp/slices"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func newTelegramBotServer(
@@ -226,7 +227,8 @@ func newGrpcServer(
 	m *metric.Metric,
 ) *grpc.Server {
 	grpcServer := grpc.NewServer()
-
+	reflection.Register(grpcServer)
+	
 	grpc.WithIdleTimeout(time.Minute * 1)
 	grpc.WithTimeout(time.Minute * 1)
 
