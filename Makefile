@@ -29,3 +29,6 @@ dev:
 	sh -c "cd frontend && npm run dev"
 telegrambot:
 	sh -c "cd app && go run ./ telegrambot --config config-local.yaml"
+
+install:
+	go install github.com/dzamyatin/protoc-api-registrator/cmd/protoc-gen-apiregistrator@1.0.0
